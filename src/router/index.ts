@@ -6,8 +6,30 @@ Vue.use(VueRouter)
 const routes: Array<RouteConfig> = [
     {
         path: '/',
-        name: 'Home',
-        component: () => import('../views/Home.vue'),
+        name: 'Main',
+        component: () => import('@/views/Main.vue'),
+        children:[
+            {
+                path:'/hive',
+                name: 'Hive',
+                component: () => import(/* webpackChunkName: "about" */ '@/components/pages/Hive.vue'),
+                alias:'/'
+        
+            },
+            {
+                path:'/myTag',
+                name: 'MyTag',
+                component: () => import(/* webpackChunkName: "about" */ '@/components/pages/MyTag.vue')
+        
+            },
+            {
+                path:'/rank',
+                name: 'Rank',
+                component: () => import(/* webpackChunkName: "about" */ '@/components/pages/Rank.vue')
+        
+            },
+
+        ]
     },
     {
         path: '/about',

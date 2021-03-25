@@ -3,11 +3,10 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import './quasar'
-import Header from './components/common/Header.vue'
+import './scripts/ui_common.js'
 
 Vue.config.productionTip = false
 
-Vue.component('Header', Header)
 
 new Vue({
   router,

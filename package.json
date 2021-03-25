@@ -8,7 +8,11 @@
   },
   "dependencies": {
     "@quasar/extras": "^1.0.0",
+    "array.prototype.findindex": "^2.1.0",
     "core-js": "^3.6.5",
+    "litepicker": "^2.0.11",
+    "litepicker-polyfills-ie11": "^0.0.1",
+    "moment": "^2.29.1",
     "quasar": "^1.0.0",
     "vue": "^2.6.11",
     "vue-class-component": "^7.2.3",
