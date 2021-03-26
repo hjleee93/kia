@@ -48,7 +48,7 @@
                         <h2 class="b-tit">인기 툿</h2>
                         <div class="box-toot">
                             <div class="toot-lists">
-                                <template v-for="toot in tootList">
+                                <div v-for="toot in tootList" :key="toot.id">
                                     <div class="list">
                                         <div class="box-user-info">
                                             <a href="#none" class="btn btn-user">
@@ -72,7 +72,7 @@
                                             </a
                                             >
                                             <p class="hash-lists">
-                                                <a v-for="tag in toot.tags" href="#none" class="btn btn-hash">
+                                                <a v-for="tag in toot.tags" href="#none" class="btn btn-hash" :key="tag.id">
                                                     #{{tag.tag}}
                                                 </a>
                                             </p>
@@ -88,7 +88,7 @@
                                             />
                                         </div>
                                     </div>
-                                </template>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -182,7 +182,7 @@ export default class Rank extends Vue {
         calendar.init();
     }
 
-    onClickTab(event) {
+    onClickTab(event: Event) {
         tab.click(event.target)
     }
 }
