@@ -1,5 +1,5 @@
 <template>
-    <div id="layer">
+    <div id="layer" class="popup-album" >
         <div class="layer-outer">
             <div class="layer-inner type-alert">
                 <div class="layer-content">
@@ -57,7 +57,7 @@
                 <!--상세 이미지-->
                 <div
                     class="layer-depth2"
-                    onclick="albumPop.layerCloseDepth2();"
+                    @click="layerCloseDepth2()"
                 >
                     <div class="layer-depth2-content">
                         <div class="box-img">
@@ -74,13 +74,13 @@
 </template>
 
 
-
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
-import { dim, gnb, albumPop } from "@/scripts/ui_common";
+import { dim, gnb, albumPop,isDesktop } from "@/scripts/ui_common";
 
 @Component
 export default class AlbumShow extends Vue {
+    albumshow: any;
     mounted() {
         albumPop.init();
         dim.init();
@@ -89,6 +89,21 @@ export default class AlbumShow extends Vue {
     layerClose(){
       albumPop.layerClose()
     }
+    layerCloseDepth2(){
+      albumPop.layerCloseDepth2();
+
+    }
+     /* 앨범쇼 팝업 닫기 테스트 기능 */
+      albumPopCloseSample() {
+        albumPop.layerClose(() => {// 상세 레이어 닫기
+         
+          
+          //@ts-ignore
+          document.querySelector("#layer .grid").innerHTML = "";
+        });
+      }
+
+     
 }
 </script>
 
