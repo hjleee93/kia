@@ -147,7 +147,6 @@ export default class GridItem extends Vue {
                     horizontalOrder: false,
                     transitionDuration: 0,
                 });
-                console.log(msnry)
             }
             //MOBILE 일경우
             else {

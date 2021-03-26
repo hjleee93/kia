@@ -95,7 +95,6 @@
 
 <script lang="ts">
 import Hashtag from "../layouts/inspiration/Hashtag.vue";
-import '../../scripts/masonry-horizontal.js'
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { albumPop, dim, gnb, isDesktop, search } from "@/scripts/ui_common";
 
@@ -178,7 +177,7 @@ export default class Category extends Vue {
           }
           
           dom += '<div class="grid-item">';
-          dom += '  <button class="btn btn-image" >';
+          dom += '  <button class="btn btn-image">';
           dom += '    <div class="box-img" style="width: '+w+'px; background-image: url('+src+')">';
           dom += '    </div>';
           dom += '  </button>';
@@ -215,36 +214,36 @@ export default class Category extends Vue {
           "../images/@temp/@temp_hive4.jpg",
           "../images/@temp/@temp_hive5.jpg",
           "../images/@temp/@temp_hive6.jpg",
-        //   "../images/@temp/@temp_hive7.jpg",
-        //   "../images/@temp/@temp_rank1.jpg",
-        //   "../images/@temp/@temp_rank2.jpg",
-        //   "../images/@temp/@temp_hive1.jpg",
-        //   "../images/@temp/@temp_hive2.jpg",
-        //   "../images/@temp/@temp_hive3.jpg",
-        //   "../images/@temp/@temp_hive4.jpg",
-        //   "../images/@temp/@temp_hive5.jpg",
-        //   "../images/@temp/@temp_hive6.jpg",
-        //   "../images/@temp/@temp_hive7.jpg",
-        //   "../images/@temp/@temp_rank1.jpg",
-        //   "../images/@temp/@temp_rank2.jpg",
-        //   "../images/@temp/@temp_hive1.jpg",
-        //   "../images/@temp/@temp_hive2.jpg",
-        //   "../images/@temp/@temp_hive3.jpg",
-        //   "../images/@temp/@temp_hive4.jpg",
-        //   "../images/@temp/@temp_rank2.jpg",
-        //   "../images/@temp/@temp_hive1.jpg",
-        //   "../images/@temp/@temp_hive2.jpg",
-        //   "../images/@temp/@temp_hive3.jpg",
-        //   "../images/@temp/@temp_hive4.jpg",
-        //   "../images/@temp/@temp_hive5.jpg",
-        //   "../images/@temp/@temp_hive6.jpg",
-        //   "../images/@temp/@temp_hive7.jpg",
-        //   "../images/@temp/@temp_rank1.jpg",
-        //   "../images/@temp/@temp_rank2.jpg",
-        //   "../images/@temp/@temp_hive1.jpg",
-        //   "../images/@temp/@temp_hive2.jpg",
-        //   "../images/@temp/@temp_hive3.jpg",
-        //   "../images/@temp/@temp_hive4.jpg",
+          "../images/@temp/@temp_hive7.jpg",
+          "../images/@temp/@temp_rank1.jpg",
+          "../images/@temp/@temp_rank2.jpg",
+          "../images/@temp/@temp_hive1.jpg",
+          "../images/@temp/@temp_hive2.jpg",
+          "../images/@temp/@temp_hive3.jpg",
+          "../images/@temp/@temp_hive4.jpg",
+          "../images/@temp/@temp_hive5.jpg",
+          "../images/@temp/@temp_hive6.jpg",
+          "../images/@temp/@temp_hive7.jpg",
+          "../images/@temp/@temp_rank1.jpg",
+          "../images/@temp/@temp_rank2.jpg",
+          "../images/@temp/@temp_hive1.jpg",
+          "../images/@temp/@temp_hive2.jpg",
+          "../images/@temp/@temp_hive3.jpg",
+          "../images/@temp/@temp_hive4.jpg",
+          "../images/@temp/@temp_rank2.jpg",
+          "../images/@temp/@temp_hive1.jpg",
+          "../images/@temp/@temp_hive2.jpg",
+          "../images/@temp/@temp_hive3.jpg",
+          "../images/@temp/@temp_hive4.jpg",
+          "../images/@temp/@temp_hive5.jpg",
+          "../images/@temp/@temp_hive6.jpg",
+          "../images/@temp/@temp_hive7.jpg",
+          "../images/@temp/@temp_rank1.jpg",
+          "../images/@temp/@temp_rank2.jpg",
+          "../images/@temp/@temp_hive1.jpg",
+          "../images/@temp/@temp_hive2.jpg",
+          "../images/@temp/@temp_hive3.jpg",
+          "../images/@temp/@temp_hive4.jpg",
        
           
         ], this.isotopeHorizontal);

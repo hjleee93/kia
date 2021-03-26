@@ -14,7 +14,7 @@
         </div>
         <div class="layer-inner album-show type-full-size">
           <div class="box-btn">
-            <button class="btn btn-close" @click="albumPopCloseSample"><span>닫기</span></button>
+            <button class="btn btn-close" @click="albumPopClose"><span>닫기</span></button>
           </div>
           <div class="layer-content">
             <div class="grid-wrap">
@@ -70,7 +70,7 @@ export default class AlbumShow extends Vue {
         albumPop.layerClose();
     }
 
-    albumPopCloseSample() {
+    albumPopClose() {
         albumPop.layerClose(() => {
             // 상세 레이어 닫기
             isDesktop();
