@@ -7,14 +7,13 @@
                     <Category />
                     <div class="sec-grid-top">
                         <BoxGridTop />
-                        <MobileAlbum />
                     </div>
                     <div class="dim"></div>
                 </div>
             </div>
             <GridItem />
-            
         </div>
+        <MobileAlbum />
     </div>
 </template>
 
@@ -32,7 +31,7 @@ import {
     gnb,
     hashDropDown,
     search,
-    tootDropDown
+    tootDropDown,
 } from "@/scripts/ui_common";
 
 @Component({
@@ -46,7 +45,6 @@ export default class Hive extends Vue {
         dim.init();
         gnb.init();
     }
-
 }
 </script>
 
