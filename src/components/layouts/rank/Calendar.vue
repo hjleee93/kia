@@ -77,15 +77,25 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
-import Litepicker from "litepicker";
+import litepicker from "litepicker";
+import {
+    dim,
+    gnb,
+    calendar,
+    tab
+} from "@/scripts/ui_common";
 
 @Component({ components: {} })
 export default class Calendar extends Vue {
-
-       calendar: any;
-    dim: any;
-    gnb: any;
-    tab:any;
+    
+    mounted() {
+        dim.init();
+        gnb.init();
+        calendar.init();
+        tab.init();
+        //@ts-ignore
+        window.litepicker = this.litepickerInit();
+    }
     // //index 1부터 시작하기 위한 빈 string 적용
     monthArray = [
         "",
@@ -111,8 +121,9 @@ export default class Calendar extends Vue {
      * calendar.getDate 에서도 start 와 end 날짜 제공합니다.
      * 다만 calendarComplete가 실행된후에 값을 저장합니다.
      */
-    litepickerInit(): Litepicker {
-        return new Litepicker({
+    litepickerInit(): litepicker {
+        
+        return new litepicker({
             element: document.getElementById("input-start")!,
             elementEnd: document.getElementById("input-end"),
             singleMode: false,
@@ -170,35 +181,16 @@ export default class Calendar extends Vue {
         });
     }
 
-    mounted() {
-        //@ts-ignore
-        this.gnb = window.gnb();
-        this.gnb.init();
-        //@ts-ignore
-        this.tab = window.tab();
-        this.tab.init();
-        //@ts-ignore
-        this.dim = window.dim();
-        this.dim.init();
-        //@ts-ignore
-        this.calendar = window.calendar();
-        this.calendar.init();
-        //ui_common.js 전달용
-        //@ts-ignore
-        window.litepicker = this.litepickerInit();
-
-        console.log("123",this.dim.open)
-    }
 
     layerOpen() {
-        this.calendar.layerOpen();
-        this.dim.open()
+        calendar.layerOpen();
+       
     }
     calendarComplete() {
-        this.calendar.calendarComplete();
+        calendar.calendarComplete();
     }
-    calendarReset(){
-      this.calendar.calendarReset();
+    calendarReset() {
+        calendar.calendarReset();
     }
 }
 </script>
