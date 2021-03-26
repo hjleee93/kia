@@ -178,7 +178,7 @@ export default class Category extends Vue {
           }
           
           dom += '<div class="grid-item">';
-          dom += '  <button class="btn btn-image" @click="albumshowDetailOpenSample(\''+src+'\')">';
+          dom += '  <button class="btn btn-image" >';
           dom += '    <div class="box-img" style="width: '+w+'px; background-image: url('+src+')">';
           dom += '    </div>';
           dom += '  </button>';
@@ -191,68 +191,69 @@ export default class Category extends Vue {
        
         //@ts-ignore
         this.albumshow = new Isotope( elem, {
-            //@ts-ignore
+            
           layoutMode: 'masonryHorizontal',
-          // initLayout: false,
+          initLayout: false,
           mansonryHorizontal: {
             itemSelector: '.grid-item',
           },
           transitionDuration: 0,
         });
         //@ts-ignore
-        this.albumshow!.layout();
+        this.albumshow.layout();
       }
  
       /* 앨범쇼 샘플 코드 */
       isotopeHorizontalSample() {
-        //@ts-ignore
-        document.querySelector("#layer .grid").innerHTML = "";
+        
+        document.querySelector("#layer .grid")!.innerHTML = "";
         
         this.preload([
-          "/images/@temp/@temp_hive1.jpg",
-          "/images/@temp/@temp_hive2.jpg",
-        //   "../../images/@temp/@temp_hive3.jpg",
-        //   "../../images/@temp/@temp_hive4.jpg",
-        //   "../../images/@temp/@temp_hive5.jpg",
-        //   "../../images/@temp/@temp_hive6.jpg",
-        //   "../../images/@temp/@temp_hive7.jpg",
-        //   "../../images/@temp/@temp_rank1.jpg",
-          "../images/@temp/@temp_rank2.jpg",
-          "../images/@temp/@temp_hive1.jpg",
-          "../images/@temp/@temp_hive2.jpg",
+          "images/@temp/@temp_hive1.jpg",
+          "images/@temp/@temp_hive2.jpg",
           "../images/@temp/@temp_hive3.jpg",
           "../images/@temp/@temp_hive4.jpg",
           "../images/@temp/@temp_hive5.jpg",
           "../images/@temp/@temp_hive6.jpg",
-          "../images/@temp/@temp_hive7.jpg",
-          "../images/@temp/@temp_rank1.jpg",
-          "../images/@temp/@temp_rank2.jpg",
-          "../images/@temp/@temp_hive1.jpg",
-          "../images/@temp/@temp_hive2.jpg",
-          "../images/@temp/@temp_hive3.jpg",
-          "../images/@temp/@temp_hive4.jpg",
-          "../images/@temp/@temp_rank2.jpg",
-          "../images/@temp/@temp_hive1.jpg",
-          "../images/@temp/@temp_hive2.jpg",
-          "../images/@temp/@temp_hive3.jpg",
-          "../images/@temp/@temp_hive4.jpg",
-          "../images/@temp/@temp_hive5.jpg",
-          "../images/@temp/@temp_hive6.jpg",
-          "../images/@temp/@temp_hive7.jpg",
-          "../images/@temp/@temp_rank1.jpg",
-          "../images/@temp/@temp_rank2.jpg",
-          "../images/@temp/@temp_hive1.jpg",
-          "../images/@temp/@temp_hive2.jpg",
-          "../images/@temp/@temp_hive3.jpg",
-          "../images/@temp/@temp_hive4.jpg",
+        //   "../images/@temp/@temp_hive7.jpg",
+        //   "../images/@temp/@temp_rank1.jpg",
+        //   "../images/@temp/@temp_rank2.jpg",
+        //   "../images/@temp/@temp_hive1.jpg",
+        //   "../images/@temp/@temp_hive2.jpg",
+        //   "../images/@temp/@temp_hive3.jpg",
+        //   "../images/@temp/@temp_hive4.jpg",
+        //   "../images/@temp/@temp_hive5.jpg",
+        //   "../images/@temp/@temp_hive6.jpg",
+        //   "../images/@temp/@temp_hive7.jpg",
+        //   "../images/@temp/@temp_rank1.jpg",
+        //   "../images/@temp/@temp_rank2.jpg",
+        //   "../images/@temp/@temp_hive1.jpg",
+        //   "../images/@temp/@temp_hive2.jpg",
+        //   "../images/@temp/@temp_hive3.jpg",
+        //   "../images/@temp/@temp_hive4.jpg",
+        //   "../images/@temp/@temp_rank2.jpg",
+        //   "../images/@temp/@temp_hive1.jpg",
+        //   "../images/@temp/@temp_hive2.jpg",
+        //   "../images/@temp/@temp_hive3.jpg",
+        //   "../images/@temp/@temp_hive4.jpg",
+        //   "../images/@temp/@temp_hive5.jpg",
+        //   "../images/@temp/@temp_hive6.jpg",
+        //   "../images/@temp/@temp_hive7.jpg",
+        //   "../images/@temp/@temp_rank1.jpg",
+        //   "../images/@temp/@temp_rank2.jpg",
+        //   "../images/@temp/@temp_hive1.jpg",
+        //   "../images/@temp/@temp_hive2.jpg",
+        //   "../images/@temp/@temp_hive3.jpg",
+        //   "../images/@temp/@temp_hive4.jpg",
+       
           
         ], this.isotopeHorizontal);
       }
 
       /* 앨범쇼 상세 페이지 테스트 기능 */
-      albumshowDetailOpenSample(src: any) {
-        //@ts-ignore
-        document.querySelector(".layer-depth2 .box-img img").src = src;
+        albumshowDetailOpenSample(src: string) {        
+          (document.querySelector(".layer-depth2 .box-img img") as HTMLInputElement).src = src;
+          
         albumPop.layerOpenDepth2()//상세 레이어 열기
       }
 
@@ -261,8 +262,8 @@ export default class Category extends Vue {
         albumPop.layerClose(() => {// 상세 레이어 닫기
          //@ts-ignore
           isDesktop() && this.albumshow!.destroy();
-          //@ts-ignore
-          document.querySelector("#layer .grid").innerHTML = "";
+          
+          document.querySelector("#layer .grid")!.innerHTML = "";
         });
       }
 }

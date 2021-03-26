@@ -48,7 +48,7 @@
                     <div class="layer-depth2-content">
                         <div class="box-img">
                             <img
-                                src="../../assets/images/@temp/@temp_hive4.jpg"
+                                src="images/@temp/@temp_hive4.jpg"
                                 alt=""
                             />
                         </div>

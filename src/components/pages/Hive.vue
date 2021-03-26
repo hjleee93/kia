@@ -13,7 +13,7 @@
             </div>
             <GridItem />
         </div>
-        <MobileAlbum />
+        
     </div>
 </template>
 
@@ -24,7 +24,6 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 import Category from "../layouts/Category.vue";
 import GridItem from "../layouts/grid/GridItem.vue";
 import BoxGridTop from "../layouts/grid/BoxGridTop.vue";
-import MobileAlbum from "../layouts/MobileAlbum.vue";
 import SearchBar from "../layouts/SearchBar.vue";
 import {
     dim,
@@ -35,7 +34,7 @@ import {
 } from "@/scripts/ui_common";
 
 @Component({
-    components: { SearchBar, Category, GridItem, BoxGridTop, MobileAlbum },
+    components: { SearchBar, Category, GridItem, BoxGridTop },
 })
 export default class Hive extends Vue {
     beforeUpdate() {

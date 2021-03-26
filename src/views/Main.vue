@@ -1,18 +1,22 @@
 <template>
-    <div id="wrap">
-        <Header />
-        <section id="container">            
-            <router-view></router-view>
-        </section>        
+    <div>
+        <div id="wrap">
+            <Header />
+            <section id="container">
+                <router-view></router-view>
+            </section>
+        </div>
+        <MobileAlbum />
     </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import Header from "@/components/layouts/Header.vue";
+import MobileAlbum from "@/components/layouts/MobileAlbum.vue";
 
 @Component({
-    components: { Header },
+    components: { Header, MobileAlbum },
 })
 export default class Main extends Vue {}
 </script>
