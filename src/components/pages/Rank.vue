@@ -73,7 +73,7 @@
                                             >
                                             <p class="hash-lists">
                                                 <a v-for="tag in toot.tags" href="#none" class="btn btn-hash">
-                                                    {{tag.tag}}
+                                                    #{{tag.tag}}
                                                 </a>
                                             </p>
                                         </div>
