@@ -9,7 +9,7 @@
                 <a href="#" class="btn btn-link">
                     <div class="box-img">
                         <img
-                            src="../../assets/images/@temp/@temp_hive1.jpg"
+                            src="../../../assets/images/@temp/@temp_hive1.jpg"
                             alt=""
                             style="width: 100%"
                         />
@@ -42,5 +42,7 @@
 import { Component, Prop, Vue } from "vue-property-decorator";
 
 @Component
-export default class Grid extends Vue {}
+export default class GridItem extends Vue {
+    
+}
 </script>
