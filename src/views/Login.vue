@@ -75,16 +75,16 @@
               </div>
               -->
                         <div class="art-second-btn">
-                            <router-link href="#" class="btn btn-link">등록하기</router-link>
+                            <router-link to="#" class="btn btn-link">등록하기</router-link>
                         </div>
                         <ul class="art-link-lists">
                             <li>
-                                <router-link href="#" class="btn btn-link"
+                                <router-link to="#" class="btn btn-link"
                                     >비밀번호를 잊어버리셨습니까?</router-link
                                 >
                             </li>
                             <li>
-                                <router-link href="#" class="btn btn-link"
+                                <router-link to="#" class="btn btn-link"
                                     >확인 메일을 받지 못하셨습니까?</router-link
                                 >
                             </li>
@@ -113,5 +113,5 @@ export default class Login extends Vue {
 }
 </script>
 
-<style scoped>
+<style>
 </style>
