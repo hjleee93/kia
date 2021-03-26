@@ -22,272 +22,29 @@
                 <!--검색-->
                 <div class="box-hash">
                     <!--검색 전-->
-                    <!--
-                <div class="box-no-data">
+                <div v-if="!isSearch" class="box-no-data">
                   <p class="txt">해시태그를 검색해주세요.</p>
                 </div>
-                -->
-                    <!--검색 결과 없음-->
-                    <!--
-                <div class="box-no-data">
-                  <p class="txt">이 해시태그는 아직 사용되지 않았습니다.</p>
-                </div>
-                -->
+
                     <!--검색 결과 있음-->
-                    <ul class="hash-lists">
-                        <li>
-                            <button class="btn btn-hash">
+                    <ul v-else-if="hashList.length" class="hash-lists">
+                        <template v-for="hashData in hashList">
+                            <li>
+                                <button class="btn btn-hash">
                                 <span class="hash"
-                                    ><span>#</span> 해시 태그명 노출</span
+                                ><span>#</span>{{hashData.hash}}</span
                                 >
-                            </button>
-                        </li>
-                        <li>
-                            <button class="btn btn-hash">
-                                <span class="hash"
-                                    ><span>#</span> 해시 태그명 노출</span
-                                >
-                            </button>
-                        </li>
-                        <li>
-                            <button class="btn btn-hash">
-                                <span class="hash"
-                                    ><span>#</span> 해시 태그명 노출</span
-                                >
-                            </button>
-                        </li>
-                        <li>
-                            <button class="btn btn-hash">
-                                <span class="hash"
-                                    ><span>#</span> 해시 태그명 노출</span
-                                >
-                            </button>
-                        </li>
-                        <li>
-                            <button class="btn btn-hash">
-                                <span class="hash"
-                                    ><span>#</span> 해시 태그명 노출</span
-                                >
-                            </button>
-                        </li>
-                        <li>
-                            <button class="btn btn-hash">
-                                <span class="hash"
-                                    ><span>#</span> 해시 태그명 노출</span
-                                >
-                            </button>
-                        </li>
-                        <li>
-                            <button class="btn btn-hash">
-                                <span class="hash"
-                                    ><span>#</span> 해시 태그명 노출</span
-                                >
-                            </button>
-                        </li>
-                        <li>
-                            <button class="btn btn-hash">
-                                <span class="hash"
-                                    ><span>#</span> 해시 태그명 노출</span
-                                >
-                            </button>
-                        </li>
-                        <li>
-                            <button class="btn btn-hash">
-                                <span class="hash"
-                                    ><span>#</span> 해시 태그명 노출</span
-                                >
-                            </button>
-                        </li>
-                        <li>
-                            <button class="btn btn-hash">
-                                <span class="hash"
-                                    ><span>#</span> 해시 태그명 노출</span
-                                >
-                            </button>
-                        </li>
-                        <li>
-                            <button class="btn btn-hash">
-                                <span class="hash"
-                                    ><span>#</span> 해시 태그명 노출</span
-                                >
-                            </button>
-                        </li>
-                        <li>
-                            <button class="btn btn-hash">
-                                <span class="hash"
-                                    ><span>#</span> 해시 태그명 노출</span
-                                >
-                            </button>
-                        </li>
-                        <li>
-                            <button class="btn btn-hash">
-                                <span class="hash"
-                                    ><span>#</span> 해시 태그명 노출</span
-                                >
-                            </button>
-                        </li>
-                        <li>
-                            <button class="btn btn-hash">
-                                <span class="hash"
-                                    ><span>#</span> 해시 태그명 노출</span
-                                >
-                            </button>
-                        </li>
-                        <li>
-                            <button class="btn btn-hash">
-                                <span class="hash"
-                                    ><span>#</span> 해시 태그명 노출</span
-                                >
-                            </button>
-                        </li>
-                        <li>
-                            <button class="btn btn-hash">
-                                <span class="hash"
-                                    ><span>#</span> 해시 태그명 노출</span
-                                >
-                            </button>
-                        </li>
-                        <li>
-                            <button class="btn btn-hash">
-                                <span class="hash"
-                                    ><span>#</span> 해시 태그명 노출</span
-                                >
-                            </button>
-                        </li>
-                        <li>
-                            <button class="btn btn-hash">
-                                <span class="hash"
-                                    ><span>#</span> 해시 태그명 노출</span
-                                >
-                            </button>
-                        </li>
-                        <li>
-                            <button class="btn btn-hash">
-                                <span class="hash"
-                                    ><span>#</span> 해시 태그명 노출</span
-                                >
-                            </button>
-                        </li>
-                        <li>
-                            <button class="btn btn-hash">
-                                <span class="hash"
-                                    ><span>#</span> 해시 태그명 노출</span
-                                >
-                            </button>
-                        </li>
-                        <li>
-                            <button class="btn btn-hash">
-                                <span class="hash"
-                                    ><span>#</span> 해시 태그명 노출</span
-                                >
-                            </button>
-                        </li>
-                        <li>
-                            <button class="btn btn-hash">
-                                <span class="hash"
-                                    ><span>#</span> 해시 태그명 노출</span
-                                >
-                            </button>
-                        </li>
-                        <li>
-                            <button class="btn btn-hash">
-                                <span class="hash"
-                                    ><span>#</span> 해시 태그명 노출</span
-                                >
-                            </button>
-                        </li>
-                        <li>
-                            <button class="btn btn-hash">
-                                <span class="hash"
-                                    ><span>#</span> 해시 태그명 노출</span
-                                >
-                            </button>
-                        </li>
-                        <li>
-                            <button class="btn btn-hash">
-                                <span class="hash"
-                                    ><span>#</span> 해시 태그명 노출</span
-                                >
-                            </button>
-                        </li>
-                        <li>
-                            <button class="btn btn-hash">
-                                <span class="hash"
-                                    ><span>#</span> 해시 태그명 노출</span
-                                >
-                            </button>
-                        </li>
-                        <li>
-                            <button class="btn btn-hash">
-                                <span class="hash"
-                                    ><span>#</span> 해시 태그명 노출</span
-                                >
-                            </button>
-                        </li>
-                        <li>
-                            <button class="btn btn-hash">
-                                <span class="hash"
-                                    ><span>#</span> 해시 태그명 노출</span
-                                >
-                            </button>
-                        </li>
-                        <li>
-                            <button class="btn btn-hash">
-                                <span class="hash"
-                                    ><span>#</span> 해시 태그명 노출</span
-                                >
-                            </button>
-                        </li>
-                        <li>
-                            <button class="btn btn-hash">
-                                <span class="hash"
-                                    ><span>#</span> 해시 태그명 노출</span
-                                >
-                            </button>
-                        </li>
-                        <li>
-                            <button class="btn btn-hash">
-                                <span class="hash"
-                                    ><span>#</span> 해시 태그명 노출</span
-                                >
-                            </button>
-                        </li>
-                        <li>
-                            <button class="btn btn-hash">
-                                <span class="hash"
-                                    ><span>#</span> 해시 태그명 노출</span
-                                >
-                            </button>
-                        </li>
-                        <li>
-                            <button class="btn btn-hash">
-                                <span class="hash"
-                                    ><span>#</span> 해시 태그명 노출</span
-                                >
-                            </button>
-                        </li>
-                        <li>
-                            <button class="btn btn-hash">
-                                <span class="hash"
-                                    ><span>#</span> 해시 태그명 노출</span
-                                >
-                            </button>
-                        </li>
-                        <li>
-                            <button class="btn btn-hash">
-                                <span class="hash"
-                                    ><span>#</span> 해시 태그명 노출</span
-                                >
-                            </button>
-                        </li>
-                        <li>
-                            <button class="btn btn-hash">
-                                <span class="hash"
-                                    ><span>#</span> 해시 태그명 노출</span
-                                >
-                            </button>
-                        </li>
+                                </button>
+                            </li>
+                        </template>
                     </ul>
+
+                    <!--검색 결과 없음-->
+                    <div v-else class="box-no-data">
+                      <p class="txt">이 해시태그는 아직 사용되지 않았습니다.</p>
+                    </div>
+
+
                 </div>
             </div>
         </div>
@@ -301,7 +58,57 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 import SearchHashtag from "../layouts/myTag/SearchHashtag.vue";
+import {gnb} from "@/scripts/ui_common";
 
 @Component({ components: { SearchHashtag } })
-export default class MyTag extends Vue {}
+export default class MyTag extends Vue {
+
+    isSearch :boolean = true;
+    hashList : any[] = [
+        { hash : '해시 태그명 노출' },
+        { hash : '해시 태그명 노출' },
+        { hash : '해시 태그명 노출' },
+        { hash : '해시 태그명 노출' },
+        { hash : '해시 태그명 노출' },
+        { hash : '해시 태그명 노출' },
+        { hash : '해시 태그명 노출' },
+        { hash : '해시 태그명 노출' },
+        { hash : '해시 태그명 노출' },
+        { hash : '해시 태그명 노출' },
+        { hash : '해시 태그명 노출' },
+        { hash : '해시 태그명 노출' },
+        { hash : '해시 태그명 노출' },
+        { hash : '해시 태그명 노출' },
+        { hash : '해시 태그명 노출' },
+        { hash : '해시 태그명 노출' },
+        { hash : '해시 태그명 노출' },
+        { hash : '해시 태그명 노출' },
+        { hash : '해시 태그명 노출' },
+        { hash : '해시 태그명 노출' },
+        { hash : '해시 태그명 노출' },
+        { hash : '해시 태그명 노출' },
+        { hash : '해시 태그명 노출' },
+        { hash : '해시 태그명 노출' },
+        { hash : '해시 태그명 노출' },
+        { hash : '해시 태그명 노출' },
+        { hash : '해시 태그명 노출' },
+        { hash : '해시 태그명 노출' },
+        { hash : '해시 태그명 노출' },
+        { hash : '해시 태그명 노출' },
+        { hash : '해시 태그명 노출' },
+        { hash : '해시 태그명 노출' },
+        { hash : '해시 태그명 노출' },
+        { hash : '해시 태그명 노출' },
+        { hash : '해시 태그명 노출' },
+        { hash : '해시 태그명 노출' },
+        { hash : '해시 태그명 노출' },
+        { hash : '해시 태그명 노출' },
+        { hash : '해시 태그명 노출' },
+        { hash : '해시 태그명 노출' },
+    ]
+
+    mounted() {
+        gnb.init();
+    }
+}
 </script>

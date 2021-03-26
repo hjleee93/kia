@@ -97,7 +97,6 @@
 </template>
 
 <script lang="ts">
-import Isotope from "../../scripts/isotope.js";
 import Hashtag from "../layouts/inspiration/Hashtag.vue";
 
 
