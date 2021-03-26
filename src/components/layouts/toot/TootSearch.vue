@@ -27,6 +27,8 @@
                     name="search"
                     placeholder="사용자, 내용 검색"
                     autocomplete="off"
+                    @focus="inpFocus('searchInput')"
+                    ref="searchInput"
                 />
             </label>
             <!--조회 전-->
@@ -153,6 +155,11 @@ export default class TootSearch extends Vue {
     listsOpen() {
         search.listsOpen();
         
+    }
+    inpFocus(arg: string){
+        
+        search.inpFocus(this.$refs[arg])
+
     }
 }
 </script>

@@ -13,6 +13,7 @@
                 </div>
             </div>
             <GridItem />
+            
         </div>
     </div>
 </template>
@@ -26,7 +27,13 @@ import GridItem from "../layouts/grid/GridItem.vue";
 import BoxGridTop from "../layouts/grid/BoxGridTop.vue";
 import MobileAlbum from "../layouts/MobileAlbum.vue";
 import SearchBar from "../layouts/SearchBar.vue";
-import {dim, gnb, hashDropDown, search, tootDropDown} from "@/scripts/ui_common";
+import {
+    dim,
+    gnb,
+    hashDropDown,
+    search,
+    tootDropDown
+} from "@/scripts/ui_common";
 
 @Component({
     components: { SearchBar, Category, GridItem, BoxGridTop, MobileAlbum },
@@ -39,6 +46,7 @@ export default class Hive extends Vue {
         dim.init();
         gnb.init();
     }
+
 }
 </script>
 
