@@ -1,11 +1,9 @@
 <template>
-    <div id="content" class="hive">
-        <div class="sec-search">
-            <div class="box-layer">
-                <div class="box-search-form">
-                    <TootDropdown/>
-                    <TootSearch/>
-                </div>
+    <div class="sec-search">
+        <div class="box-layer">
+            <div class="box-search-form">
+                <TootDropdown />
+                <TootSearch />
             </div>
         </div>
     </div>
@@ -13,11 +11,11 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
-import TootDropdown from "./toot/TootDropdown.vue"
-import TootSearch from "./toot/TootSearch.vue"
+import TootDropdown from "./toot/TootDropdown.vue";
+import TootSearch from "./toot/TootSearch.vue";
 import Isotope from "../../scripts/isotope.js";
 
-@Component({ components: { TootDropdown,TootSearch } })
+@Component({ components: { TootDropdown, TootSearch } })
 export default class SearchBar extends Vue {
     dim: any;
     gnb: any;

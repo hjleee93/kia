@@ -33,8 +33,11 @@
                 <!--활성화 모션-->
                 <!--<button class="btn btn-like active motion"></button>-->
             </div>
+            
         </div>
+        
     </div>
+    
 </template>
 
 
@@ -46,3 +49,16 @@ export default class GridItem extends Vue {
     
 }
 </script>
+
+<style scoped>
+.btn-like{
+    position: absolute;
+    left: 0px  !important;
+    top: 0px !important;
+}
+.grid{
+    position: relative;
+    width: 1230px;
+    height: 721px;
+}
+</style>
