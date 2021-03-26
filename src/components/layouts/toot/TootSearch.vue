@@ -41,102 +41,14 @@
         <div class="box-search-history">
             <strong class="tit">최근 검색어</strong>
             <ul class="search-history-lists">
-                <li>
-                    <button class="btn btn-history">
-                        <span>최근 검색어 노출</span>
-                    </button>
-                    <button class="btn btn-history-delete">삭제</button>
-                </li>
-                <li>
-                    <button class="btn btn-history">
-                        <span>최근 검색어 노출</span>
-                    </button>
-                    <button class="btn btn-history-delete">삭제</button>
-                </li>
-                <li>
-                    <button class="btn btn-history">
-                        <span>최근 검색어 노출</span>
-                    </button>
-                    <button class="btn btn-history-delete">삭제</button>
-                </li>
-                <li>
-                    <button class="btn btn-history">
-                        <span>최근 검색어 노출</span>
-                    </button>
-                    <button class="btn btn-history-delete">삭제</button>
-                </li>
-                <li>
-                    <button class="btn btn-history">
-                        <span>최근 검색어 노출</span>
-                    </button>
-                    <button class="btn btn-history-delete">삭제</button>
-                </li>
-                <li>
-                    <button class="btn btn-history">
-                        <span>최근 검색어 노출</span>
-                    </button>
-                    <button class="btn btn-history-delete">삭제</button>
-                </li>
-                <li>
-                    <button class="btn btn-history">
-                        <span>최근 검색어 노출</span>
-                    </button>
-                    <button class="btn btn-history-delete">삭제</button>
-                </li>
-                <li>
-                    <button class="btn btn-history">
-                        <span>최근 검색어 노출</span>
-                    </button>
-                    <button class="btn btn-history-delete">삭제</button>
-                </li>
-                <li>
-                    <button class="btn btn-history">
-                        <span>최근 검색어 노출</span>
-                    </button>
-                    <button class="btn btn-history-delete">삭제</button>
-                </li>
-                <li>
-                    <button class="btn btn-history">
-                        <span>최근 검색어 노출</span>
-                    </button>
-                    <button class="btn btn-history-delete">삭제</button>
-                </li>
-                <li>
-                    <button class="btn btn-history">
-                        <span>최근 검색어 노출</span>
-                    </button>
-                    <button class="btn btn-history-delete">삭제</button>
-                </li>
-                <li>
-                    <button class="btn btn-history">
-                        <span>최근 검색어 노출</span>
-                    </button>
-                    <button class="btn btn-history-delete">삭제</button>
-                </li>
-                <li>
-                    <button class="btn btn-history">
-                        <span>최근 검색어 노출</span>
-                    </button>
-                    <button class="btn btn-history-delete">삭제</button>
-                </li>
-                <li>
-                    <button class="btn btn-history">
-                        <span>최근 검색어 노출</span>
-                    </button>
-                    <button class="btn btn-history-delete">삭제</button>
-                </li>
-                <li>
-                    <button class="btn btn-history">
-                        <span>최근 검색어 노출</span>
-                    </button>
-                    <button class="btn btn-history-delete">삭제</button>
-                </li>
-                <li>
-                    <button class="btn btn-history">
-                        <span>최근 검색어 노출</span>
-                    </button>
-                    <button class="btn btn-history-delete">삭제</button>
-                </li>
+                <template v-for="keyword in searchHistory">
+                    <li>
+                        <button class="btn btn-history">
+                            <span>{{ keyword }}</span>
+                        </button>
+                        <button class="btn btn-history-delete">삭제</button>
+                    </li>
+                </template>
             </ul>
         </div>
     </div>
@@ -149,6 +61,32 @@ import { search } from "@/scripts/ui_common";
 
 @Component({ components: {} })
 export default class TootSearch extends Vue {
+
+    private searchHistory : string[] = [
+        '최근 검색어 노출',
+        '최근 검색어 노출',
+        '최근 검색어 노출',
+        '최근 검색어 노출',
+        '최근 검색어 노출',
+        '최근 검색어 노출',
+        '최근 검색어 노출',
+        '최근 검색어 노출',
+        '최근 검색어 노출',
+        '최근 검색어 노출',
+        '최근 검색어 노출',
+        '최근 검색어 노출',
+        '최근 검색어 노출',
+        '최근 검색어 노출',
+        '최근 검색어 노출',
+        '최근 검색어 노출',
+        '최근 검색어 노출',
+        '최근 검색어 노출',
+        '최근 검색어 노출',
+        '최근 검색어 노출',
+        '최근 검색어 노출',
+        '최근 검색어 노출',
+    ]
+
     mounted(){
         search.init();
     }

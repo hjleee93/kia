@@ -145,6 +145,34 @@ export default class Rank extends Vue {
             likeCount : '1,504',
             isMore : false,
         },
+        {
+            userImg : 'images/@temp/@temp_rank2.jpg',
+            userName : 'Sunny Jeong',
+            date : '9월 13일',
+            content : '2020년 하반기 전시회 사진입니다.',
+            img : 'images/@temp/@temp_rank1.jpg',
+            tags : [
+                { tag : '2020' },
+                { tag : '전시회' },
+                { tag : '하반기' },
+            ],
+            likeCount : '1,504',
+            isMore : false,
+        },
+        {
+            userImg : 'images/@temp/@temp_rank2.jpg',
+            userName : 'Sunny Jeong',
+            date : '9월 13일',
+            content : '2020년 하반기 전시회 사진입니다.',
+            img : 'images/@temp/@temp_rank1.jpg',
+            tags : [
+                { tag : '2020' },
+                { tag : '전시회' },
+                { tag : '하반기' },
+            ],
+            likeCount : '1,504',
+            isMore : false,
+        },
     ];
 
     mounted() {
