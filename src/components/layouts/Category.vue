@@ -102,6 +102,7 @@ import Hashtag from "../layouts/inspiration/Hashtag.vue";
 
 
 import { Component, Prop, Vue } from "vue-property-decorator";
+import {albumPop, dim, gnb, isDesktop, search} from "@/scripts/ui_common";
 
 @Component({ components: { Hashtag } })
 export default class Category extends Vue {
@@ -119,20 +120,15 @@ export default class Category extends Vue {
     }
 
     mounted() {
-        //@ts-ignore
-        this.gnb = window.gnb();
+        this.gnb = gnb;
         this.gnb.init();
-        //@ts-ignore
-        this.search = window.search();
+        this.search = search;
         this.search.init();
-        //@ts-ignore
-        this.dim = window.dim();
+        this.dim = dim;
         this.dim.init();
-        //@ts-ignore
-        this.albumPop = window.albumPop();
+        this.albumPop = albumPop
         this.albumPop.init();
-        //@ts-ignore
-        this.isDesktop = window.isDesktop();
+        this.isDesktop = isDesktop;
     }
 
     openAlbum() {
