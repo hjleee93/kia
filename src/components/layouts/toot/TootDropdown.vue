@@ -1,6 +1,6 @@
 <template>
     <div class="box-toot-dropdown">
-        <button data-val="" class="btn txt" @click="tootDropDown.txtClick()">
+        <button data-val="" class="btn txt" @click="txtClick">
             <span>모든 툿</span>
         </button>
         <div class="lists">
@@ -32,7 +32,8 @@
         <!--모바일 전용 search open버튼-->
         <button
             class="btn btn-m-search open"
-            onclick="search.mobileToggle(this)"
+            @click="mobileToggle('mobileSearch')"
+             ref="mobileSearch"
         ></button>
     </div>
 </template>
@@ -40,9 +41,32 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
+import {
+    tootDropDown,
+    gnb,
+    search
+} from "@/scripts/ui_common";
 
 @Component({ components: {} })
-export default class TootDropdown extends Vue {}
+export default class TootDropdown extends Vue {
+
+    mounted() {
+        tootDropDown.init();
+        gnb.init();
+        search.init();
+    }
+    txtClick(){
+        tootDropDown.txtClick()
+    }
+    tootDrop(arg: string){
+        tootDropDown.btnDropdownClick(this.$refs[arg])
+    }
+    mobileToggle(arg: string){
+        search.mobileToggle(this.$refs[arg])
+    }
+
+
+}
 </script>
 
 <style>
