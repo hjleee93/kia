@@ -1,58 +1,57 @@
 <template>
-    
-        <div class="sec-category">
-            <!--검색 한경우 외-->
-            <div class="box-category">
-                <ul class="category-lists">
-                    <!--비활성화-->
-                    <!--<button class="btn btn-category"></button>-->
-                    <!--활성화-->
+    <div class="sec-category">
+        <!--검색 한경우 외-->
+        <div class="box-category">
+            <ul class="category-lists">
+                <!--비활성화-->
+                <!--<button class="btn btn-category"></button>-->
+                <!--활성화-->
 
-                    <!--<button class="btn btn-category active"></button>-->
-                    <li class="list-all divider">
-                        <button
-                            @click.prevent="active = 'All'"
-                            :class="{ active: isActive('All') }"
-                            class="btn btn-category"
-                        >
-                            <span>All</span>
-                        </button>
-                    </li>
-                    <li class="list-inspiration">
-                        <button
-                            @click.prevent="active = 'Inspiration'"
-                            :class="{ active: isActive('Inspiration') }"
-                            class="btn btn-category"
-                        >
-                            <span>Inspiration</span>
-                        </button>
-                    </li>
-                    <li class="list-project">
-                        <button
-                            class="btn btn-category"
-                            @click.prevent="active = 'Project'"
-                            :class="{ active: isActive('Project') }"
-                        >
-                            <span>Project</span>
-                        </button>
-                    </li>
-                    <li class="list-exhibition divider">
-                        <button
-                            class="btn btn-category"
-                            @click.prevent="active = 'Exhibition'"
-                            :class="{ active: isActive('Exhibition') }"
-                        >
-                            <span>Exhibition</span>
-                        </button>
-                    </li>
-                    <li class="list-albumshow">
-                        <button class="btn btn-category" @click="openAlbum">
-                            <span>Albumshow</span>
-                        </button>
-                    </li>
-                </ul>
-            </div>
-            <!--
+                <!--<button class="btn btn-category active"></button>-->
+                <li class="list-all divider">
+                    <button
+                        @click.prevent="active = 'All'"
+                        :class="{ active: isActive('All') }"
+                        class="btn btn-category"
+                    >
+                        <span>All</span>
+                    </button>
+                </li>
+                <li class="list-inspiration">
+                    <button
+                        @click.prevent="active = 'Inspiration'"
+                        :class="{ active: isActive('Inspiration') }"
+                        class="btn btn-category"
+                    >
+                        <span>Inspiration</span>
+                    </button>
+                </li>
+                <li class="list-project">
+                    <button
+                        class="btn btn-category"
+                        @click.prevent="active = 'Project'"
+                        :class="{ active: isActive('Project') }"
+                    >
+                        <span>Project</span>
+                    </button>
+                </li>
+                <li class="list-exhibition divider">
+                    <button
+                        class="btn btn-category"
+                        @click.prevent="active = 'Exhibition'"
+                        :class="{ active: isActive('Exhibition') }"
+                    >
+                        <span>Exhibition</span>
+                    </button>
+                </li>
+                <li class="list-albumshow">
+                    <button class="btn btn-category" @click="openAlbum">
+                        <span>Albumshow</span>
+                    </button>
+                </li>
+            </ul>
+        </div>
+        <!--
                     dropdown 개발 관련하여 안내 사항
                     
                     .btn.btn-dropdown.active 가 설정되어 있다면 해당 button의 값을 초기 .txt에 값을 설정합니다.
@@ -74,8 +73,8 @@
                     .lists 부분을 전체 clone 하여 외부에 생성하여 컨트롤 하고 선택이 되면 다시
                     clone 하여 재자리에 append 시키는 방식을 사용합니다.
                   -->
-            <!--hash tag-->
-            <!--<div class="box-hash-dropdown">
+        <!--hash tag-->
+        <!--<div class="box-hash-dropdown">
                     <button data-val="" class="txt" onclick="hashDropDown.txtClick()"><span># hash1</span></button>
                     <div class="lists">
                       <strong class="tit">해시태그</strong>&lt;!&ndash;모바일 전용&ndash;&gt;
@@ -88,31 +87,20 @@
                       </ul>
                     </div>
 									</div>-->
-            <template v-if="active === 'Inspiration'">
-                <Hashtag />
-            </template>
-        </div>
-       
-    
+        <template v-if="active === 'Inspiration'">
+            <Hashtag />
+        </template>
+    </div>
 </template>
 
 <script lang="ts">
-import Isotope from "../../scripts/isotope.js";
 import Hashtag from "../layouts/inspiration/Hashtag.vue";
-
-
+import '../../scripts/masonry-horizontal.js'
 import { Component, Prop, Vue } from "vue-property-decorator";
-import {albumPop, dim, gnb, isDesktop, search} from "@/scripts/ui_common";
+import { albumPop, dim, gnb, isDesktop, search } from "@/scripts/ui_common";
 
 @Component({ components: { Hashtag } })
 export default class Category extends Vue {
-    dim: any;
-    gnb: any;
-    search: any;
-    albumPop: any;
-
-    isDesktop: any;
-
     private active = "All";
 
     isActive(value: string) {
@@ -120,161 +108,163 @@ export default class Category extends Vue {
     }
 
     mounted() {
-        this.gnb = gnb;
-        this.gnb.init();
-        this.search = search;
-        this.search.init();
-        this.dim = dim;
-        this.dim.init();
-        this.albumPop = albumPop
-        this.albumPop.init();
-        this.isDesktop = isDesktop;
+        gnb.init();
+        search.init();
+        dim.init();
+        albumPop.init();
     }
 
-    openAlbum() {
-        this.isotopeHorizontalSample();
-        this.albumPop.layerOpen(() => {
-            return this.isDesktop() && this.isotopeHorizontalSample();
+    openAlbum(): void {
+        // this.isotopeHorizontalSample();
+        albumPop.layerOpen(() => {
+            return isDesktop() && this.isotopeHorizontalSample();
         });
     }
+ 
 
-    private callCount = 0;
-    /* pre imge load sample */
-    preload(
-        imgLists: string[],
-        callback: {
-            (arrImgSizes: any): void;
-            (
-                arg0: boolean | { src: string; width: number; height: number }[]
-            ): void;
-        }
-    ) {
+      /* pre imge load sample */
+      callCount = 0;
+      preload(imgLists: any, callback :any) {
         const preloadImages = () => {
-            var b = this.testLoaded(imgLists);
-            if (b) {
-                setTimeout(function () {
-                    callback(b);
-                }, 100);
-            }
-            if (!b) {
-                setTimeout(() => {
-                    this.callCount++;
-                    if (this.callCount < 1000) {
-                        preloadImages();
-                    }
-                }, 100);
-            }
-        };
+          var b = this.testLoaded(imgLists);
+          if (b) {
+            setTimeout(function() {
+              callback(b);
+            }, 100);
+          }
+          if (!b) {
+            setTimeout(() => {
+              this.callCount++;
+              if (this.callCount < 1000) {
+                preloadImages();
+              }
+            }, 100);
+          }
+        }
         preloadImages();
-    }
-    testLoaded(imgLists: string | any[]) {
+      }
+      testLoaded(imgLists: any) {
         var size = [];
         for (let i = 0; i < imgLists.length; i++) {
-            let img = document.createElement("img");
-            img.src = imgLists[i];
-            size.push({
-                src: img.src,
-                width: img.width,
-                height: img.height,
-            });
-            if (!img.complete) return false;
+          let img = document.createElement('img');
+          img.src = imgLists[i];
+          size.push({
+            src: img.src,
+            width: img.width,
+            height: img.height,
+          })
+          if (!img.complete) return false;
         }
         return size;
-    }
+      }
 
-    /* 엘범쇼 테스트 코드 */
-    private albumshow: { layout: () => void; destroy: () => any } | null = null;
-
-    isotopeHorizontal(arrImgSizes: any) {
-        console.log("?");
+      /* 엘범쇼 테스트 코드 */
+      albumshow = null;
+      isotopeHorizontal(arrImgSizes: any) {
         var heightRatio = 1.0681818182; //가로가 176px 보다 작다면
-        var dom = "";
-
-        arrImgSizes?.forEach(function (o: {
-            src: any;
-            width: any;
-            height: any;
-        }) {
-            var src = o.src;
-            var width = o.width;
-            var height = o.height;
-            var imgheightRatio = height / width;
-            var imgWidthRatio = width / height;
-            var w: any = "auto";
-            if (imgheightRatio > heightRatio) {
-                w = 480;
-            } else {
-                w = Math.min(188 * imgWidthRatio, 480);
-            }
-
-            dom += '<div class="grid-item">';
-            dom +=
-                '  <button class="btn btn-image" onClick="albumshowDetailOpenSample(\'' +
-                src +
-                "')\">";
-            dom +=
-                '    <div class="box-img" style="width: ' +
-                w +
-                "px; background-image: url(" +
-                src +
-                ')">';
-            dom += "    </div>";
-            dom += "  </button>";
-            dom += "</div>";
-        });
-
+        var dom = '';
+        
+        arrImgSizes.forEach(function(o :any) {
+          var src = o.src;
+          var width = o.width;
+          var height = o.height;
+          var imgheightRatio = height/width;
+          var imgWidthRatio = width/height;
+          var w: any= "auto";
+          if (imgheightRatio > heightRatio) {
+            w = 480;
+          } else {
+            w = Math.min(188 * imgWidthRatio, 480);
+          }
+          
+          dom += '<div class="grid-item">';
+          dom += '  <button class="btn btn-image" @click="albumshowDetailOpenSample(\''+src+'\')">';
+          dom += '    <div class="box-img" style="width: '+w+'px; background-image: url('+src+')">';
+          dom += '    </div>';
+          dom += '  </button>';
+          dom += '</div>';
+        })
+        
         document.querySelector("#layer .grid")!.innerHTML = dom;
-
-        var elem = document
-            .querySelector(".album-show")!
-            .querySelector(".grid");
-        this.albumshow = new Isotope(elem, {
-            layoutMode: "masonryHorizontal",
-            // initLayout: false,
-            mansonryHorizontal: {
-                itemSelector: ".grid-item",
-            },
-            transitionDuration: 0,
+        
+        var elem = document.querySelector('.album-show')!.querySelector('.grid');
+       
+        //@ts-ignore
+        this.albumshow = new Isotope( elem, {
+            //@ts-ignore
+          layoutMode: 'masonryHorizontal',
+          // initLayout: false,
+          mansonryHorizontal: {
+            itemSelector: '.grid-item',
+          },
+          transitionDuration: 0,
         });
+        //@ts-ignore
         this.albumshow!.layout();
-    }
+      }
+ 
+      /* 앨범쇼 샘플 코드 */
+      isotopeHorizontalSample() {
+        //@ts-ignore
+        document.querySelector("#layer .grid").innerHTML = "";
+        
+        this.preload([
+          "/images/@temp/@temp_hive1.jpg",
+          "/images/@temp/@temp_hive2.jpg",
+        //   "../../images/@temp/@temp_hive3.jpg",
+        //   "../../images/@temp/@temp_hive4.jpg",
+        //   "../../images/@temp/@temp_hive5.jpg",
+        //   "../../images/@temp/@temp_hive6.jpg",
+        //   "../../images/@temp/@temp_hive7.jpg",
+        //   "../../images/@temp/@temp_rank1.jpg",
+          "../images/@temp/@temp_rank2.jpg",
+          "../images/@temp/@temp_hive1.jpg",
+          "../images/@temp/@temp_hive2.jpg",
+          "../images/@temp/@temp_hive3.jpg",
+          "../images/@temp/@temp_hive4.jpg",
+          "../images/@temp/@temp_hive5.jpg",
+          "../images/@temp/@temp_hive6.jpg",
+          "../images/@temp/@temp_hive7.jpg",
+          "../images/@temp/@temp_rank1.jpg",
+          "../images/@temp/@temp_rank2.jpg",
+          "../images/@temp/@temp_hive1.jpg",
+          "../images/@temp/@temp_hive2.jpg",
+          "../images/@temp/@temp_hive3.jpg",
+          "../images/@temp/@temp_hive4.jpg",
+          "../images/@temp/@temp_rank2.jpg",
+          "../images/@temp/@temp_hive1.jpg",
+          "../images/@temp/@temp_hive2.jpg",
+          "../images/@temp/@temp_hive3.jpg",
+          "../images/@temp/@temp_hive4.jpg",
+          "../images/@temp/@temp_hive5.jpg",
+          "../images/@temp/@temp_hive6.jpg",
+          "../images/@temp/@temp_hive7.jpg",
+          "../images/@temp/@temp_rank1.jpg",
+          "../images/@temp/@temp_rank2.jpg",
+          "../images/@temp/@temp_hive1.jpg",
+          "../images/@temp/@temp_hive2.jpg",
+          "../images/@temp/@temp_hive3.jpg",
+          "../images/@temp/@temp_hive4.jpg",
+          
+        ], this.isotopeHorizontal);
+      }
 
-    /* 앨범쇼 샘플 코드 */
-    isotopeHorizontalSample() {
-        document.querySelector("#layer .grid")!.innerHTML = "";
-        this.preload(
-            [
-                "../../assets/images/@temp/@temp_hive1.jpg",
-                "../../assets/images/@temp/@temp_hive2.jpg",
-                "../../assets/images/@temp/@temp_hive3.jpg",
-                "../../assets/images/@temp/@temp_hive4.jpg",
-                "../../assets/images/@temp/@temp_rank1.jpg",
-                "../../assets/images/@temp/@temp_rank2.jpg",
-                "../../assets/images/@temp/@temp_hive1.jpg",
-                "../../assets/images/@temp/@temp_hive2.jpg",
-                "../../assets/images/@temp/@temp_hive3.jpg",
-                "../../assets/images/@temp/@temp_hive4.jpg",
-            ],
-            this.isotopeHorizontal
-        );
-    }
+      /* 앨범쇼 상세 페이지 테스트 기능 */
+      albumshowDetailOpenSample(src: any) {
+        //@ts-ignore
+        document.querySelector(".layer-depth2 .box-img img").src = src;
+        albumPop.layerOpenDepth2()//상세 레이어 열기
+      }
 
-    /* 앨범쇼 상세 페이지 테스트 기능 */
-    albumshowDetailOpenSample(src: any) {
-        (document.querySelector(
-            ".layer-depth2 .box-img img"
-        ) as HTMLInputElement)!.src = src;
-        this.albumPop.layerOpenDepth2(); //상세 레이어 열기
-    }
-
-    /* 앨범쇼 팝업 닫기 테스트 기능 */
-    albumPopCloseSample() {
-        this.albumPop.layerClose(() => {
-            // 상세 레이어 닫기
-            this.isDesktop() && this.albumshow!.destroy();
-            document.querySelector("#layer .grid")!.innerHTML = "";
+      /* 앨범쇼 팝업 닫기 테스트 기능 */
+      albumPopCloseSample() {
+        albumPop.layerClose(() => {// 상세 레이어 닫기
+         //@ts-ignore
+          isDesktop() && this.albumshow!.destroy();
+          //@ts-ignore
+          document.querySelector("#layer .grid").innerHTML = "";
         });
-    }
+      }
 }
 </script>
 

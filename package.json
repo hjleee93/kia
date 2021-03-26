@@ -11,6 +11,7 @@
     "array.prototype.findindex": "^2.1.0",
     "core-js": "^3.6.5",
     "isotope-layout": "^3.0.6",
+    "isotope-masonry-horizontal": "^2.0.1",
     "jquery": "^3.6.0",
     "litepicker": "^2.0.11",
     "litepicker-polyfills-ie11": "^0.0.1",
