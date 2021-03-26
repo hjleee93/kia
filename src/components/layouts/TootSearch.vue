@@ -10,7 +10,7 @@
                                     <button
                                         data-val=""
                                         class="btn txt"
-                                        @click="dropDown.txtClick()"
+                                        @click="tootDropDown.txtClick()"
                                     >
                                         <span>모든 툿</span>
                                     </button>
@@ -21,12 +21,7 @@
                                                 <button
                                                     data-val="all"
                                                     class="btn btn-dropdown"
-                                                    @click="
-                                                        dropDown.btnDropdownClick(
-                                                            this
-                                                        )
-                                                    "
-                                                >
+                                                    @click="tootDrop('allToot')" ref="allToot">
                                                     <span>모든 툿</span>
                                                 </button>
                                             </li>
@@ -35,7 +30,7 @@
                                                 <button
                                                     data-val="my"
                                                     class="btn btn-dropdown active"
-                                                    onclick="tootDropDown.btnDropdownClick(this)"
+                                                    @click="tootDrop('myToot')" ref="myToot"
                                                 >
                                                     <span>내가 쓴 툿</span>
                                                 </button>
@@ -52,7 +47,7 @@
                                     <div class="box-input">
                                         <label
                                             class="input"
-                                            onclick="search.listsOpen()"
+                                            @click="listsOpen"
                                         >
                                             <!--
                               input 개발 관련하여 안내사항
@@ -302,6 +297,7 @@
 import { Component, Prop, Vue } from "vue-property-decorator";
 import Category from "./Category.vue";
 import Grid from "./GridAlbum.vue";
+import Isotope from '../../scripts/isotope.js';
 
 @Component({ components: { Category, Grid } })
 export default class TootSearch extends Vue {
@@ -309,7 +305,8 @@ export default class TootSearch extends Vue {
     gnb: any;
     search: any;
     tootDropDown: any;
-    hashDropDpwm: any;
+    hashDropDown: any;
+    getDevice: any;
 
     mounted() {
         //@ts-ignore
@@ -322,12 +319,89 @@ export default class TootSearch extends Vue {
         this.dim = window.dim();
         this.dim.init();
         //@ts-ignore
-        this.tootDropDown = window.tootDropDown();
+        this.tootDropDown = window.tootDropDown(".box-toot-dropdown");
         this.tootDropDown.init();
         //@ts-ignore
-        this.hashDropDpwm = window.hashDropDpwm();
-        this.hashDropDpwm.init();
+        this.hashDropDown = window.hashDropDown(".box-hash-dropdown");
+        this.hashDropDown.init();
+        //@ts-ignore
+        this.getDevice = window.getDevice();
+       
+
     }
+
+    isotope() {
+        var elem = document.querySelector('.hive')!.querySelector('.grid');
+        var msnry : any  = null;
+        var device : string = null!;
+
+        function injection(target: string) {
+          //isotope script 제거
+          if (msnry) {
+            msnry.destroy();
+            msnry = null;
+          }
+          //PC 일경우
+          if (target === 'pc') {
+            msnry = new Isotope( elem, {
+              masonry: {
+                columnWidth: '.grid-item',
+                itemSelector: '.grid-item',
+                fitWidth: true,
+              },
+              horizontal: true,
+              horizontalOrder: false,
+              transitionDuration: 0,
+            });
+          }
+          //MOBILE 일경우
+          else {
+            msnry = new Isotope( elem, {
+              masonry: {
+                columnWidth: '.grid-item',
+                itemSelector: '.grid-item',
+              },
+              horizontalOrder: false,
+              transitionDuration: 0,
+            });
+          }
+        }
+
+        const init = () =>{
+          device = this.getDevice(); //device
+          (document.querySelector(".sec-grid") as HTMLElement)!.style.display = "none";
+
+          setTimeout(function () {
+            (document.querySelector(".sec-grid")as HTMLElement)!.style.display = "block";
+            injection(device);
+          }, 1000);
+        }
+
+        window.addEventListener("resize", ()=> {
+          if (
+            (device === "mo" && this.getDevice() === "pc") //desktop
+            || (device === "pc" && this.getDevice() === "mo") //mobile
+          ) {
+            device = this.getDevice();
+            injection(device);
+          }
+        }, false);
+
+        init();
+      }
+
+tootDrop(arg: string){
+    this.tootDropDown.btnDropdownClick(this.$refs[arg])
+}
+      
+listsOpen(){
+     
+    this.search.listsOpen();
+    // this.dim.open()
+}
+      
+     
+    
 }
 </script>
 

@@ -387,10 +387,14 @@ var Gnb = function Gnb() {
 var getDevice = function getDevice() {
   return window.innerWidth >= 1024 ? "pc" : "mo";
 };
+window.getDevice = getDevice;
 
 var isDesktop = function isDesktop() {
+  console.log("isDesktop")
   return getDevice() === "pc";
 };
+
+window.isDesktop = isDesktop;
 
 var isMobile = function isMobile() {
   return getDevice() === "mo";
@@ -693,6 +697,7 @@ var Search = function Search() {
   };
 
   var listsClose = function listsClose() {
+   
     if (domWrap) {
       info.flag = false; //box-search-input
       //검색 완료가 아닌경우만
@@ -714,6 +719,7 @@ var Search = function Search() {
   };
 
   var historyListsOpen = function historyListsOpen() {
+    
     if (domWrap) {
       if (isMobile()) {
         wrapOverflow.hidden();
@@ -721,7 +727,7 @@ var Search = function Search() {
       }
 
       domSearchHistory.style.display = "block";
-      dim.open();
+        dim.open();
     }
   };
 
@@ -729,7 +735,7 @@ var Search = function Search() {
     if (domWrap) {
       document.querySelector(".search-history-lists").removeEventListener("scroll", domInpBlur);
       domSearchHistory.style.display = "none";
-      dim.close();
+      dim.close;
     }
   };
 
@@ -856,15 +862,19 @@ var Dim = function Dim() {
 
   var init = function init() {
     domDim = document.querySelector(".dim");
+    console.log("domdim", domDim)
   };
-
+  
   var open = function open() {
     if (timer) {
       clearTimeout(timer);
       timer = null;
     }
-
+    
+    console.log("domDim", domDim)
+    console.log(domDim.classList.contains("open"))
     if (!domDim.classList.contains("open")) {
+      console.log("?")
       domDim.classList.add("open");
     }
   };
@@ -1111,6 +1121,7 @@ var LayerPop = function LayerPop() {
 
   var init = function init() {
     domWrap = document.querySelector("#layer");
+    console.log("domWrap",domWrap)
     domWrapDepth2 = domWrap.querySelector(".layer-depth2");
   };
 
@@ -1122,6 +1133,7 @@ var LayerPop = function LayerPop() {
   };
 
   var layerOpen = function layerOpen(callback) {
+    
     if (domWrap.classList.contains("close")) {
       domWrap.classList.remove("close");
     }
@@ -1232,8 +1244,8 @@ var appHeight = function appHeight() {
 // var calendar = Calendar;
 appHeight();
 
-window.tootDropDown = DropDown(".box-toot-dropdown");
-window.hashDropDown = DropDown(".box-hash-dropdown");
+window.tootDropDown = DropDown;
+window.hashDropDown = DropDown;
 window.gnb = Gnb;
 window.dim = Dim;
 window.tab = Tab;

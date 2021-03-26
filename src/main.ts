@@ -4,6 +4,7 @@ import router from './router'
 import store from './store'
 import './quasar'
 import './scripts/ui_common.js'
+import './scripts/isotope.js'
 
 Vue.config.productionTip = false
 
