@@ -174,10 +174,14 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
+import {search} from "@/scripts/ui_common";
 
 @Component({ components: {} })
 export default class TootSearch extends Vue{
-
+    listsOpen() {
+        search.listsOpen();
+        // this.dim.open()
+    }
 }
 </script>
 

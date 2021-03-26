@@ -16,6 +16,7 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 import TootDropdown from "./toot/TootDropdown.vue"
 import TootSearch from "./toot/TootSearch.vue"
 import Isotope from "../../scripts/isotope.js";
+import {dim, getDevice, gnb, hashDropDown, search, tootDropDown} from "@/scripts/ui_common";
 
 @Component({ components: { TootDropdown,TootSearch } })
 export default class SearchBar extends Vue {
@@ -27,23 +28,22 @@ export default class SearchBar extends Vue {
     getDevice: any;
 
     mounted() {
-        //@ts-ignore
-        this.gnb = window.gnb();
+        this.gnb = gnb;
         this.gnb.init();
-        //@ts-ignore
-        this.search = window.search();
+
+        this.search = search;
         this.search.init();
-        //@ts-ignore
-        this.dim = window.dim();
+
+        this.dim = dim;
         this.dim.init();
-        //@ts-ignore
-        this.tootDropDown = window.tootDropDown(".box-toot-dropdown");
+
+        this.tootDropDown = tootDropDown;
         this.tootDropDown.init();
-        //@ts-ignore
-        this.hashDropDown = window.hashDropDown(".box-hash-dropdown");
+
+        this.hashDropDown = hashDropDown;
         this.hashDropDown.init();
-        //@ts-ignore
-        this.getDevice = window.getDevice();
+
+        this.getDevice = getDevice;
     }
 
     isotope() {
