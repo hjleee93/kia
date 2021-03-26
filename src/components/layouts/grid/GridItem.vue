@@ -108,6 +108,22 @@ import {
 
 @Component
 export default class GridItem extends Vue {    
+
+    likeToggle() {
+        var domBtnLike = Array.prototype.slice.call(document.querySelectorAll(".btn-like"));
+        domBtnLike.forEach(function (btnLike) {
+          btnLike.addEventListener("click", function () {
+            btnLike.classList.contains("active") && btnLike.classList.remove("motion");
+            btnLike.classList.toggle("active");
+
+            setTimeout(function() {
+              if (btnLike.classList.contains("active"))  {
+                btnLike.classList.add("motion");
+              }
+            }, 0);
+          }, false);
+        });
+      }
     isotope() {
         var elem = document.querySelector(".isotope")!.querySelector(".grid");
         var msnry: any = null;
@@ -178,7 +194,7 @@ export default class GridItem extends Vue {
         init();
     }
     mounted() {
-        
+        this.likeToggle()
         this.isotope();
     }
 
