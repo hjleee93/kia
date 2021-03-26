@@ -1,10 +1,11 @@
 <template>
-    <div class="sec-grid">
+    <div class="sec-grid isotope" >
         <!--검색 결과가 없는경우-->
         <!--<div class="no-data">
                 <p class="txt">검색 결과가 없습니다.</p>
               </div>-->
         <div class="grid">
+            
             <div class="grid-item">
                 <a href="#" class="btn btn-link">
                     <div class="box-img">
@@ -32,6 +33,62 @@
                 <!--<button class="btn btn-like active"></button>-->
                 <!--활성화 모션-->
                 <!--<button class="btn btn-like active motion"></button>-->
+            
+            </div>
+
+            <div class="grid-item">
+                <a href="#" class="btn btn-link">
+                    <div class="box-img">
+                        <img
+                            src="../../../assets/images/@temp/@temp_hive5.jpg"
+                            alt=""
+                            style="width: 100%"
+                        />
+                        <i class="icon icon-play"></i
+                        >
+                        <!--동영상인 경우-->
+                    </div>
+                    <div class="box-cont">
+                        <p class="txt">
+                            안녕하세32132132... <span>더보기</span>
+                        </p>
+                        <span class="nic-name">hiid0806</span>
+                    </div>
+                </a>
+                <!--비활성-->
+                <button class="btn btn-like"></button>
+                <!--활성화-->
+                <!--<button class="btn btn-like active"></button>-->
+                <!--활성화 모션-->
+                <!--<button class="btn btn-like active motion"></button>-->
+            
+            </div>
+            <div class="grid-item">
+                <a href="#" class="btn btn-link">
+                    <div class="box-img">
+                        <img
+                            src="../../../assets/images/@temp/@temp_hive2.jpg"
+                            alt=""
+                            style="width: 100%"
+                        />
+                        <i class="icon icon-play"></i
+                        >
+                        <!--동영상인 경우-->
+                    </div>
+                    <div class="box-cont">
+                        <p class="txt">
+                            안녕하세32132132... <span>더보기</span>
+                        </p>
+                        <span class="nic-name">hiid0806</span>
+                    </div>
+                </a>
+                <!--비활성-->
+                <button class="btn btn-like"></button>
+                <!--활성화-->
+                <!--<button class="btn btn-like active"></button>-->
+                <!--활성화 모션-->
+                <!--<button class="btn btn-like active motion"></button>-->
+            
             </div>
             
         </div>
@@ -44,18 +101,93 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 
+
+import {
+    getDevice
+} from "@/scripts/ui_common";
+
 @Component
-export default class GridItem extends Vue {
+export default class GridItem extends Vue {    
+    isotope() {
+        var elem = document.querySelector(".isotope")!.querySelector(".grid");
+        var msnry: any = null;
+        var device: string = null!;
+        function injection(target: string) {
+            //isotope script 제거
+            if (msnry) {
+                msnry.destroy();
+                msnry = null;
+            }
+            //PC 일경우
+            if (target === "pc") {
+                //@ts-ignore
+                msnry = new Isotope(elem, {
+                    masonry: {
+                        columnWidth: ".grid-item",
+                        itemSelector: ".grid-item",
+                        fitWidth: true,
+                    },
+                    horizontal: true,
+                    horizontalOrder: false,
+                    transitionDuration: 0,
+                });
+                console.log(msnry)
+            }
+            //MOBILE 일경우
+            else {
+                //@ts-ignore
+                msnry = new Isotope(elem, {
+                    masonry: {
+                        columnWidth: ".grid-item",
+                        itemSelector: ".grid-item",
+                    },
+                    horizontalOrder: false,
+                    transitionDuration: 0,
+                });
+            }
+        }
+
+        const init = () => {
+            device = getDevice(); //device
+            (document.querySelector(
+                ".sec-grid"
+            ) as HTMLElement)!.style.display = "none";
+
+            setTimeout(function () {
+                (document.querySelector(
+                    ".sec-grid"
+                ) as HTMLElement)!.style.display = "block";
+                injection(device);
+            }, 1000);
+        };
+
+        window.addEventListener(
+            "resize",
+            () => {
+                if (
+                    (device === "mo" && getDevice() === "pc") || //desktop
+                    (device === "pc" && getDevice() === "mo") //mobile
+                ) {
+                    device = getDevice();
+                    injection(device);
+                }
+            },
+            false
+        );
+
+        init();
+    }
+    mounted() {
+        
+        this.isotope();
+    }
+
+    
     
 }
 </script>
 
 <style scoped>
-.btn-like{
-    position: absolute;
-    left: 0px  !important;
-    top: 0px !important;
-}
 .grid{
     position: relative;
     width: 1230px;
