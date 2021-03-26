@@ -8,13 +8,13 @@
               <p class="txt">모바일 버전에서는 지원되지 않는 기능입니다.<br />PC로 접속 후 이용 부탁드립니다.</p>
             </div>
             <div class="alert-btn">
-              <button class="btn btn-confirm" onclick="albumPop.layerClose();"><span>확인</span></button>
+              <button class="btn btn-confirm" @click="layerClose"><span>확인</span></button>
             </div>
           </div>
         </div>
         <div class="layer-inner album-show type-full-size">
           <div class="box-btn">
-            <button class="btn btn-close" onclick="albumPopCloseSample();"><span>닫기</span></button>
+            <button class="btn btn-close" @click="albumPopCloseSample"><span>닫기</span></button>
           </div>
           <div class="layer-content">
             <div class="grid-wrap">
@@ -57,10 +57,21 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
+import {albumPop, isDesktop} from "@/scripts/ui_common";
 
 @Component
 export default class AlbumShow extends Vue {
+    layerClose() {
+        albumPop.layerClose();
+    }
 
+    albumPopCloseSample() {
+        albumPop.layerClose(() => {
+            // 상세 레이어 닫기
+            isDesktop();
+            document.querySelector("#layer .grid")!.innerHTML = "";
+        });
+    }
 }
 </script>
 
