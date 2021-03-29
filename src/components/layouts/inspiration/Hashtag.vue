@@ -6,9 +6,9 @@
                       <button class="btn-m-hash-close" onclick="hashDropDown.listsClose()"></button><!--모바일 전용-->
                       <ul>
                         <!--비선택-->
-                        <li><button data-val="hash1" class="btn btn-dropdown" @click="btnDropdownClick('hashtagClicked')" ref="hashtagClicked"><span># hash1</span></button></li>
+                        <li><button data-val="hash1" class="btn btn-dropdown" @click="btnDropdownClick('hash1')" ref="hash1"><span># hash1</span></button></li>
                         <!--선택-->
-                        <li><button data-val="hash2" class="btn btn-dropdown active" onclick="hashDropDown.btnDropdownClick(this)"><span># hash2</span></button></li>
+                        <li><button data-val="hash2" class="btn btn-dropdown active" @click="btnDropdownClick('hash2')" ref="hash2"><span># hash2</span></button></li>
                         <li><button data-val="hash3" class="btn btn-dropdown" onclick="hashDropDown.btnDropdownClick(this)"><span># hash3</span></button></li>
                         <li><button data-val="hash4" class="btn btn-dropdown" onclick="hashDropDown.btnDropdownClick(this)"><span># hash4</span></button></li>
                         <li><button data-val="hash5" class="btn btn-dropdown" onclick="hashDropDown.btnDropdownClick(this)"><span># hash5</span></button></li>
