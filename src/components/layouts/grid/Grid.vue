@@ -6,13 +6,28 @@
                 <p class="txt">검색 결과가 없습니다.</p>
             </div>
         </template>
-        <div class="grid">
-            <GridItem
-                v-for="toot in tootList.slice(start, end)"
-                :toot="toot"
-                :key="toot.id"
-            />
-        </div>
+<!--        <div class="grid">-->
+<!--            <GridItem-->
+<!--                v-for="toot in tootList.slice(start, end)"-->
+<!--                :toot="toot"-->
+<!--                :key="toot.id"-->
+<!--            />-->
+<!--        </div>-->
+
+      <isotope v-if="device==='pc'" :key="device" ref="isotope" class="grid" tabindex="11" :options='optionPc()' :list="tootList.slice(start, end)">
+        <GridItem
+            v-for="(toot,index) in tootList.slice(start, end)"
+            :toot="toot"
+            :key="index"
+        />
+      </isotope>
+      <isotope v-else-if="device==='mo'" :key="device" ref="isotope" class="grid" tabindex="100" :options='optionsMo()' :list="tootList.slice(start, end)">
+        <GridItem
+            v-for="(toot,index) in tootList.slice(start, end)"
+            :toot="toot"
+            :key="index"
+        />
+      </isotope>
 
         <button style="color: white" @click="moreItem">더보기</button>
     </div>
@@ -20,11 +35,15 @@
 
 
 <script lang="ts">
-import { isotope } from "@/scripts/ui_common";
+// import { isotope } from "@/scripts/ui_common";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import GridItem from "./GridItem.vue";
 
-@Component({ components: { GridItem } })
+//@ts-ignore
+import isotope from 'vueisotope';
+import {getDevice} from "@/scripts/ui_common";
+
+@Component({ components: { GridItem, isotope } })
 export default class Grid extends Vue {
     private end = 20;
     private start = 0;
@@ -3393,10 +3412,20 @@ export default class Grid extends Vue {
             tootNickName: "testName3",
         },
     ];
+    private device : string = '';
 
     mounted() {
         // this.getToots();
-        isotope.init();
+        // isotope.init();
+      this.device = getDevice();
+      setTimeout( ()=>{
+        this.$refs.isotope.layout();
+      }, 100);
+      window.addEventListener('resize', this.onResize);
+    }
+
+    beforeDestroy() {
+      window.removeEventListener('resize', this.onResize);
     }
 
     getToots() {
@@ -3404,7 +3433,36 @@ export default class Grid extends Vue {
     }
     moreItem() {
         this.end += 20;
-        isotope.init();
+        // isotope.init();
     }
+
+    onResize() {
+      this.device = getDevice();
+      console.log( this.device );
+    }
+
+    optionPc() {
+      return {
+        masonry : {
+          columnWidth: ".grid-item",
+          itemSelector: ".grid-item",
+          fitWidth: true,
+        },
+
+        horizontal: true,
+        horizontalOrder: false,
+        // transitionDuration: 0,
+      }
+    }
+
+  optionsMo() {
+    return {
+      masonry : {
+        columnWidth: ".grid-item",
+        itemSelector: ".grid-item"
+      },
+    }
+  }
+
 }
 </script>
