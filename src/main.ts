@@ -9,7 +9,6 @@ import './scripts/ui_common.js'
 
 
 Vue.config.productionTip = false
-
 Vue.prototype.$http = axios
 
 new Vue({

@@ -1,8 +1,8 @@
 <template>
-    <div class="box-search-input">
-        <div class="box-input">
-            <label class="input" @click="listsOpen">
-                <!--
+  <div class="box-search-input">
+    <div class="box-input">
+      <label class="input" @click="listsOpen">
+        <!--
                               input 개발 관련하여 안내사항
                               
                               1. 현재 onFocus에 적용되어 있는 이벤트는 search.listsOpen 해당 이벤트를 실행 시키는 함수입니다.
@@ -22,85 +22,82 @@
                               - input에 focus이면서 text가 있으면 최근 검색어 노출하지 않습니다. search.historyListsClose 호출
                               - input에 focus이면서 text가 없으면 최근 검색어 노출합니다. search.historyListsOpen 호출
                             -->
-                <input
-                    type="text"
-                    name="search"
-                    placeholder="사용자, 내용 검색"
-                    autocomplete="off"
-                    @focus="inpFocus('searchInput')"
-                    ref="searchInput"
-                />
-            </label>
-            <!--조회 전-->
-            <button class="btn btn-search"></button>
-            <!--조회 중-->
-            <!--<button class="btn btn-search active"></button>-->
-            <!--조회 완료-->
-            <!--<button class="btn btn-search delete"></button>-->
-        </div>
-        <div class="box-search-history">
-            <strong class="tit">최근 검색어</strong>
-            <ul class="search-history-lists">
-                <template v-for="keyword in searchHistory">
-                    <li>
-                        <button class="btn btn-history">
-                            <span>{{ keyword }}</span>
-                        </button>
-                        <button class="btn btn-history-delete">삭제</button>
-                    </li>
-                </template>
-            </ul>
-        </div>
+        <!-- todo검색: https://codepen.io/AndrewThian/pen/QdeOVa -->
+        <input
+          type="text"
+          name="search"
+          placeholder="사용자, 내용 검색"
+          autocomplete="off"
+          @focus="inpFocus('searchInput')"
+          ref="searchInput"
+        />
+        <!-- todo: 사용자:username검색, 내용검색: content -->
+      </label>
+      <!--조회 전-->
+      <button class="btn btn-search"></button>
+      <!--조회 중-->
+      <!--<button class="btn btn-search active"></button>-->
+      <!--조회 완료-->
+      <!--<button class="btn btn-search delete"></button>-->
     </div>
+    <div class="box-search-history">
+      <strong class="tit">최근 검색어</strong>
+      <ul class="search-history-lists">
+        <template v-for="keyword in searchHistory">
+          <li>
+            <button class="btn btn-history">
+              <span>{{ keyword }}</span>
+            </button>
+            <button class="btn btn-history-delete">삭제</button>
+          </li>
+        </template>
+      </ul>
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { search } from "@/scripts/ui_common";
 
-
 @Component({ components: {} })
 export default class TootSearch extends Vue {
+  // todo: 최근 검색어는 총 몇개까지 저장?
+  private searchHistory: string[] = [
+    "최근 검색어 노출",
+    "최근 검색어 노출",
+    "최근 검색어 노출",
+    "최근 검색어 노출",
+    "최근 검색어 노출",
+    "최근 검색어 노출",
+    "최근 검색어 노출",
+    "최근 검색어 노출",
+    "최근 검색어 노출",
+    "최근 검색어 노출",
+    "최근 검색어 노출",
+    "최근 검색어 노출",
+    "최근 검색어 노출",
+    "최근 검색어 노출",
+    "최근 검색어 노출",
+    "최근 검색어 노출",
+    "최근 검색어 노출",
+    "최근 검색어 노출",
+    "최근 검색어 노출",
+    "최근 검색어 노출",
+    "최근 검색어 노출",
+    "최근 검색어 노출",
+  ];
 
-    private searchHistory : string[] = [
-        '최근 검색어 노출',
-        '최근 검색어 노출',
-        '최근 검색어 노출',
-        '최근 검색어 노출',
-        '최근 검색어 노출',
-        '최근 검색어 노출',
-        '최근 검색어 노출',
-        '최근 검색어 노출',
-        '최근 검색어 노출',
-        '최근 검색어 노출',
-        '최근 검색어 노출',
-        '최근 검색어 노출',
-        '최근 검색어 노출',
-        '최근 검색어 노출',
-        '최근 검색어 노출',
-        '최근 검색어 노출',
-        '최근 검색어 노출',
-        '최근 검색어 노출',
-        '최근 검색어 노출',
-        '최근 검색어 노출',
-        '최근 검색어 노출',
-        '최근 검색어 노출',
-    ]
-
-    mounted(){
-        search.init();
-    }
-    listsOpen() {
-        search.listsOpen();
-        
-    }
-    inpFocus(arg: string){
-        
-        search.inpFocus(this.$refs[arg])
-
-    }
+  mounted() {
+    search.init();
+  }
+  listsOpen() {
+    search.listsOpen();
+  }
+  inpFocus(arg: string) {
+    search.inpFocus(this.$refs[arg]);
+  }
 }
 </script>
 
-<style>
-</style>
+<style></style>
