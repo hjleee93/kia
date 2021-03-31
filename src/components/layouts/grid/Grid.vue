@@ -8,7 +8,7 @@
         </template>
         <div class="grid">
             <GridItem
-                v-for="toot in tootList.slice(0, 20)"
+                v-for="toot in tootList.slice(start, end)"
                 :toot="toot"
                 :key="toot.id"
             />
@@ -3394,7 +3394,6 @@ export default class Grid extends Vue {
         },
     ];
 
- 
     mounted() {
         // this.getToots();
         isotope.init();
@@ -3403,6 +3402,9 @@ export default class Grid extends Vue {
     getToots() {
         this.toots = this.$store.state.test.tootList;
     }
-  
+    moreItem() {
+        this.end += 20;
+        isotope.init();
+    }
 }
 </script>
