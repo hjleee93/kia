@@ -87,6 +87,8 @@ import {
 
 @Component({ components: {} })
 export default class Calendar extends Vue {
+    private startDate!: Date;
+    private endDate!: Date;
     
     mounted() {
         dim.init();
@@ -188,10 +190,23 @@ export default class Calendar extends Vue {
     }
     calendarComplete() {
         calendar.calendarComplete();
+        // @ts-ignore
+        // this.endDate = window.litepicker.options.endDate;
+        // // @ts-ignore
+        // this.startDate = window.litepicker.options.startDate;
+
+        this.getDate()
+
+      
+    }
+    getDate(){
+          console.log(calendar.getDate());
     }
     calendarReset() {
         calendar.calendarReset();
     }
+
+    
 }
 </script>
 

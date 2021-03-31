@@ -5,6 +5,7 @@
                             <div class="box-input">
                                 <label class="input">
                                     <input
+                                        v-model="inputHashtag"
                                         type="text"
                                         name="search"
                                         placeholder="해시태그 검색"
@@ -29,6 +30,9 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 
 @Component({ components: {} })
 export default class SearchHashtag extends Vue{
+    private inputHashtag: string = ' '
+
+    
 
 }
 </script>

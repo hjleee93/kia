@@ -41,7 +41,7 @@
                 </div>
 
                 <!--상세 이미지-->
-                <div
+                <!-- <div
                     class="layer-depth2"
                     @click="layerCloseDepth2()"
                 >
@@ -53,7 +53,7 @@
                             />
                         </div>
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
     </div>
@@ -76,6 +76,9 @@ export default class AlbumShow extends Vue {
             isDesktop();
             document.querySelector("#layer .grid")!.innerHTML = "";
         });
+    }
+    layerCloseDepth2(){
+      console.log("clicked")
     }
 }
 </script>

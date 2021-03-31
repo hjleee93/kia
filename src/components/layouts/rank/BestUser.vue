@@ -14,103 +14,46 @@
                         <span class="toot">486 툿</span>
                       </li>
                       -->
-                                <li>
-                                    <span class="number gold">1</span>
-                                    <i class="icon icon-user"
-                                        ><img
-                                            src="../../../assets/images/@temp/@temp_rank2.jpg"
-                                            alt=""
-                                    /></i>
+                                <li v-for="userinfo in userList" :key="userinfo.userNumber">
+                                    
+                                    <template v-if="userinfo.userNumber === 1">
+                                        <span class="number gold">{{userinfo.userNumber}}</span>
+                                    </template>
+                                    <template v-else-if="userinfo.userNumber === 2">
+                                        <span class="number silver">{{userinfo.userNumber}}</span>
+                                    </template>
+                                    <template v-else-if="userinfo.userNumber === 3">
+                                        <span class="number bronze">{{userinfo.userNumber}}</span>
+                                    </template>
+
+
+                                    <template v-else>
+                                        <span class="number">{{userinfo.userNumber}}</span>
+                                    </template>
+
+                                    <template v-if="userinfo.userImg !== ''">
+                                        <i class="icon icon-user"
+                                            ><img
+                                                :src='userinfo.userImg'
+                                                alt=""
+                                        /></i>
+                                    </template>
                                     <span class="username"
-                                        >user name user name</span
+                                        >{{userinfo.userName}}</span
                                     >
-                                    <span class="m-toot">작성한 툿 : 486</span
+                                    <template v-if="userinfo.userNumber === 1 || userinfo.userNumber === 2 || userinfo.userNumber === 3">
+                                        <span class="m-toot">작성한 툿 : {{userinfo.tootCnt.toLocaleString()}}</span
+                                        ><!--mobile 전용-->
+                                    </template>
+                                    <template v-else>
+                                        <span class="m-toot">{{userinfo.tootCnt.toLocaleString()}} 툿</span
                                     ><!--mobile 전용-->
-                                    <span class="toot">486 툿</span
+                                    </template>
+                                    
+                                    <span class="toot">{{userinfo.tootCnt.toLocaleString()}} 툿</span
                                     ><!--desktop 전용-->
                                 </li>
-                                <li>
-                                    <span class="number silver">2</span>
-                                    <i class="icon icon-user"
-                                        ><img
-                                            src="../../../assets/images/@temp/@temp_rank2.jpg"
-                                            alt=""
-                                    /></i>
-                                    <span class="username">user name</span>
-                                    <span class="m-toot">작성한 툿 : 486</span
-                                    ><!--mobile 전용-->
-                                    <span class="toot">486 툿</span
-                                    ><!--desktop 전용-->
-                                </li>
-                                <li>
-                                    <span class="number bronze">3</span>
-                                    <i class="icon icon-user"
-                                        ><img
-                                            src="../../../assets/images/@temp/@temp_rank2.jpg"
-                                            alt=""
-                                    /></i>
-                                    <span class="username">user name</span>
-                                    <span class="m-toot">작성한 툿 : 486</span
-                                    ><!--mobile 전용-->
-                                    <span class="toot">486 툿</span
-                                    ><!--desktop 전용-->
-                                </li>
-                                <li>
-                                    <span class="number">4</span>
-                                    <span class="username">user name</span>
-                                    <span class="m-toot">1,990 툿</span
-                                    ><!--mobile 전용-->
-                                    <span class="toot">1,990 툿</span
-                                    ><!--desktop 전용-->
-                                </li>
-                                <li>
-                                    <span class="number">5</span>
-                                    <span class="username">user name</span>
-                                    <span class="m-toot">0 툿</span
-                                    ><!--mobile 전용-->
-                                    <span class="toot">0 툿</span
-                                    ><!--desktop 전용-->
-                                </li>
-                                <li>
-                                    <span class="number">6</span>
-                                    <span class="username">user name</span>
-                                    <span class="m-toot">0 툿</span
-                                    ><!--mobile 전용-->
-                                    <span class="toot">0 툿</span
-                                    ><!--desktop 전용-->
-                                </li>
-                                <li>
-                                    <span class="number">7</span>
-                                    <span class="username">user name</span>
-                                    <span class="m-toot">0 툿</span
-                                    ><!--mobile 전용-->
-                                    <span class="toot">0 툿</span
-                                    ><!--desktop 전용-->
-                                </li>
-                                <li>
-                                    <span class="number">8</span>
-                                    <span class="username">user name</span>
-                                    <span class="m-toot">0 툿</span
-                                    ><!--mobile 전용-->
-                                    <span class="toot">0 툿</span
-                                    ><!--desktop 전용-->
-                                </li>
-                                <li>
-                                    <span class="number">9</span>
-                                    <span class="username">user name</span>
-                                    <span class="m-toot">0 툿</span
-                                    ><!--mobile 전용-->
-                                    <span class="toot">0 툿</span
-                                    ><!--desktop 전용-->
-                                </li>
-                                <li>
-                                    <span class="number">10</span>
-                                    <span class="username">user name</span>
-                                    <span class="m-toot">0 툿</span
-                                    ><!--mobile 전용-->
-                                    <span class="toot">0 툿</span
-                                    ><!--desktop 전용-->
-                                </li>
+                               
                             </ol>
                         </div>
                     </div>  
@@ -122,6 +65,69 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 
 @Component({ components: {} })
 export default class BestUser extends Vue{
+    private userList: any[] = [
+        {
+            userNumber: 1,
+            userName: 'user name 1',
+            userImg: 'images/@temp/@temp_rank2.jpg',
+            tootCnt: 486
+        },
+        {
+            userNumber: 2,
+            userName: 'user name 2',
+            userImg: 'images/@temp/@temp_rank2.jpg',
+            tootCnt: 486
+        },
+        {
+            userNumber: 3,
+            userName: 'user name 3',
+            userImg: 'images/@temp/@temp_rank2.jpg',
+            tootCnt: 486
+        },
+        {
+            userNumber: 4,
+            userName: 'user name 4',
+            userImg: '',
+            tootCnt: 1990
+        },
+        {
+            userNumber: 5,
+            userName: 'user name 5',
+            userImg: '',
+            tootCnt: 0
+        },
+        {
+            userNumber: 6,
+            userName: 'user name 6',
+            userImg: '',
+            tootCnt: 0
+        },
+        {
+            userNumber: 7,
+            userName: 'user name 7',
+            userImg: '',
+            tootCnt: 0
+        },
+        {
+            userNumber: 8,
+            userName: 'user name 8',
+            userImg: '',
+            tootCnt: 0
+        },
+        {
+            userNumber: 9,
+            userName: 'user name 9',
+            userImg: '',
+            tootCnt: 0
+        },
+        {
+            userNumber: 10,
+            userName: 'user name 10',
+            userImg: '',
+            tootCnt: 0
+        },
+    ]
+
 
 }
 </script>

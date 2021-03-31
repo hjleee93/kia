@@ -1190,6 +1190,83 @@ var LayerPop = function LayerPop() {
         getDom: getDom
     };
 };
+
+function Isotope2() {
+    var elem;
+    var msnry;
+    var device;
+
+    function injection(target) {
+        //isotope script 제거
+        if (msnry) {
+            msnry.destroy();
+            msnry = null;
+        }
+        //PC 일경우
+        if (target === "pc") {
+            msnry = new Isotope(elem, {
+                masonry: {
+                    columnWidth: ".grid-item",
+                    itemSelector: ".grid-item",
+                    fitWidth: true,
+                },
+                // 반응형
+                // horizontal: true,
+                // horizontalOrder: false,
+                // transitionDuration: 0,
+            });
+        }
+        //MOBILE 일경우
+        else {
+            msnry = new Isotope(elem, {
+                masonry: {
+                    columnWidth: ".grid-item",
+                    itemSelector: ".grid-item",
+                },
+                // horizontal: true,
+                // horizontalOrder: false,
+                // transitionDuration: 0,
+            });
+        }
+    }
+
+    function init() {
+        elem = document.querySelector(".hive").querySelector(".grid");
+        device = getDevice(); //device
+
+        document.querySelector(
+            ".sec-grid")
+    .style.display = "none";
+
+        setTimeout(function () {
+            document.querySelector(
+                ".sec-grid"
+            ).style.display = "block";
+            injection(device);
+        }, 1000);
+    };
+
+
+    window.addEventListener(
+        "resize",
+        () => {
+            if (
+                (device === "mo" && getDevice() === "pc") || //desktop
+                (device === "pc" && getDevice() === "mo") //mobile
+            ) {
+                device = getDevice();
+                injection(device);
+            }
+        },
+        false
+    );
+
+    return {
+        init,
+        injection
+    }
+}
+
 /**
  * css처리 하기위한 window height
  * resize발생 할때마다 새로 구함
@@ -1225,6 +1302,7 @@ var gnb = Gnb();
 var tab = Tab();
 var albumPop = LayerPop();
 var calendar = Calendar();
+var isotope = Isotope2();
 
 export {
     dim,
@@ -1235,6 +1313,7 @@ export {
     search,
     tootDropDown,
     hashDropDown,
+    isotope,
 }
 
 export function initApp() {

@@ -74,6 +74,7 @@
                     clone 하여 재자리에 append 시키는 방식을 사용합니다.
                   -->
         <!--hash tag-->
+        
         <!--<div class="box-hash-dropdown">
                     <button data-val="" class="txt" onclick="hashDropDown.txtClick()"><span># hash1</span></button>
                     <div class="lists">
@@ -101,6 +102,7 @@ import { albumPop, dim, gnb, isDesktop, search } from "@/scripts/ui_common";
 @Component({ components: { Hashtag } })
 export default class Category extends Vue {
     private active = "All";
+    private imgLists: string[] = [];
 
     isActive(value: string) {
         return this.active === value;
@@ -111,6 +113,8 @@ export default class Category extends Vue {
         search.init();
         dim.init();
         albumPop.init();
+        this.imgLists = this.getImgLists();
+        
     }
 
     openAlbum(): void {
@@ -164,12 +168,15 @@ export default class Category extends Vue {
         var dom = '';
         
         arrImgSizes.forEach(function(o :any) {
+          
           var src = o.src;
           var width = o.width;
           var height = o.height;
+
           var imgheightRatio = height/width;
           var imgWidthRatio = width/height;
-          var w: any= "auto";
+
+          var w: string | Number= "auto";
           if (imgheightRatio > heightRatio) {
             w = 480;
           } else {
@@ -182,6 +189,8 @@ export default class Category extends Vue {
           dom += '    </div>';
           dom += '  </button>';
           dom += '</div>';
+
+          console.log(dom)
         })
         
         document.querySelector("#layer .grid")!.innerHTML = dom;
@@ -207,46 +216,7 @@ export default class Category extends Vue {
         
         document.querySelector("#layer .grid")!.innerHTML = "";
         
-        this.preload([
-          "images/@temp/@temp_hive1.jpg",
-          "images/@temp/@temp_hive2.jpg",
-          "../images/@temp/@temp_hive3.jpg",
-          "../images/@temp/@temp_hive4.jpg",
-          "../images/@temp/@temp_hive5.jpg",
-          "../images/@temp/@temp_hive6.jpg",
-          "../images/@temp/@temp_hive7.jpg",
-          "../images/@temp/@temp_rank1.jpg",
-          "../images/@temp/@temp_rank2.jpg",
-          "../images/@temp/@temp_hive1.jpg",
-          "../images/@temp/@temp_hive2.jpg",
-          "../images/@temp/@temp_hive3.jpg",
-          "../images/@temp/@temp_hive4.jpg",
-          "../images/@temp/@temp_hive5.jpg",
-          "../images/@temp/@temp_hive6.jpg",
-          "../images/@temp/@temp_hive7.jpg",
-          "../images/@temp/@temp_rank1.jpg",
-          "../images/@temp/@temp_rank2.jpg",
-          "../images/@temp/@temp_hive1.jpg",
-          "../images/@temp/@temp_hive2.jpg",
-          "../images/@temp/@temp_hive3.jpg",
-          "../images/@temp/@temp_hive4.jpg",
-          "../images/@temp/@temp_rank2.jpg",
-          "../images/@temp/@temp_hive1.jpg",
-          "../images/@temp/@temp_hive2.jpg",
-          "../images/@temp/@temp_hive3.jpg",
-          "../images/@temp/@temp_hive4.jpg",
-          "../images/@temp/@temp_hive5.jpg",
-          "../images/@temp/@temp_hive6.jpg",
-          "../images/@temp/@temp_hive7.jpg",
-          "../images/@temp/@temp_rank1.jpg",
-          "../images/@temp/@temp_rank2.jpg",
-          "../images/@temp/@temp_hive1.jpg",
-          "../images/@temp/@temp_hive2.jpg",
-          "../images/@temp/@temp_hive3.jpg",
-          "../images/@temp/@temp_hive4.jpg",
-       
-          
-        ], this.isotopeHorizontal);
+        this.preload(this.imgLists, this.isotopeHorizontal);
       }
 
       /* 앨범쇼 상세 페이지 테스트 기능 */
@@ -264,6 +234,11 @@ export default class Category extends Vue {
           
           document.querySelector("#layer .grid")!.innerHTML = "";
         });
+      }
+
+      getImgLists(){
+       return this.$store.state.test.imgLists;
+        
       }
 }
 </script>
