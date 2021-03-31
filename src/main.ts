@@ -2,14 +2,15 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
+import axios from 'axios';
 
 // import './quasar'
 import './scripts/ui_common.js'
-import VueResource from 'vue-resource'
+
 
 Vue.config.productionTip = false
-Vue.use(VueResource)
 
+Vue.prototype.$http = axios
 
 new Vue({
   router,

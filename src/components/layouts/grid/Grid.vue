@@ -3419,6 +3419,7 @@ export default class Grid extends Vue {
         // isotope.init();
       this.device = getDevice();
       setTimeout( ()=>{
+          //@ts-ignore
         this.$refs.isotope.layout();
       }, 100);
       window.addEventListener('resize', this.onResize);

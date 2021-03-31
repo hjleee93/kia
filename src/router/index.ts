@@ -40,9 +40,9 @@ const routes: Array<RouteConfig> = [
     },
    
     {
-        path: '/loginTest',
-        name: 'LoginTest',
-        component: () => import(/* webpackChunkName: "about" */ '@/components/pages/LoginTest.vue')
+        path: '/login',
+        name: 'Login',
+        component: () => import(/* webpackChunkName: "about" */ '@/components/pages/Login.vue')
     }
 ]
 

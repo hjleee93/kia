@@ -57,8 +57,8 @@ export default {
             }
         },
     },
-    created() {
-        this.store = {
+    // created() {
+        store = {
             in: (key, item) => {
                 var storable = JSON.stringify(item);
                 localStorage.setItem(key, storable);
@@ -129,7 +129,7 @@ export default {
                     }
                 );
         };
-    },
+    // },
 };
 </script>
 

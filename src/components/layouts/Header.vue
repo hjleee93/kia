@@ -4,7 +4,7 @@
           <h1 class="logo"><router-link to="/" class="btn btn-logo">KN</router-link></h1>
           <nav class="navigation">
             <ul>
-              <li class="list-ins"><router-link to="/loginTest" class="btn btn-link">loginTest</router-link></li>
+              <li class="list-ins"><router-link to="/login" class="btn btn-link">login</router-link></li>
               <li class="list-ins"><router-link to="#" class="btn btn-link">INS</router-link></li>
               <li class="list-toot"><router-link to="#" class="btn btn-link">TOOT</router-link></li>
               <li class="list-hive"><router-link to="/" @click.native="active = 'HIVE'" :class="{active: isActive('HIVE')}" class="btn btn-link" >HIVE</router-link></li>
