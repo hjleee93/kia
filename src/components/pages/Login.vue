@@ -60,9 +60,10 @@
                 <div class="art-btn">
                     <!--default-->
                     <button
-                        class="btn btn-login"
+						 class="btn btn-login"
                         @click="login"
                         @keyup.enter="login"
+                        :disabled="this.email.match(emailRegExp) === null  || !password"						
                     >
                         로그인
                     </button>
@@ -116,6 +117,10 @@ export default class Login extends Vue {
     private isLoginError: boolean = false;
     private isEmailActive: boolean = false;
     private isPwdActive: boolean = false;
+	private clickedLogin: boolean = false;
+	private emailRegExp = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
+
+
 
     mounted() {
         window.addEventListener("keyup", (event) => {
@@ -124,9 +129,9 @@ export default class Login extends Vue {
             }
         });
     }
-
     login() {
         let uri = new URL(this.instance);
+		this.isLoginActive = true;
         if (this.known() === null || this.known()[uri.host] === null) {
             console.log("Login successful registerWithInstance");
             this.registerWithInstance(uri).then(() => {
@@ -140,6 +145,7 @@ export default class Login extends Vue {
     private store = {
         in: (key: string, item: string) => {
             var storable = JSON.stringify(item);
+            console.log("storable", storable);
             localStorage.setItem(key, storable);
             return storable;
         },
