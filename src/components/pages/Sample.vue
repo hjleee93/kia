@@ -1,3 +1,5 @@
+
+
 <template>
     <div id="content" class="hive">
         <div class="content">
@@ -11,16 +13,17 @@
                     <div class="dim"></div>
                 </div>
             </div>
-            <Grid />
+            <GridTest/>
         </div>
     </div>
 </template>
 
 
+
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 import Category from "../layouts/Category.vue";
-import Grid from "../layouts/grid/Grid.vue";
+import GridTest from "../layouts/grid/GridTest.vue";
 import BoxGridTop from "../layouts/grid/BoxGridTop.vue";
 import SearchBar from "../layouts/SearchBar.vue";
 import {
@@ -33,9 +36,9 @@ import {
 } from "@/scripts/ui_common";
 
 @Component({
-    components: { SearchBar, Category, Grid, BoxGridTop },
+    components: { SearchBar, Category, GridTest, BoxGridTop },
 })
-export default class Hive extends Vue {
+export default class Sample extends Vue {
     beforeUpdate() {
         tootDropDown.init();
         hashDropDown.init();
