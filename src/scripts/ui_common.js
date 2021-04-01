@@ -1104,10 +1104,12 @@ var Calendar = function Calendar() {
 var LayerPop = function LayerPop() {
     var domWrap = null;
     var domWrapDepth2 = null;
+    var openCallback = null;
 
-    var init = function init() {
+    var init = function init( callback ) {
         domWrap = document.querySelector("#layer");
         domWrapDepth2 = domWrap.querySelector(".layer-depth2");
+        openCallback = callback;
     };
 
     var getDom = function getDom() {
@@ -1117,7 +1119,7 @@ var LayerPop = function LayerPop() {
         };
     };
 
-    var layerOpen = function layerOpen(callback) {
+    var layerOpen = function layerOpen() {
         if (domWrap.classList.contains("close")) {
             domWrap.classList.remove("close");
         }
@@ -1126,10 +1128,7 @@ var LayerPop = function LayerPop() {
         domWrap.style.display = "block";
         setTimeout(function () {
             domWrap.classList.add("open");
-
-            if (callback && typeof callback === 'function') {
-                callback();
-            }
+            openCallback && openCallback();
         });
     };
 
@@ -1178,6 +1177,7 @@ var LayerPop = function LayerPop() {
     var destroy = function destroy() {
         domWrap = null;
         domWrapDepth2 = null;
+        openCallback = null;
     };
 
     return {

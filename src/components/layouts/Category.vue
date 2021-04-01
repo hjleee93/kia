@@ -102,7 +102,6 @@ import { albumPop, dim, gnb, isDesktop, search } from "@/scripts/ui_common";
 @Component({ components: { Hashtag } })
 export default class Category extends Vue {
     private active = "All";
-    private imgLists: string[] = [];
 
     isActive(value: string) {
         return this.active === value;
@@ -112,134 +111,11 @@ export default class Category extends Vue {
         gnb.init();
         search.init();
         dim.init();
-        albumPop.init();
-        this.imgLists = this.getImgLists();
-        
     }
 
     openAlbum(): void {
-        // this.isotopeHorizontalSample();
-        albumPop.layerOpen(() => {
-            return isDesktop() && this.isotopeHorizontalSample();
-        });
+        albumPop.layerOpen();
     }
- 
-
-      /* pre imge load sample */
-      callCount = 0;
-      preload(imgLists: any, callback :any) {
-        const preloadImages = () => {
-          var b = this.testLoaded(imgLists);
-          if (b) {
-            setTimeout(function() {
-              callback(b);
-            }, 100);
-          }
-          if (!b) {
-            setTimeout(() => {
-              this.callCount++;
-              if (this.callCount < 1000) {
-                preloadImages();
-              }
-            }, 100);
-          }
-        }
-        preloadImages();
-      }
-      testLoaded(imgLists: any) {
-        var size = [];
-        for (let i = 0; i < imgLists.length; i++) {
-          let img = document.createElement('img');
-          img.src = imgLists[i];
-          size.push({
-            src: img.src,
-            width: img.width,
-            height: img.height,
-          })
-          if (!img.complete) return false;
-        }
-        return size;
-      }
-
-      /* 엘범쇼 테스트 코드 */
-      albumshow = null;
-      isotopeHorizontal(arrImgSizes: any) {
-        var heightRatio = 1.0681818182; //가로가 176px 보다 작다면
-        var dom = '';
-        
-        arrImgSizes.forEach(function(o :any) {
-          
-          var src = o.src;
-          var width = o.width;
-          var height = o.height;
-
-          var imgheightRatio = height/width;
-          var imgWidthRatio = width/height;
-
-          var w: string | Number= "auto";
-          if (imgheightRatio > heightRatio) {
-            w = 480;
-          } else {
-            w = Math.min(188 * imgWidthRatio, 480);
-          }
-          
-          dom += '<div class="grid-item">';
-          dom += '  <button class="btn btn-image">';
-          dom += '    <div class="box-img" style="width: '+w+'px; background-image: url('+src+')">';
-          dom += '    </div>';
-          dom += '  </button>';
-          dom += '</div>';
-
-          console.log(dom)
-        })
-        
-        document.querySelector("#layer .grid")!.innerHTML = dom;
-        
-        var elem = document.querySelector('.album-show')!.querySelector('.grid');
-       
-        //@ts-ignore
-        this.albumshow = new Isotope( elem, {
-            
-          layoutMode: 'masonryHorizontal',
-          initLayout: false,
-          mansonryHorizontal: {
-            itemSelector: '.grid-item',
-          },
-          transitionDuration: 0,
-        });
-        //@ts-ignore
-        this.albumshow.layout();
-      }
- 
-      /* 앨범쇼 샘플 코드 */
-      isotopeHorizontalSample() {
-        
-        document.querySelector("#layer .grid")!.innerHTML = "";
-        
-        this.preload(this.imgLists, this.isotopeHorizontal);
-      }
-
-      /* 앨범쇼 상세 페이지 테스트 기능 */
-        albumshowDetailOpenSample(src: string) {        
-          (document.querySelector(".layer-depth2 .box-img img") as HTMLInputElement).src = src;
-          
-        albumPop.layerOpenDepth2()//상세 레이어 열기
-      }
-
-      /* 앨범쇼 팝업 닫기 테스트 기능 */
-      albumPopCloseSample() {
-        albumPop.layerClose(() => {// 상세 레이어 닫기
-         //@ts-ignore
-          isDesktop() && this.albumshow!.destroy();
-          
-          document.querySelector("#layer .grid")!.innerHTML = "";
-        });
-      }
-
-      getImgLists(){
-       return this.$store.state.test.imgLists;
-        
-      }
 }
 </script>
 
