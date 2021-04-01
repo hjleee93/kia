@@ -23,10 +23,12 @@
                               - input에 focus이면서 text가 없으면 최근 검색어 노출합니다. search.historyListsOpen 호출
                             -->
         <!-- todo검색: https://codepen.io/AndrewThian/pen/QdeOVa -->
+
         <input
           type="text"
           name="search"
           placeholder="사용자, 내용 검색"
+          v-model="searchInput"
           autocomplete="off"
           @focus="inpFocus('searchInput')"
           ref="searchInput"
@@ -34,23 +36,27 @@
         <!-- todo: 사용자:username검색, 내용검색: content -->
       </label>
       <!--조회 전-->
-      <button class="btn btn-search"></button>
+      <button
+        @click="searchToot"
+        class="btn btn-search"
+        :class="searchInput ? 'active' : ''"
+      ></button>
       <!--조회 중-->
-      <!--<button class="btn btn-search active"></button>-->
+      <!-- <template v-if="!searchInput">
+      <button class="btn btn-search active"></button>-->
+      <!-- </template>  -->
       <!--조회 완료-->
       <!--<button class="btn btn-search delete"></button>-->
     </div>
     <div class="box-search-history">
       <strong class="tit">최근 검색어</strong>
       <ul class="search-history-lists">
-        <template v-for="keyword in searchHistory">
-          <li>
-            <button class="btn btn-history">
-              <span>{{ keyword }}</span>
-            </button>
-            <button class="btn btn-history-delete">삭제</button>
-          </li>
-        </template>
+        <li v-for="keyword in searchHistory" :key="keyword.id">
+          <button class="btn btn-history">
+            <span>{{ keyword }}</span>
+          </button>
+          <button class="btn btn-history-delete">삭제</button>
+        </li>
       </ul>
     </div>
   </div>
@@ -62,17 +68,9 @@ import { search } from "@/scripts/ui_common";
 
 @Component({ components: {} })
 export default class TootSearch extends Vue {
+  private searchInput: string = "";
+  //10개
   private searchHistory: string[] = [
-    "최근 검색어 노출",
-    "최근 검색어 노출",
-    "최근 검색어 노출",
-    "최근 검색어 노출",
-    "최근 검색어 노출",
-    "최근 검색어 노출",
-    "최근 검색어 노출",
-    "최근 검색어 노출",
-    "최근 검색어 노출",
-    "최근 검색어 노출",
     "최근 검색어 노출",
     "최근 검색어 노출",
     "최근 검색어 노출",
@@ -95,6 +93,9 @@ export default class TootSearch extends Vue {
   }
   inpFocus(arg: string) {
     search.inpFocus(this.$refs[arg]);
+  }
+  searchToot() {
+    console.log(this.searchInput);
   }
 }
 </script>
