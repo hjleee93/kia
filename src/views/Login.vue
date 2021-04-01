@@ -60,7 +60,7 @@
                         </div>
                         <div class="art-btn">
                             <!--default-->
-                            <button class="btn btn-login">로그인</button>
+                            <button class="btn btn-login" @click="login">로그인</button>
                             <!--active-->
                             <!--<button class="btn btn-login active">로그인</button>-->
                             <!--disabled-->
@@ -109,7 +109,9 @@ export default class Login extends Vue {
 
     mounted() {}
 
-    login() {}
+    login() {
+
+    }
 }
 </script>
 

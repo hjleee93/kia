@@ -6,6 +6,7 @@ import store from './store'
 import isotope from 'vueisotope';
 import './scripts/masonry-horizontal.js';
 import axios from 'axios';
+import './plugin/axios';
 
 
 // import './quasar'
