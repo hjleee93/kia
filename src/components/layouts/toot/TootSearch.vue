@@ -62,7 +62,6 @@ import { search } from "@/scripts/ui_common";
 
 @Component({ components: {} })
 export default class TootSearch extends Vue {
-  // todo: 최근 검색어는 총 몇개까지 저장?
   private searchHistory: string[] = [
     "최근 검색어 노출",
     "최근 검색어 노출",

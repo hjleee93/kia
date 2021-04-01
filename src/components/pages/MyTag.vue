@@ -1,5 +1,4 @@
 <template>
-  <!--todo: 내가 쓴 태그들이 모여져 있는건가 -->
   <div id="content" class="my-tag">
     <!--content(S)-->
     <div class="content">

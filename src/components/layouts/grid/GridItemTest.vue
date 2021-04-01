@@ -2,7 +2,7 @@
     <div class="grid-item">
         <a href="#" class="btn btn-link">
             <div class="box-img">
-                <template v-if="toot.media_attachments.length > 0">
+                <template v-if="toot.media_attachments.length>0">
                     <img
                         :src="toot.media_attachments[0].preview_url"
                         alt=""

@@ -14,7 +14,6 @@
         <!--활성화-->
         <li>
           <button class="btn btn-sort">
-            <!-- todo: 인기순 기준? -->
             <span>인기순</span>
           </button>
         </li>
