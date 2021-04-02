@@ -10,6 +10,13 @@ const routes: Array<RouteConfig> = [
         component: () => import('@/views/Main.vue'),
         children: [
             {
+                path: '/INS',
+                name: 'INS',
+                component: () => import(/* webpackChunkName: "about" */ '@/components/pages/INS.vue'),
+
+
+            },
+            {
                 path: '/hive',
                 name: 'Hive',
                 component: () => import(/* webpackChunkName: "about" */ '@/components/pages/Hive.vue'),
