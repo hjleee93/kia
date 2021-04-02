@@ -4,8 +4,8 @@
             <div class="wrap-fixed">
                 <div class="sec-fixed">
                     <SearchBar />
-                    <Category />
-                    <div class="sec-grid-top">
+                    <Category :category="category"/>
+                    <div class="sec-grid-top">                        
                         <BoxGridTop />
                     </div>
                     <div class="dim"></div>
@@ -35,7 +35,8 @@ import {
 @Component({
     components: { SearchBar, Category, Grid, BoxGridTop },
 })
-export default class Hive extends Vue {
+export default class Hive extends Vue {    
+  private category: string = 'Hive'
     beforeUpdate() {
         tootDropDown.init();
         hashDropDown.init();

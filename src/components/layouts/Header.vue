@@ -101,8 +101,12 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 
 @Component({ props: ["currentUser"]})
 export default class Header extends Vue {
+  @Prop() category!: string;  
     private active = "HIVE";
     private loggedIn: boolean = localStorage.getItem("token") != null;
+    mounted() {
+     console.log(this.category)   
+    }
     isActive(value: string) {
         return this.active === value;
     }
@@ -110,5 +114,6 @@ export default class Header extends Vue {
         this.$emit("logout");
         localStorage.removeItem("token");
     }
+  
 }
 </script>

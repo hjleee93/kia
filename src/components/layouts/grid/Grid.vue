@@ -19,6 +19,7 @@
             v-for="(toot,index) in tootList.slice(start, end)"
             :toot="toot"
             :key="index"
+            
         />
       </isotope>
       <isotope v-else-if="device==='mo'" :key="device" ref="isotope" class="grid" tabindex="100" :options='optionsMo()' :list="tootList.slice(start, end)">

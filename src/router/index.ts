@@ -14,7 +14,9 @@ const routes: Array<RouteConfig> = [
                 path: '/hive',
                 name: 'Hive',
                 component: () => import(/* webpackChunkName: "about" */ '@/components/pages/Hive.vue'),
-                
+                children:[
+                    
+                ]
 
             },
             {

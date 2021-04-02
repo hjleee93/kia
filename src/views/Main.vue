@@ -1,7 +1,7 @@
 <template>
     <div>
         <div id="wrap">
-            <Header @logout="logOut" />
+            <Header @logout="logOut" @category="getCategory"  :category="category"/>
             <section id="container">
                 <router-view></router-view>
             </section>
@@ -20,11 +20,16 @@ import MobileAlbum from "@/components/layouts/MobileAlbum.vue";
     props: ["currentUser"]
 })
 export default class Main extends Vue {
+    private category: string = "";
     mounted() {
     }
 
     logOut(){
         this.$emit('logout')
+    }
+     getCategory(category: string){
+         this.category = category;
+      
     }
 }
 </script>

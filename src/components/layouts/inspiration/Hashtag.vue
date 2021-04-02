@@ -33,12 +33,17 @@ import { dim, gnb, hashDropDown } from "@/scripts/ui_common";
 
 @Component({ components: {} })
 export default class Hashtag extends Vue {
+    @Prop() tag!: string;
     private hashtags: string[] = ['hashtag1','hashtag2','hashtag3','hashtag4','hashtag5','hashtag6','hashtag7','hashtag8','hashtag9',
     'hashtag10','hashtag11','hashtag12','hashtag13','hashtag14','hashtag15','hashtag16','hashtag17']
 
 
     mounted() {
         hashDropDown.init();
+        if(this.tag.toLowerCase() === 'hive'){
+            
+        }
+        console.log(this.tag)
     }
 
     txtClick() {
