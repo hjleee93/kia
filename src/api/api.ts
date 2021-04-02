@@ -6,6 +6,17 @@ export default class Api {
     async login() {
         const result = await Vue.$axios.get( 'oauth/token' )
     }
+
+    async getToots( max_id? : number, limit : number = 100 ) {
+        const result = await Vue.$axios.get( 'api/v1/timelines/public', {
+            params : {
+                limit,
+                max_id,
+                local : true,
+            }
+        } );
+        return result.data;
+    }
 }
 
 declare module 'vue/types/vue' {

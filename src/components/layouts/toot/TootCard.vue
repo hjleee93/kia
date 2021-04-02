@@ -5,36 +5,37 @@
         <a href="#none" class="btn btn-user">
           <i class="icon icon-user"
           ><img
-              :src="toot.userImg"
+              :src="toot.account.avatar"
               alt=""
           /></i>
         </a>
         <div class="box-txt">
           <strong class="username"
-          >{{ toot.userName }}</strong
+          >{{ toot.account.username }}</strong
           >
           <span class="date">{{toot.date}}</span>
         </div>
       </div>
       <div class="box-content">
         <a href="#none" class="btn btn-txt"
-        >{{ toot.content }}
-          <span v-if="toot.isMore" class="more">더보기</span>
+            v-html="toot.content"
+        >
+          <span class="more">더보기</span>
         </a
         >
         <p class="hash-lists">
           <a v-for="tag in toot.tags" href="#none" class="btn btn-hash" :key="tag.id">
-            #{{tag.tag}}
+            #{{tag.name}}
           </a>
         </p>
       </div>
       <div class="box-like">
         <i class="icon icon-like"></i>
-        <strong class="like-num">{{ toot.likeCount }}</strong>
+        <strong class="like-num">{{ toot.favourites_count }}</strong>
       </div>
-      <div v-if="toot.img" class="box-img">
+      <div v-if="toot.media_attachments && toot.media_attachments.length" class="box-img">
         <img
-            :src="toot.img"
+            :src="toot.media_attachments[0].preview_url"
             alt=""
         />
       </div>
@@ -53,5 +54,11 @@ export default class TootCard extends Vue {
 }
 </script>
 
-<style>
+<style lang="scss">
+    .box-img {
+        img {
+            object-fit: cover;
+            max-height: 200px;
+        }
+    }
 </style>
