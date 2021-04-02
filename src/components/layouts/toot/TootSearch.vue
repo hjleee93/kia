@@ -39,7 +39,7 @@
       <button
         @click="searchToot"
         class="btn btn-search"
-        :class="searchInput ? 'active' : ''"
+        :class="[searchInput ? 'active' : '', isDone ? 'delete' : '']"
       ></button>
       <!--조회 중-->
       <!-- <template v-if="!searchInput">
@@ -69,6 +69,7 @@ import { search } from "@/scripts/ui_common";
 @Component({ components: {} })
 export default class TootSearch extends Vue {
   private searchInput: string = "";
+  private isDone: boolean = false;
   //10개
   private searchHistory: string[] = [
     "최근 검색어 노출",
@@ -92,10 +93,13 @@ export default class TootSearch extends Vue {
     search.listsOpen();
   }
   inpFocus(arg: string) {
+    this.isDone = false;
     search.inpFocus(this.$refs[arg]);
   }
   searchToot() {
+    this.isDone = true;
     console.log(this.searchInput);
+
   }
 }
 </script>

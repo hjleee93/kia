@@ -1,7 +1,7 @@
 <template>
     <div>
         <div id="wrap">
-            <Header />
+            <Header @logout="logOut" />
             <section id="container">
                 <router-view></router-view>
             </section>
@@ -17,6 +17,14 @@ import MobileAlbum from "@/components/layouts/MobileAlbum.vue";
 
 @Component({
     components: { Header, MobileAlbum },
+    props: ["currentUser"]
 })
-export default class Main extends Vue {}
+export default class Main extends Vue {
+    mounted() {
+    }
+
+    logOut(){
+        this.$emit('logout')
+    }
+}
 </script>
