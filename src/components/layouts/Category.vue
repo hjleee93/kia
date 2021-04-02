@@ -1,57 +1,57 @@
 <template>
-    <div class="sec-category">
-        <!--검색 한경우 외-->
-        <div class="box-category">
-            <ul class="category-lists">
-                <!--비활성화-->
-                <!--<button class="btn btn-category"></button>-->
-                <!--활성화-->
+  <div class="sec-category">
+    <!--검색 한경우 외-->
+    <div class="box-category">
+      <ul class="category-lists">
+        <!--비활성화-->
+        <!--<button class="btn btn-category"></button>-->
+        <!--활성화-->
 
-                <!--<button class="btn btn-category active"></button>-->
-                <li class="list-all divider">
-                    <button
-                        @click.prevent="active = 'All'"
-                        :class="{ active: isActive('All') }"
-                        class="btn btn-category"
-                    >
-                        <span>All</span>
-                    </button>
-                </li>
-                <li class="list-inspiration">
-                    <button
-                        @click.prevent="active = 'Inspiration'"
-                        :class="{ active: isActive('Inspiration') }"
-                        class="btn btn-category"
-                    >
-                        <span>Inspiration</span>
-                    </button>
-                </li>
-                <li class="list-project">
-                    <button
-                        class="btn btn-category"
-                        @click.prevent="active = 'Project'"
-                        :class="{ active: isActive('Project') }"
-                    >
-                        <span>Project</span>
-                    </button>
-                </li>
-                <li class="list-exhibition divider">
-                    <button
-                        class="btn btn-category"
-                        @click.prevent="active = 'Exhibition'"
-                        :class="{ active: isActive('Exhibition') }"
-                    >
-                        <span>Exhibition</span>
-                    </button>
-                </li>
-                <li class="list-albumshow">
-                    <button class="btn btn-category" @click="openAlbum">
-                        <span>Albumshow</span>
-                    </button>
-                </li>
-            </ul>
-        </div>
-        <!--
+        <!--<button class="btn btn-category active"></button>-->
+        <li class="list-all divider">
+          <button
+            @click.prevent="active = 'All'"
+            :class="{ active: isActive('All') }"
+            class="btn btn-category"
+          >
+            <span>All</span>
+          </button>
+        </li>
+        <li class="list-inspiration">
+          <button
+            @click.prevent="active = 'Inspiration'"
+            :class="{ active: isActive('Inspiration') }"
+            class="btn btn-category"
+          >
+            <span>Inspiration</span>
+          </button>
+        </li>
+        <li class="list-project">
+          <button
+            class="btn btn-category"
+            @click.prevent="active = 'Project'"
+            :class="{ active: isActive('Project') }"
+          >
+            <span>Project</span>
+          </button>
+        </li>
+        <li class="list-exhibition divider">
+          <button
+            class="btn btn-category"
+            @click.prevent="active = 'Exhibition'"
+            :class="{ active: isActive('Exhibition') }"
+          >
+            <span>Exhibition</span>
+          </button>
+        </li>
+        <li class="list-albumshow">
+          <button class="btn btn-category" @click="openAlbum">
+            <span>Albumshow</span>
+          </button>
+        </li>
+      </ul>
+    </div>
+    <!--
                     dropdown 개발 관련하여 안내 사항
                     
                     .btn.btn-dropdown.active 가 설정되어 있다면 해당 button의 값을 초기 .txt에 값을 설정합니다.
@@ -73,9 +73,9 @@
                     .lists 부분을 전체 clone 하여 외부에 생성하여 컨트롤 하고 선택이 되면 다시
                     clone 하여 재자리에 append 시키는 방식을 사용합니다.
                   -->
-        <!--hash tag-->
-        
-        <!--<div class="box-hash-dropdown">
+    <!--hash tag-->
+
+    <!--<div class="box-hash-dropdown">
                     <button data-val="" class="txt" onclick="hashDropDown.txtClick()"><span># hash1</span></button>
                     <div class="lists">
                       <strong class="tit">해시태그</strong>&lt;!&ndash;모바일 전용&ndash;&gt;
@@ -88,10 +88,9 @@
                       </ul>
                     </div>
 									</div>-->
-        <template v-if="active === 'Inspiration'">
-            <Hashtag />
-        </template>
-    </div>
+
+    <Hashtag />
+  </div>
 </template>
 
 <script lang="ts">
@@ -101,23 +100,22 @@ import { albumPop, dim, gnb, isDesktop, search } from "@/scripts/ui_common";
 
 @Component({ components: { Hashtag } })
 export default class Category extends Vue {
-    private active = "All";
+  private active = "All";
 
-    isActive(value: string) {
-        return this.active === value;
-    }
+  isActive(value: string) {
+    return this.active === value;
+  }
 
-    mounted() {
-        gnb.init();
-        search.init();
-        dim.init();
-    }
+  mounted() {
+    gnb.init();
+    search.init();
+    dim.init();
+  }
 
-    openAlbum(): void {
-        albumPop.layerOpen();
-    }
+  openAlbum(): void {
+    albumPop.layerOpen();
+  }
 }
 </script>
 
-<style>
-</style>
+<style></style>

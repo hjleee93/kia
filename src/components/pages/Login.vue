@@ -30,7 +30,13 @@
                     <!--default-->
 
                     <input type="text" hidden v-model="instance" />
-                    <label class="input" :class="isEmailActive ? 'active' : ''">
+                    <label
+                        class="input"
+                        :class="[
+                            isEmailActive ? 'active' : '',
+                            isLoginError ? 'error' : '',
+                        ]"
+                    >
                         <input
                             @focus="isEmailActive = true"
                             @blur="isEmailActive = false"
@@ -46,7 +52,13 @@
                   <input type="text" placeholder="이메일" />
                 </label>
                 -->
-                    <label class="input" :class="isPwdActive ? 'active' : ''">
+                    <label
+                        class="input"
+                        :class="[
+                            isPwdActive ? 'active' : '',
+                            isLoginError ? 'error' : '',
+                        ]"
+                    >
                         <input
                             @focus="isPwdActive = true"
                             @blur="isPwdActive = false"
@@ -63,6 +75,9 @@
                         class="btn btn-login"
                         @click="login"
                         @keyup.enter="login"
+                        :disabled="
+                            this.email.match(emailRegExp) === null || !password
+                        "
                     >
                         로그인
                     </button>
@@ -108,7 +123,8 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 
-@Component({ components: {} })
+@Component({ components: {},
+ props: ["currentUser"] })
 export default class Login extends Vue {
     private email: string = "";
     private password: string = "";
@@ -116,17 +132,21 @@ export default class Login extends Vue {
     private isLoginError: boolean = false;
     private isEmailActive: boolean = false;
     private isPwdActive: boolean = false;
+    private clickedLogin: boolean = false;
+    private emailRegExp = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
 
-    mounted() {
+    async mounted() {
+        //@ts-ignore
+        console.log("123", this.currentUser);
         window.addEventListener("keyup", (event) => {
             if (event.keyCode === 13) {
                 this.login();
             }
         });
     }
-
     login() {
         let uri = new URL(this.instance);
+
         if (this.known() === null || this.known()[uri.host] === null) {
             console.log("Login successful registerWithInstance");
             this.registerWithInstance(uri).then(() => {
@@ -140,6 +160,7 @@ export default class Login extends Vue {
     private store = {
         in: (key: string, item: string) => {
             var storable = JSON.stringify(item);
+            console.log("storable", storable);
             localStorage.setItem(key, storable);
             return storable;
         },
@@ -213,5 +234,9 @@ export default class Login extends Vue {
 }
 </script>
 
-<style>
+<style scoped>
+.btn.btn-login:active {
+    background-color: #fff !important;
+    color: #000 !important;
+}
 </style>

@@ -93,6 +93,7 @@ mounted(){
         if (this.sending || (!this.message.length && !this.uploads.length)) {
             return true;
         }
+        console.log("this.endpoints.toot", this.endpoints.toot)
         this.sending = true;
 		//@ts-ignore
         this.$http
@@ -112,6 +113,7 @@ mounted(){
             )
             .then(
                 (response: { data: { id: any; }; }) => {
+					
                     this.message = "";
                     this.uploads = [];
                     this.sending = false;

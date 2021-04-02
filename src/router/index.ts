@@ -8,6 +8,7 @@ const routes: Array<RouteConfig> = [
         path: '/main',
         name: 'Main',
         component: () => import('@/views/Main.vue'),
+        alias: '/',
         children: [
             {
                 path: '/INS',
@@ -20,7 +21,7 @@ const routes: Array<RouteConfig> = [
                 path: '/hive',
                 name: 'Hive',
                 component: () => import(/* webpackChunkName: "about" */ '@/components/pages/Hive.vue'),
-
+                
 
             },
             {
@@ -80,7 +81,6 @@ const routes: Array<RouteConfig> = [
         path: '/login',
         name: 'Login',
         component: () => import(/* webpackChunkName: "about" */ '@/components/pages/Login.vue'),
-        alias: '/'
     }
 ]
 
@@ -88,5 +88,15 @@ const router = new VueRouter({
     mode: 'history',
     routes,
 })
+
+
+router.beforeEach((to, from, next)=>{
+    if(to.path !== '/login'&& localStorage.getItem("token") === null){
+        next('/login');
+    }else{
+        next()
+    }
+})
+
 
 export default router

@@ -46,15 +46,16 @@ export default class GridTest extends Vue {
   };
   private endpoint = this.endpoints.rest.fed;
 
-  test(howMany = config.statusLimit, option = {}) {
+  test(howMany = config.statusLimit) {
     //@ts-ignore
     this.$http
       .get(this.endpoint, {
-        params: Object.assign({ limit: howMany }, option),
+        params: Object.assign({ only_media: true  }),
         headers: { Authorization: "Bearer " + config.token },
       })
       .then(
         (response: any) => {
+          console.log(this.endpoint)
           //@ts-ignore
           var result = response.data;
           console.log(result);
