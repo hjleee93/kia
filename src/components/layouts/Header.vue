@@ -109,7 +109,6 @@ export default class Header extends Vue {
         // console.log("eventBus", category)
         (this.active = category)
     );
-    console.log(this.active);
   }
 }
 </script>

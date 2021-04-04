@@ -5,18 +5,14 @@ Vue.use(VueRouter)
 
 const routes: Array<RouteConfig> = [
     {
-        path: '/main',
+        path: '/',
         name: 'Main',
         component: () => import('@/views/Main.vue'),
-        alias: '/',
         children: [
             {
                 path: '/hive',
                 name: 'Hive',
                 component: () => import(/* webpackChunkName: "about" */ '@/components/pages/Hive.vue'),
-                children:[
-                    
-                ]
 
             },
             {
@@ -85,10 +81,10 @@ const router = new VueRouter({
 })
 
 
-router.beforeEach((to, from, next)=>{
-    if(to.path !== '/login'&& localStorage.getItem("token") === null){
+router.beforeEach((to, from, next) => {
+    if (to.path !== '/login' && localStorage.getItem("token") === null) {
         next('/login');
-    }else{
+    } else {
         next()
     }
 })
