@@ -468,13 +468,10 @@ export default class Grid extends Vue {
       })
       .then(
         (response: any) => {
-          console.log(this.endpoint);
           //@ts-ignore
           var result = response.data;
-          console.log(result);
-          for (let i = 0; i < result.length; i++) {
-            console.log(result[i].account.username);
-          }
+
+          for (let i = 0; i < result.length; i++) {}
           this.allToots = result;
         },
         (response: any) => {
