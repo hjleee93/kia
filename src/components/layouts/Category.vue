@@ -9,8 +9,9 @@
 
         <!--<button class="btn btn-category active"></button>-->
         <li class="list-all divider">
+          <!--  @click="[(active = 'Hive'), $router.push('/hive')]" -->
           <button
-            @click="sendCategory('/hive')"
+            @click="clickedCategory('Hive')"
             :class="{ active: isActive('Hive') }"
             class="btn btn-category"
           >
@@ -18,9 +19,8 @@
           </button>
         </li>
         <li class="list-inspiration">
-         
           <button
-            @click="[active = 'Inspiration',$router.push('/inspiration') ]"
+            @click="clickedCategory('Inspiration')"
             :class="{ active: isActive('Inspiration') }"
             class="btn btn-category"
           >
@@ -30,7 +30,7 @@
         <li class="list-project">
           <button
             class="btn btn-category"
-             @click="[active = 'Project', $router.push('/project')]"
+            @click="[(active = 'Project'), $router.push('/project')]"
             :class="{ active: isActive('Project') }"
           >
             <span>Project</span>
@@ -39,7 +39,7 @@
         <li class="list-exhibition divider">
           <button
             class="btn btn-category"
-           @click="[active = 'Exhibition', $router.push('/exhibition')]"
+            @click="[(active = 'Exhibition'), $router.push('/exhibition')]"
             :class="{ active: isActive('Exhibition') }"
           >
             <span>Exhibition</span>
@@ -57,17 +57,16 @@
 </template>
 
 <script lang="ts">
-import Hashtag from "../layouts/inspiration/Hashtag.vue";
+import Hashtag from "@/components/layouts/Hashtag.vue";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { albumPop, dim, gnb, isDesktop, search } from "@/scripts/ui_common";
 
 @Component({ components: { Hashtag } })
 export default class Category extends Vue {
-  @Prop() category!: string
+  @Prop() category!: string;
   private active: string = this.category;
 
   isActive(value: string) {
-    
     return this.active === value;
   }
 
@@ -80,9 +79,9 @@ export default class Category extends Vue {
   openAlbum(): void {
     albumPop.layerOpen();
   }
-  sendCategory(val: string){
-    this.$router.push(val)
-   this.$emit("category", this.category);
+  clickedCategory(category: string) {
+    this.active = category;
+    this.$router.push("/" + category.toLowerCase());
   }
 }
 </script>
