@@ -8,6 +8,8 @@ import './scripts/masonry-horizontal.js';
 import axios from 'axios';
 import './plugin/axios';
 
+export const bus = new Vue();
+
 
 // import './quasar'
 import './scripts/ui_common.js'
