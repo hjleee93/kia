@@ -2,6 +2,7 @@ export default [
     {
         name : 'Inspiration',
         tags : [
+            {name:'Inspiration'},
             {name:'inshashtag1'},
             {name:'inshashtag2'},
             {name:'inshashtag3'},
@@ -16,6 +17,7 @@ export default [
     {
         name : 'Project',
         tags : [
+            {name:'Project'},
             {name:'prohashtag1'},
             {name:'prohashtag2'},
             {name:'prohashtag3'},
@@ -30,6 +32,7 @@ export default [
     {
         name : 'Exhibition',
         tags : [
+            {name:'Exhibition'},
             {name:'exhhashtag1'},
             {name:'exhhashtag2'},
             {name:'exhhashtag3'},
