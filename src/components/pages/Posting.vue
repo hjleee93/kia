@@ -58,7 +58,21 @@
                             ><img :src="toot.account.avatar" alt=""
                           /></i>
                         </a>
+                        
                         <button class="toot-delete-btn" @click="tootDelete(toot)">삭제</button>
+                        
+                        <!-- <div class="dropdown" @click="active = !active">
+                            <span>메뉴</span>
+                            <div class="dropdown-content" :class="active ? 'active' : ''" >
+                            <ul>
+                                <li>수정</li>
+                                <li>삭제</li>
+
+
+                            </ul>
+                            </div>
+                        </div> -->
+                        
                         <div class="box-txt">
                           <strong class="username">{{
                             toot.account.acct
@@ -127,12 +141,11 @@ export default class Posting extends Vue {
   private message: string = "";
   private uploads: File[] = [];
   private sending!: boolean;
-  private replyToId: string = "";
   private statuses: any[] = [];
   private newStatuses: any[] = [];
-  private newToot2: any[] = [];
   private userId = this.currentUser.id;
   private tootList: any[] = [];
+//   private active: boolean = false;
 
   /* api */
   private base = config.instance + "/api/v1";
@@ -161,7 +174,6 @@ export default class Posting extends Vue {
             .slice(0, 4)
             //@ts-ignore
             .map((upload) => upload.id),
-          in_reply_to_id: this.replyToId,
         },
         {
           headers: { Authorization: "Bearer " + config.token },
@@ -250,6 +262,7 @@ export default class Posting extends Vue {
     
 
   }
+  
 }
 </script>
 
@@ -321,5 +334,24 @@ label.fileSelect:hover {
   background: #666;
   padding: 0 1em;
   color: #111;
+}
+
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  padding: 12px 16px;
+  z-index: 1;
+}
+.dropdown-content.active{
+display: block;
 }
 </style>
