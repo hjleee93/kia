@@ -1,16 +1,21 @@
 <template>
-    <div id="content" class="rank">
+    <div id="content" class="rank INS">
         <!--content(S)-->
         <div class="content" ref="content">
             <div class="wrap-fixed">
                 <div class="sec-fixed">
+                    <div class="sec-tab">
+                        <div class="box-tab">
+                        </div>
+                    </div>
+<!--                    <Calendar />-->
                 </div>
             </div>
             <!--컨텐츠 영역-->
             <div class="wrap-content">
                 <div class="sec-left">
                     <!--인기 툿-->
-                    <div class="sec-toot">
+                    <div class="sec-toot open">
                         <h2 class="b-tit">툿</h2>
                         <div class="box-toot">
                             <div class="toot-lists">
@@ -116,7 +121,7 @@ export default class INS extends Vue {
 
 <style lang="scss">
 //@media (min-width: 1024px)
-#content.rank .wrap-content .sec-left, #content.rank .wrap-content .sec-right {
+#content.INS .wrap-content .sec-left, #content.rank .wrap-content .sec-right {
     height: 100%;
 }
 
