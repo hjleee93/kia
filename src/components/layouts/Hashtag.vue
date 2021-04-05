@@ -52,6 +52,7 @@ export default class Hashtag extends Vue {
     let mediaTag: any[] = []
     //@ts-ignore
     hashDropDown.btnDropdownClick(this.$refs[arg][0]);
+    
     //@ts-ignore
     this.$http.get(config.instance + '/api/v1/timelines/tag/' + arg).then((response)=>{
       for(const i in response.data){

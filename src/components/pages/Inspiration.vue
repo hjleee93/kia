@@ -1,19 +1,19 @@
 <template>
-  <div id="content" class="hive">
-    <div class="content">
-      <div class="wrap-fixed">
-        <div class="sec-fixed">
-          <SearchBar />
-          <Category :category="category" @tagResult="tagResult"/>
-          <div class="sec-grid-top">
-            <BoxGridTop />
-          </div>
-          <div class="dim"></div>
+    <div id="content" class="hive">
+        <div class="content">
+            <div class="wrap-fixed">
+                <div class="sec-fixed">
+                    <SearchBar />
+                    <Category :category="category" @tagResult="tagResult" />
+                    <div class="sec-grid-top">
+                        <BoxGridTop />
+                    </div>
+                    <div class="dim"></div>
+                </div>
+            </div>
+            <Grid :tagSearch="tagSearch" />
         </div>
-      </div>
-      <Grid :tagSearch="tagSearch" />
     </div>
-  </div>
 </template>
 
 <script lang="ts">
@@ -23,77 +23,59 @@ import Grid from "../layouts/grid/Grid.vue";
 import BoxGridTop from "../layouts/grid/BoxGridTop.vue";
 import SearchBar from "../layouts/SearchBar.vue";
 import {
-  dim,
-  gnb,
-  hashDropDown,
-  tootDropDown,
-  getDevice,
+    dim,
+    gnb,
+    hashDropDown,
+    tootDropDown,
+    getDevice,
 } from "@/scripts/ui_common";
 import { bus } from "@/main";
 import config from "@/lib/config";
 
 @Component({
-  components: { SearchBar, Category, Grid, BoxGridTop },
+    components: { SearchBar, Category, Grid, BoxGridTop },
 })
 export default class Inspiration extends Vue {
-  private category: string = "Inspiration";
-  private tagSearch: any[] = [];
+    private category: string = "Inspiration";
+    private tagSearch: any[] = [];
 
-   // api
-      private base = config.instance + "/api/v1";
-    private apiBase = this.base + "/timelines";
+    beforeUpdate() {
+        tootDropDown.init();
+        hashDropDown.init();
+        dim.init();
+        gnb.init();
+    }
 
-    private streamBase =
-        this.base.replace(/^https?/i, "ws") +
-        "/streaming?access_token=" +
-        config.token +
-        "&stream=";
+    tagResult(result: any) {
+        // this.$emit("tagResult", result)
+        this.tagSearch = result;
+        console.log("여기여기", result);
+    }
 
-    private endpoints = {
-        rest: {
-            home: this.apiBase + "/home",
-            fed: this.apiBase + "/public",
-            local: this.apiBase + "/public?local=true",
-        },
-        stream: {
-            home: this.streamBase + "user",
-            fed: this.streamBase + "public",
-            local: this.streamBase + "public:local",
-        },
-    };
+    mounted() {
+        this.$emit("category", this.category);
+        bus.$emit("category", this.category);
+        this.getGridItem(10);
+    }
 
-
-  beforeUpdate() {
-    tootDropDown.init();
-    hashDropDown.init();
-    dim.init();
-    gnb.init();
-  }
-  tagResult(result: any){
-    // this.$emit("tagResult", result)
-    this.tagSearch = result;
-    console.log("여기여기", result)
-
-  }
-
-
-  mounted() {
-    this.$emit("category", this.category);
-    bus.$emit("category", this.category);
-    this.getGridItem(10);
-  }
-
-   async getGridItem(howMany = config.statusLimit) {
-        let endpoint = this.endpoints.rest.fed;
+    async getGridItem(howMany = config.statusLimit) {
+        //미디어 태그 분류
+        let mediaTag: any[] = [];
         try {
             //@ts-ignore
-            const result = await this.$http.get(endpoint, {
-                params: Object.assign({ only_media: true }),
-                headers: { Authorization: "Bearer " + config.token },
-            });
-            this.tagSearch = result.data;
+            const result = await this.$http.get(
+                config.instance + "/api/v1/timelines/tag/" + this.category
+            );
+            console.log(result)
+
+            for (const i in result.data) {
+                if (result.data[i].media_attachments.length > 0) {
+                    mediaTag.push(result.data[i]);
+                }
+            }
+            this.tagSearch = mediaTag
         } catch (err) {
-            console.log(endpoint + " request failed");
+            console.log(err);
         }
     }
 }

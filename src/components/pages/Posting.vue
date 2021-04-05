@@ -3,24 +3,28 @@
         <div class="toot-form">
             <form @submit.prevent="send" @keydown.ctrl.enter.prevent="send">
                 <label for="hashtag">Hashtag</label>
-               
-                <select name="hashtag" id="hashtag" class="hashtag" v-model="selected">
+
+                <select
+                    name="hashtag"
+                    id="hashtag"
+                    class="hashtag"
+                    v-model="selected"
+                >
                     <optgroup
                         v-for="lists in categoryList"
                         :key="lists.idx"
-                        :label="lists.name"
-                    >                  
+                        :label="lists.tags[0].name"
+                    >
                         <option
                             :value="lists.name + ' #' + tag.name"
-                            v-for="tag in lists.tags"
-                            :key="tag.id"
-                           
+                            v-for="(tag, idx) in lists.tags"
+                            :key="idx"
                         >
-                         <span>   {{ tag.name }}</span>
+                            <span> {{ tag.name }}</span>
                         </option>
                     </optgroup>
                 </select>
-              
+
                 <textarea
                     placeholder="Toot something!"
                     v-model="message"
@@ -212,7 +216,7 @@ export default class Posting extends Vue {
     private tootList: any[] = [];
     private isUploadStatus!: boolean;
     private categoryList: any[] = categoryList;
-    private selected: string = '';
+    private selected: string = "";
     //   private active: boolean = false;
 
     /* api */
@@ -232,6 +236,7 @@ export default class Posting extends Vue {
             return true;
         }
         this.sending = true;
+      
         
 
         if (this.isUploadStatus === false) {
@@ -242,7 +247,7 @@ export default class Posting extends Vue {
                 .post(
                     this.endpoints.toot,
                     {
-                        status:  this.message + `\n #` + this.selected,
+                        status: this.message + `\n #` + this.selected,
                         media_ids: this.uploads
                             .slice(0, 4)
                             //@ts-ignore
@@ -336,9 +341,7 @@ export default class Posting extends Vue {
                 alert("해당 톳이 삭제되었습니다.");
             });
     }
-    clickedHashtag(){
-      console.log("123", this)
-    }
+   
 
     //  tagResult(result: any){
     //   this.$emit("tagResult", result)
