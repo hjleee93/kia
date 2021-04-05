@@ -132,6 +132,9 @@ export default class SearchBar extends Vue {
     search.init();
     dim.init();
   }
+  beforeDestroy() {
+      search.destroy();
+  }
   txtClick() {
     tootDropDown.txtClick();
   }

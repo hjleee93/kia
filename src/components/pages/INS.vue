@@ -91,7 +91,7 @@ export default class INS extends Vue {
 
         if (el.scrollTop === 0) {
 
-        } else if (el.scrollTop + el.clientHeight >= el.offsetHeight - 150) {
+        } else if (el.scrollTop + el.clientHeight >= el.scrollHeight - 150) {
             this.loadToot();
         }
     }

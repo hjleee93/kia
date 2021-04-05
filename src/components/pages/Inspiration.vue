@@ -26,7 +26,6 @@ import {
   dim,
   gnb,
   hashDropDown,
-  search,
   tootDropDown,
   getDevice,
 } from "@/scripts/ui_common";
@@ -67,7 +66,6 @@ export default class Inspiration extends Vue {
   beforeUpdate() {
     tootDropDown.init();
     hashDropDown.init();
-    search.init();
     dim.init();
     gnb.init();
   }

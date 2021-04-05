@@ -61,7 +61,7 @@
 <script lang="ts">
 import Hashtag from "@/components/layouts/Hashtag.vue";
 import { Component, Prop, Vue } from "vue-property-decorator";
-import { albumPop, dim, gnb, isDesktop, search } from "@/scripts/ui_common";
+import { albumPop, dim, gnb, isDesktop } from "@/scripts/ui_common";
 
 @Component({ components: { Hashtag } })
 export default class Category extends Vue {
@@ -74,7 +74,6 @@ export default class Category extends Vue {
 
   mounted() {
     gnb.init();
-    search.init();
     dim.init();
 
   }
