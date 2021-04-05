@@ -64,27 +64,20 @@ export default class Grid extends Vue {
   private end = 20;
   private start = 0;
   private active: boolean = false;
-  private idx: number = 20;
-  private toots: any[] = [];
-  
+  private idx: number = 20;  
   private device: string = "";
-
-
-
-
-// api
+  // api
   private allToots: any[] = [];
-  private myToots: any[] = [];
   private foundUser: any[] = [];
 
-  private base = "https://toot.wbcard.org" + "/api/v1";
+  private base = config.instance + "/api/v1";
   private apiBase = this.base + "/timelines";
+  
   private streamBase =
     this.base.replace(/^https?/i, "ws") +
     "/streaming?access_token=" +
     config.token +
     "&stream=";
-
 
   private endpoints = {
     rest: {
@@ -97,8 +90,7 @@ export default class Grid extends Vue {
       fed: this.streamBase + "public",
       local: this.streamBase + "public:local",
     },
-  };
-  private endpoint = this.endpoints.rest.fed;
+  };  
 
   @Watch("result")
   changeResult() {
@@ -119,7 +111,7 @@ export default class Grid extends Vue {
     //   },
     //   { immediate: true }
     // );
-    // this.getToots();
+   
     // isotope.init();
     this.device = getDevice();
     setTimeout(() => {
@@ -130,9 +122,10 @@ export default class Grid extends Vue {
   }
 
   getGridItem(howMany = config.statusLimit) {
+    let endpoint = this.endpoints.rest.fed;
     //@ts-ignore
     this.$http
-      .get(this.endpoint, {
+      .get(endpoint, {
         params: Object.assign({ only_media: true }),
         headers: { Authorization: "Bearer " + config.token },
       })
@@ -140,13 +133,11 @@ export default class Grid extends Vue {
         (response: any) => {
           //@ts-ignore
           var result = response.data;
-
           for (let i = 0; i < result.length; i++) {}
           this.allToots = result;
         },
         (response: any) => {
-          console.log(this.endpoint + " request failed");
-          console.log(response);
+          console.log(endpoint + " request failed");
         }
       );
   }
@@ -155,9 +146,6 @@ export default class Grid extends Vue {
     window.removeEventListener("resize", this.onResize);
   }
 
-  getToots() {
-    this.toots = this.$store.state.test.tootList;
-  }
   moreItem() {
     this.end += 20;
     // isotope.init();
