@@ -23,11 +23,11 @@
           <span class="more">더보기</span>
         </a
         >
-        <p class="hash-lists">
-          <a v-for="tag in toot.tags" href="#none" class="btn btn-hash" :key="tag.id">
-            #{{tag.name}}
-          </a>
-        </p>
+<!--        <p class="hash-lists">-->
+<!--          <a v-for="tag in toot.tags" href="#none" class="btn btn-hash" :key="tag.id">-->
+<!--            #{{tag.name}}-->
+<!--          </a>-->
+<!--        </p>-->
       </div>
       <div class="box-like">
         <i class="icon icon-like"></i>
@@ -60,5 +60,12 @@ export default class TootCard extends Vue {
             //object-fit: cover;
             //max-height: 200px;
         }
+    }
+
+    .mention.hashtag {
+        font-size: 12px;
+        line-height: 14px;
+        letter-spacing: -.3px;
+        color: #788087;
     }
 </style>
