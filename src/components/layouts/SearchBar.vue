@@ -117,7 +117,6 @@
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { dim, getDevice, gnb, search, tootDropDown } from "@/scripts/ui_common";
 import config from "@/lib/config";
-import { filter } from "node_modules/vue/types/umd";
 
 @Component({ components: {} })
 export default class SearchBar extends Vue {

@@ -10,7 +10,5 @@ export default {
     this.token = JSON.parse(localStorage.getItem('token'))
     //@ts-ignore
     this.instance = JSON.parse(localStorage.getItem('instance'))
-  },
-
-
+  }
 }

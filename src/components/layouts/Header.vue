@@ -92,7 +92,6 @@ export default class Header extends Vue {
   @Prop() sendCategory!: string;
   private active: string = "";
   private loggedIn: boolean = localStorage.getItem("token") != null;
-
   private eventBus = new Vue();
 
   isActive(value: string) {
