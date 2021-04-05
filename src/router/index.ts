@@ -8,11 +8,13 @@ const routes: Array<RouteConfig> = [
         path: '/',
         name: 'Main',
         component: () => import('@/views/Main.vue'),
+        redirect:'/hive',
         children: [
             {
                 path: '/hive',
                 name: 'Hive',
                 component: () => import(/* webpackChunkName: "about" */ '@/components/pages/Hive.vue'),
+                
 
             },
             {
@@ -84,7 +86,11 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
     if (to.path !== '/login' && localStorage.getItem("token") === null) {
         next('/login');
-    } else {
+    } 
+    // if (to.path=== '/login' && localStorage.getItem("token") !== null) {
+    //     next('/hive')
+    // }    
+        else {
         next()
     }
 })
