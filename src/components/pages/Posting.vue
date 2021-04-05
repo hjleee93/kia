@@ -4,7 +4,7 @@
       <form @submit.prevent="send" @keydown.ctrl.enter.prevent="send">
         <textarea placeholder="Toot something!" v-model="message"></textarea>
         <div class="previews" v-if="uploads.length > 0">
-          <div v-for="image in uploads">
+          <div v-for="image in uploads" :key="image.id">
             <img :src="image.preview_url" />
             <button @click="unUpload(image)" class="file-btn">Delete</button>
           </div>
@@ -14,7 +14,7 @@
             title="Upload files"
             class="fileSelect"
             for="fileUploader"
-          /><button @click="send" class="file-btn">Toot!</button>
+          >파일 첨부</label><button @click="send" class="file-btn">Toot!</button>
           <input
             type="file"
             multiple
@@ -58,12 +58,13 @@
                             ><img :src="toot.account.avatar" alt=""
                           /></i>
                         </a>
+                        <button class="toot-delete-btn">삭제</button>
                         <div class="box-txt">
                           <strong class="username">{{
                             toot.account.acct
                           }}</strong>
                           <span class="date"
-                            >{{ toot.created_at.split("-")[1] }}월{{
+                            >{{ toot.created_at.split("-")[1] }}월 {{
                               toot.created_at.split("-")[2].substring(0, 2)
                             }}일</span
                           >
@@ -134,26 +135,11 @@ export default class Posting extends Vue {
   private tootList: any[] = [];
 
   /* api */
-  private base = "https://toot.wbcard.org" + "/api/v1";
-  private apiBase = this.base + "/timelines";
-  private streamBase =
-    this.base.replace(/^https?/i, "ws") +
-    "/streaming?access_token=" +
-    config.token +
-    "&stream=";
+  private base = config.instance + "/api/v1";
+  private apiBase = this.base + "/timelines"; 
   private endpoints = {
     toot: this.base + "/statuses",
     media: this.base + "/media",
-    rest: {
-      home: this.apiBase + "/home",
-      fed: this.apiBase + "/public",
-      local: this.apiBase + "/public?local=true",
-    },
-    stream: {
-      home: this.streamBase + "user",
-      fed: this.streamBase + "public",
-      local: this.streamBase + "public:local",
-    },
   };
 
   async mounted() {
@@ -237,7 +223,6 @@ export default class Posting extends Vue {
   read() {
     //@ts-ignore
     let endpoint = this.base + "/accounts/" + this.userId;
-
     //@ts-ignore
     return this.$http.get(endpoint + "/statuses").then(
       (response: { data: any }) => {
@@ -273,15 +258,14 @@ textarea {
 }
 
 label.fileSelect {
+  color: #111;
   display: inline-block;
   cursor: pointer;
-  height: 30.1667px;
-  width: 30.1667px;
   padding: 0;
   margin: 0 0.5em;
   background: #666;
   border: 1px solid #999;
-  border-radius: 1em;
+  
 }
 #fileUploader {
   display: none;
@@ -314,5 +298,11 @@ div.previews div button {
 button:hover,
 label.fileSelect:hover {
   background-color: #999;
+}
+.toot-delete-btn{
+  float: right;
+   background: #666;
+  padding: 0 1em;
+  color: #111;
 }
 </style>

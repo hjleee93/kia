@@ -17,7 +17,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import Category from "../layouts/Category.vue";
 import Grid from "../layouts/grid/Grid.vue";
 import BoxGridTop from "../layouts/grid/BoxGridTop.vue";
@@ -49,9 +49,10 @@ export default class Hive extends Vue {
     this.$emit("category", this.category);
     bus.$emit("category", this.category);
   }
+
   searchResult(result: any) {
     this.result = result;
-    console.log(this.result);
+    console.log("searchResult",this.result);
   }
 }
 </script>

@@ -88,12 +88,13 @@
             <!--조회 완료-->
             <!--<button class="btn btn-search delete"></button>-->
           </div>
-          <template v-if="!searchInput">
+          <template v-if="searchInput.length === 0 ">
             <div class="box-search-history">
               <strong class="tit">최근 검색어</strong>
               <ul class="search-history-lists">
                 <li v-for="(keyword, idx) in searchHistory" :key="keyword.id">
-                  <button class="btn btn-history">
+                  <!-- issue: null -->
+                  <button class="btn btn-history" @click="searchInput=keyword">
                     <span>{{ keyword }}</span>
                   </button>
                   <button
@@ -131,6 +132,7 @@ export default class SearchBar extends Vue {
     tootDropDown.init();
     gnb.init();
     search.init();
+    dim.init();
   }
   txtClick() {
     tootDropDown.txtClick();
@@ -148,6 +150,8 @@ export default class SearchBar extends Vue {
   inpFocus(arg: string) {
     this.isDone = false;
     search.inpFocus(this.$refs[arg]);
+    console.log("123",search.inpFocus(this.$refs[arg]))
+    
   }
   searchToot() {
     //스토리지에 없는 경우
@@ -181,6 +185,7 @@ export default class SearchBar extends Vue {
       .then((response: any) => {
         this.searchResult = response.data;
         this.$emit("searchResult", this.searchResult);
+        dim.close();
       });
     this.isDone = true;
   }
@@ -188,6 +193,10 @@ export default class SearchBar extends Vue {
     this.searchHistory.splice(idx, 1);
     localStorage.removeItem("RecentKeyword");
     localStorage.setItem("RecentKeyword", JSON.stringify(this.searchHistory));
+  }
+  clickedRctKeyword(keyword: string){
+    this.searchInput = keyword;
+
   }
 }
 </script>

@@ -665,26 +665,32 @@ var Search = function Search() {
     };
 
     var listsOpen = function listsOpen() {
-        if (domWrap && domSearchHistory.style.display !== "block") {
-            var val = domInp.value;
-            info.flag = false;
+        
+        //검색 한 번 하고 다시 검색하는 경우
+        if(domSearchHistory !== null){       
+            if (domWrap && domSearchHistory.style.display !== "block") {
+                var val = domInp.value;
+                info.flag = false;
 
-            if (!val) {
-                historyListsOpen();
+                if (!val) {
+                    historyListsOpen();
+                }
+
+                domWrap.classList.add("open");
+
+                if (isDesktop()) {
+                    document.querySelector("body").addEventListener("click", listenerFun);
+                }
+
+                document.querySelector(".sec-category").style.display = "none"; //PC일경우만
+
+                document.querySelector(".wrap-fixed").style.height = "".concat(getSecFixedRect().height || 0, "px");
+                setTimeout(function () {
+                    info.flag = true;
+                }, 300);
             }
-
-            domWrap.classList.add("open");
-
-            if (isDesktop()) {
-                document.querySelector("body").addEventListener("click", listenerFun);
-            }
-
-            document.querySelector(".sec-category").style.display = "none"; //PC일경우만
-
-            document.querySelector(".wrap-fixed").style.height = "".concat(getSecFixedRect().height || 0, "px");
-            setTimeout(function () {
-                info.flag = true;
-            }, 300);
+        }else{
+            dim.open()
         }
     };
 
@@ -723,9 +729,18 @@ var Search = function Search() {
 
     var historyListsClose = function historyListsClose() {
         if (domWrap) {
-            document.querySelector(".search-history-lists").removeEventListener("scroll", domInpBlur);
-            domSearchHistory.style.display = "none";
-            dim.close();
+            //최근검색어 클릭한 경우 
+            if(document.querySelector(".search-history-lists") !== null){            
+                document.querySelector(".search-history-lists").removeEventListener("scroll", domInpBlur);
+                domSearchHistory.style.display = "none";
+                dim.close();
+            }else{
+                document.querySelector(".sec-category").style.display = "none";
+                document.querySelector(".wrap-fixed").style.height = "".concat(getSecFixedRect().height || 0, "px");
+                setTimeout(function () {
+                    info.flag = true;
+                }, 300);
+            }
         }
     };
 
@@ -744,6 +759,7 @@ var Search = function Search() {
     };
 
     var inpFocus = function inpFocus() {
+        console.log("domWrap",domWrap)
         if (domWrap) {
             listsOpen();
         }

@@ -1,7 +1,7 @@
 <template>
   <div class="sec-grid">
     <!--검색 결과가 없는경우-->
-    <template v-if="tootList.length === 0">
+    <template v-if="allToots.length === 0">
       <div class="no-data">
         <p class="txt">검색 결과가 없습니다.</p>
       </div>
@@ -66,345 +66,16 @@ export default class Grid extends Vue {
   private active: boolean = false;
   private idx: number = 20;
   private toots: any[] = [];
-  private tootList: any[] = [
-    {
-      tootSrc: "images/@temp/@temp_hive1.jpg",
-      tootSrcTypeIsVideo: true,
-      tootTxt:
-        "안녕하세요1. 이번 전시회에서 구경한 내용 공유합니다. 안녕하세요. 이번 전시회에서 구경한 내용 공유합니다...",
-      tootNickName: "testName1",
-    },
-    {
-      tootSrc: "images/@temp/@temp_hive1.jpg",
-      tootSrcTypeIsVideo: true,
-      tootTxt:
-        "안녕하세요1. 이번 전시회에서 구경한 내용 공유합니다. 안녕하세요. 이번 전시회에서 구경한 내용 공유합니다...",
-      tootNickName: "testName1",
-    },
-    {
-      tootSrc: "images/@temp/@temp_hive2.jpg",
-      tootSrcTypeIsVideo: true,
-      tootTxt:
-        "안녕하세요2. 이번 전시회에서 구경한 내용 공유합니다. 안녕하세요. 이번 전시회에서 구경한 내용 공유합니다...",
-      tootNickName: "testName2",
-    },
-    {
-      tootSrc: "images/@temp/@temp_hive3.jpg",
-      tootSrcTypeIsVideo: false,
-      tootTxt:
-        "안녕하세요3. 이번 전시회에서 구경한 내용 공유합니다. 안녕하세요. 이번 전시회에서 구경한 내용 공유합니다...",
-      tootNickName: "testName3",
-    },
-    {
-      tootSrc: "images/@temp/@temp_hive1.jpg",
-      tootSrcTypeIsVideo: true,
-      tootTxt:
-        "안녕하세요1. 이번 전시회에서 구경한 내용 공유합니다. 안녕하세요. 이번 전시회에서 구경한 내용 공유합니다...",
-      tootNickName: "testName1",
-    },
-    {
-      tootSrc: "images/@temp/@temp_hive2.jpg",
-      tootSrcTypeIsVideo: true,
-      tootTxt:
-        "안녕하세요2. 이번 전시회에서 구경한 내용 공유합니다. 안녕하세요. 이번 전시회에서 구경한 내용 공유합니다...",
-      tootNickName: "testName2",
-    },
-    {
-      tootSrc: "images/@temp/@temp_hive3.jpg",
-      tootSrcTypeIsVideo: false,
-      tootTxt:
-        "안녕하세요3. 이번 전시회에서 구경한 내용 공유합니다. 안녕하세요. 이번 전시회에서 구경한 내용 공유합니다...",
-      tootNickName: "testName3",
-    },
-    {
-      tootSrc: "images/@temp/@temp_hive2.jpg",
-      tootSrcTypeIsVideo: true,
-      tootTxt:
-        "안녕하세요2. 이번 전시회에서 구경한 내용 공유합니다. 안녕하세요. 이번 전시회에서 구경한 내용 공유합니다...",
-      tootNickName: "testName2",
-    },
-    {
-      tootSrc: "images/@temp/@temp_hive1.jpg",
-      tootSrcTypeIsVideo: true,
-      tootTxt:
-        "안녕하세요1. 이번 전시회에서 구경한 내용 공유합니다. 안녕하세요. 이번 전시회에서 구경한 내용 공유합니다...",
-      tootNickName: "testName1",
-    },
-    {
-      tootSrc: "images/@temp/@temp_hive2.jpg",
-      tootSrcTypeIsVideo: true,
-      tootTxt:
-        "안녕하세요2. 이번 전시회에서 구경한 내용 공유합니다. 안녕하세요. 이번 전시회에서 구경한 내용 공유합니다...",
-      tootNickName: "testName2",
-    },
-    {
-      tootSrc: "images/@temp/@temp_hive3.jpg",
-      tootSrcTypeIsVideo: false,
-      tootTxt:
-        "안녕하세요3. 이번 전시회에서 구경한 내용 공유합니다. 안녕하세요. 이번 전시회에서 구경한 내용 공유합니다...",
-      tootNickName: "testName3",
-    },
-    {
-      tootSrc: "images/@temp/@temp_hive3.jpg",
-      tootSrcTypeIsVideo: false,
-      tootTxt:
-        "안녕하세요3. 이번 전시회에서 구경한 내용 공유합니다. 안녕하세요. 이번 전시회에서 구경한 내용 공유합니다...",
-      tootNickName: "testName3",
-    },
-    {
-      tootSrc: "images/@temp/@temp_hive1.jpg",
-      tootSrcTypeIsVideo: true,
-      tootTxt:
-        "안녕하세요1. 이번 전시회에서 구경한 내용 공유합니다. 안녕하세요. 이번 전시회에서 구경한 내용 공유합니다...",
-      tootNickName: "testName1",
-    },
-    {
-      tootSrc: "images/@temp/@temp_hive1.jpg",
-      tootSrcTypeIsVideo: true,
-      tootTxt:
-        "안녕하세요1. 이번 전시회에서 구경한 내용 공유합니다. 안녕하세요. 이번 전시회에서 구경한 내용 공유합니다...",
-      tootNickName: "testName1",
-    },
-    {
-      tootSrc: "images/@temp/@temp_hive2.jpg",
-      tootSrcTypeIsVideo: true,
-      tootTxt:
-        "안녕하세요2. 이번 전시회에서 구경한 내용 공유합니다. 안녕하세요. 이번 전시회에서 구경한 내용 공유합니다...",
-      tootNickName: "testName2",
-    },
-    {
-      tootSrc: "images/@temp/@temp_hive3.jpg",
-      tootSrcTypeIsVideo: false,
-      tootTxt:
-        "안녕하세요3. 이번 전시회에서 구경한 내용 공유합니다. 안녕하세요. 이번 전시회에서 구경한 내용 공유합니다...",
-      tootNickName: "testName3",
-    },
-    {
-      tootSrc: "images/@temp/@temp_hive1.jpg",
-      tootSrcTypeIsVideo: true,
-      tootTxt:
-        "안녕하세요1. 이번 전시회에서 구경한 내용 공유합니다. 안녕하세요. 이번 전시회에서 구경한 내용 공유합니다...",
-      tootNickName: "testName1",
-    },
-    {
-      tootSrc: "images/@temp/@temp_hive2.jpg",
-      tootSrcTypeIsVideo: true,
-      tootTxt:
-        "안녕하세요2. 이번 전시회에서 구경한 내용 공유합니다. 안녕하세요. 이번 전시회에서 구경한 내용 공유합니다...",
-      tootNickName: "testName2",
-    },
-    {
-      tootSrc: "images/@temp/@temp_hive3.jpg",
-      tootSrcTypeIsVideo: false,
-      tootTxt:
-        "안녕하세요3. 이번 전시회에서 구경한 내용 공유합니다. 안녕하세요. 이번 전시회에서 구경한 내용 공유합니다...",
-      tootNickName: "testName3",
-    },
-    {
-      tootSrc: "images/@temp/@temp_hive2.jpg",
-      tootSrcTypeIsVideo: true,
-      tootTxt:
-        "안녕하세요2. 이번 전시회에서 구경한 내용 공유합니다. 안녕하세요. 이번 전시회에서 구경한 내용 공유합니다...",
-      tootNickName: "testName2",
-    },
-    {
-      tootSrc: "images/@temp/@temp_hive1.jpg",
-      tootSrcTypeIsVideo: true,
-      tootTxt:
-        "안녕하세요1. 이번 전시회에서 구경한 내용 공유합니다. 안녕하세요. 이번 전시회에서 구경한 내용 공유합니다...",
-      tootNickName: "testName1",
-    },
-    {
-      tootSrc: "images/@temp/@temp_hive2.jpg",
-      tootSrcTypeIsVideo: true,
-      tootTxt:
-        "안녕하세요2. 이번 전시회에서 구경한 내용 공유합니다. 안녕하세요. 이번 전시회에서 구경한 내용 공유합니다...",
-      tootNickName: "testName2",
-    },
-    {
-      tootSrc: "images/@temp/@temp_hive3.jpg",
-      tootSrcTypeIsVideo: false,
-      tootTxt:
-        "안녕하세요3. 이번 전시회에서 구경한 내용 공유합니다. 안녕하세요. 이번 전시회에서 구경한 내용 공유합니다...",
-      tootNickName: "testName3",
-    },
-    {
-      tootSrc: "images/@temp/@temp_hive3.jpg",
-      tootSrcTypeIsVideo: false,
-      tootTxt:
-        "안녕하세요3. 이번 전시회에서 구경한 내용 공유합니다. 안녕하세요. 이번 전시회에서 구경한 내용 공유합니다...",
-      tootNickName: "testName3",
-    },
-    {
-      tootSrc: "images/@temp/@temp_hive1.jpg",
-      tootSrcTypeIsVideo: true,
-      tootTxt:
-        "안녕하세요1. 이번 전시회에서 구경한 내용 공유합니다. 안녕하세요. 이번 전시회에서 구경한 내용 공유합니다...",
-      tootNickName: "testName1",
-    },
-    {
-      tootSrc: "images/@temp/@temp_hive1.jpg",
-      tootSrcTypeIsVideo: true,
-      tootTxt:
-        "안녕하세요1. 이번 전시회에서 구경한 내용 공유합니다. 안녕하세요. 이번 전시회에서 구경한 내용 공유합니다...",
-      tootNickName: "testName1",
-    },
-    {
-      tootSrc: "images/@temp/@temp_hive2.jpg",
-      tootSrcTypeIsVideo: true,
-      tootTxt:
-        "안녕하세요2. 이번 전시회에서 구경한 내용 공유합니다. 안녕하세요. 이번 전시회에서 구경한 내용 공유합니다...",
-      tootNickName: "testName2",
-    },
-    {
-      tootSrc: "images/@temp/@temp_hive3.jpg",
-      tootSrcTypeIsVideo: false,
-      tootTxt:
-        "안녕하세요3. 이번 전시회에서 구경한 내용 공유합니다. 안녕하세요. 이번 전시회에서 구경한 내용 공유합니다...",
-      tootNickName: "testName3",
-    },
-    {
-      tootSrc: "images/@temp/@temp_hive1.jpg",
-      tootSrcTypeIsVideo: true,
-      tootTxt:
-        "안녕하세요1. 이번 전시회에서 구경한 내용 공유합니다. 안녕하세요. 이번 전시회에서 구경한 내용 공유합니다...",
-      tootNickName: "testName1",
-    },
-    {
-      tootSrc: "images/@temp/@temp_hive2.jpg",
-      tootSrcTypeIsVideo: true,
-      tootTxt:
-        "안녕하세요2. 이번 전시회에서 구경한 내용 공유합니다. 안녕하세요. 이번 전시회에서 구경한 내용 공유합니다...",
-      tootNickName: "testName2",
-    },
-    {
-      tootSrc: "images/@temp/@temp_hive3.jpg",
-      tootSrcTypeIsVideo: false,
-      tootTxt:
-        "안녕하세요3. 이번 전시회에서 구경한 내용 공유합니다. 안녕하세요. 이번 전시회에서 구경한 내용 공유합니다...",
-      tootNickName: "testName3",
-    },
-    {
-      tootSrc: "images/@temp/@temp_hive2.jpg",
-      tootSrcTypeIsVideo: true,
-      tootTxt:
-        "안녕하세요2. 이번 전시회에서 구경한 내용 공유합니다. 안녕하세요. 이번 전시회에서 구경한 내용 공유합니다...",
-      tootNickName: "testName2",
-    },
-    {
-      tootSrc: "images/@temp/@temp_hive1.jpg",
-      tootSrcTypeIsVideo: true,
-      tootTxt:
-        "안녕하세요1. 이번 전시회에서 구경한 내용 공유합니다. 안녕하세요. 이번 전시회에서 구경한 내용 공유합니다...",
-      tootNickName: "testName1",
-    },
-    {
-      tootSrc: "images/@temp/@temp_hive2.jpg",
-      tootSrcTypeIsVideo: true,
-      tootTxt:
-        "안녕하세요2. 이번 전시회에서 구경한 내용 공유합니다. 안녕하세요. 이번 전시회에서 구경한 내용 공유합니다...",
-      tootNickName: "testName2",
-    },
-    {
-      tootSrc: "images/@temp/@temp_hive3.jpg",
-      tootSrcTypeIsVideo: false,
-      tootTxt:
-        "안녕하세요3. 이번 전시회에서 구경한 내용 공유합니다. 안녕하세요. 이번 전시회에서 구경한 내용 공유합니다...",
-      tootNickName: "testName3",
-    },
-    {
-      tootSrc: "images/@temp/@temp_hive3.jpg",
-      tootSrcTypeIsVideo: false,
-      tootTxt:
-        "안녕하세요3. 이번 전시회에서 구경한 내용 공유합니다. 안녕하세요. 이번 전시회에서 구경한 내용 공유합니다...",
-      tootNickName: "testName3",
-    },
-    {
-      tootSrc: "images/@temp/@temp_hive1.jpg",
-      tootSrcTypeIsVideo: true,
-      tootTxt:
-        "안녕하세요1. 이번 전시회에서 구경한 내용 공유합니다. 안녕하세요. 이번 전시회에서 구경한 내용 공유합니다...",
-      tootNickName: "testName1",
-    },
-    {
-      tootSrc: "images/@temp/@temp_hive1.jpg",
-      tootSrcTypeIsVideo: true,
-      tootTxt:
-        "안녕하세요1. 이번 전시회에서 구경한 내용 공유합니다. 안녕하세요. 이번 전시회에서 구경한 내용 공유합니다...",
-      tootNickName: "testName1",
-    },
-    {
-      tootSrc: "images/@temp/@temp_hive2.jpg",
-      tootSrcTypeIsVideo: true,
-      tootTxt:
-        "안녕하세요2. 이번 전시회에서 구경한 내용 공유합니다. 안녕하세요. 이번 전시회에서 구경한 내용 공유합니다...",
-      tootNickName: "testName2",
-    },
-    {
-      tootSrc: "images/@temp/@temp_hive3.jpg",
-      tootSrcTypeIsVideo: false,
-      tootTxt:
-        "안녕하세요3. 이번 전시회에서 구경한 내용 공유합니다. 안녕하세요. 이번 전시회에서 구경한 내용 공유합니다...",
-      tootNickName: "testName3",
-    },
-    {
-      tootSrc: "images/@temp/@temp_hive1.jpg",
-      tootSrcTypeIsVideo: true,
-      tootTxt:
-        "안녕하세요1. 이번 전시회에서 구경한 내용 공유합니다. 안녕하세요. 이번 전시회에서 구경한 내용 공유합니다...",
-      tootNickName: "testName1",
-    },
-    {
-      tootSrc: "images/@temp/@temp_hive2.jpg",
-      tootSrcTypeIsVideo: true,
-      tootTxt:
-        "안녕하세요2. 이번 전시회에서 구경한 내용 공유합니다. 안녕하세요. 이번 전시회에서 구경한 내용 공유합니다...",
-      tootNickName: "testName2",
-    },
-    {
-      tootSrc: "images/@temp/@temp_hive3.jpg",
-      tootSrcTypeIsVideo: false,
-      tootTxt:
-        "안녕하세요3. 이번 전시회에서 구경한 내용 공유합니다. 안녕하세요. 이번 전시회에서 구경한 내용 공유합니다...",
-      tootNickName: "testName3",
-    },
-    {
-      tootSrc: "images/@temp/@temp_hive2.jpg",
-      tootSrcTypeIsVideo: true,
-      tootTxt:
-        "안녕하세요2. 이번 전시회에서 구경한 내용 공유합니다. 안녕하세요. 이번 전시회에서 구경한 내용 공유합니다...",
-      tootNickName: "testName2",
-    },
-    {
-      tootSrc: "images/@temp/@temp_hive1.jpg",
-      tootSrcTypeIsVideo: true,
-      tootTxt:
-        "안녕하세요1. 이번 전시회에서 구경한 내용 공유합니다. 안녕하세요. 이번 전시회에서 구경한 내용 공유합니다...",
-      tootNickName: "testName1",
-    },
-    {
-      tootSrc: "images/@temp/@temp_hive2.jpg",
-      tootSrcTypeIsVideo: true,
-      tootTxt:
-        "안녕하세요2. 이번 전시회에서 구경한 내용 공유합니다. 안녕하세요. 이번 전시회에서 구경한 내용 공유합니다...",
-      tootNickName: "testName2",
-    },
-    {
-      tootSrc: "images/@temp/@temp_hive3.jpg",
-      tootSrcTypeIsVideo: false,
-      tootTxt:
-        "안녕하세요3. 이번 전시회에서 구경한 내용 공유합니다. 안녕하세요. 이번 전시회에서 구경한 내용 공유합니다...",
-      tootNickName: "testName3",
-    },
-    {
-      tootSrc: "images/@temp/@temp_hive3.jpg",
-      tootSrcTypeIsVideo: false,
-      tootTxt:
-        "안녕하세요3. 이번 전시회에서 구경한 내용 공유합니다. 안녕하세요. 이번 전시회에서 구경한 내용 공유합니다...",
-      tootNickName: "testName3",
-    },
-  ];
+  
   private device: string = "";
+
+
+
+
+// api
+  private allToots: any[] = [];
+  private myToots: any[] = [];
+  private foundUser: any[] = [];
 
   private base = "https://toot.wbcard.org" + "/api/v1";
   private apiBase = this.base + "/timelines";
@@ -414,8 +85,6 @@ export default class Grid extends Vue {
     config.token +
     "&stream=";
 
-  private allToots: any[] = [];
-  private myToots: any[] = [];
 
   private endpoints = {
     rest: {
@@ -433,8 +102,9 @@ export default class Grid extends Vue {
 
   @Watch("result")
   changeResult() {
-    console.log("result", this.result);
-    this.tootList = this.result;
+    console.log("result in Grid", this.result);
+    this.foundUser = this.result.accounts
+    // this.allToots = this.result;
   }
   mounted() {
     this.getGridItem(10);
