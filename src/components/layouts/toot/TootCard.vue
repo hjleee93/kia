@@ -57,8 +57,8 @@ export default class TootCard extends Vue {
 <style lang="scss">
     .box-img {
         img {
-            object-fit: cover;
-            max-height: 200px;
+            //object-fit: cover;
+            //max-height: 200px;
         }
     }
 </style>
