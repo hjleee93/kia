@@ -9,7 +9,6 @@
 
         <!--<button class="btn btn-category active"></button>-->
         <li class="list-all divider">
-          <!--  @click="[(active = 'Hive'), $router.push('/hive')]" -->
           <button
             @click="clickedCategory('Hive')"
             :class="{ active: isActive('Hive') }"
@@ -30,7 +29,7 @@
         <li class="list-project">
           <button
             class="btn btn-category"
-            @click="[(active = 'Project'), $router.push('/project')]"
+            @click="clickedCategory('Project')"
             :class="{ active: isActive('Project') }"
           >
             <span>Project</span>
@@ -39,7 +38,7 @@
         <li class="list-exhibition divider">
           <button
             class="btn btn-category"
-            @click="[(active = 'Exhibition'), $router.push('/exhibition')]"
+            @click="clickedCategory('exhibition')"
             :class="{ active: isActive('Exhibition') }"
           >
             <span>Exhibition</span>
@@ -81,7 +80,7 @@ export default class Category extends Vue {
   }
   clickedCategory(category: string) {
     this.active = category;
-    this.$router.push("/" + category.toLowerCase());
+    this.$router.push("/" + category.toLowerCase()).catch(() => {});
   }
 }
 </script>
