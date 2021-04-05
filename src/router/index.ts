@@ -5,10 +5,10 @@ Vue.use(VueRouter)
 
 const routes: Array<RouteConfig> = [
     {
-        path: '/main',
+        path: '/',
         name: 'Main',
         component: () => import('@/views/Main.vue'),
-        alias: '/',
+        redirect:'/hive',
         children: [
             {
                 path: '/INS',
@@ -90,10 +90,14 @@ const router = new VueRouter({
 })
 
 
-router.beforeEach((to, from, next)=>{
-    if(to.path !== '/login'&& localStorage.getItem("token") === null){
+router.beforeEach((to, from, next) => {
+    if (to.path !== '/login' && localStorage.getItem("token") === null) {
         next('/login');
-    }else{
+    } 
+    // if (to.path=== '/login' && localStorage.getItem("token") !== null) {
+    //     next('/hive')
+    // }    
+        else {
         next()
     }
 })

@@ -9,6 +9,8 @@ import axios from 'axios';
 import './plugin/axios';
 import './api/api';
 
+export const bus = new Vue();
+
 
 // import './quasar'
 import './scripts/ui_common.js'

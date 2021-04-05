@@ -22,7 +22,7 @@
                               - input에 focus이면서 text가 있으면 최근 검색어 노출하지 않습니다. search.historyListsClose 호출
                               - input에 focus이면서 text가 없으면 최근 검색어 노출합니다. search.historyListsOpen 호출
                             -->
-        <!-- todo검색: https://codepen.io/AndrewThian/pen/QdeOVa -->
+        
 
         <input
           type="text"
