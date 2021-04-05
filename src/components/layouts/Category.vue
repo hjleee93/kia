@@ -51,7 +51,10 @@
         </li>
       </ul>
     </div>
+  
+    <template v-if="category !== 'Hive'">
     <Hashtag :tag="category" />
+    </template>
   </div>
 </template>
 
