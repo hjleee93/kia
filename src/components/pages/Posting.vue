@@ -145,6 +145,7 @@ export default class Posting extends Vue {
   private newStatuses: any[] = [];
   private userId = this.currentUser.id;
   private tootList: any[] = [];
+  private isUploadStatus!: boolean;
 //   private active: boolean = false;
 
   /* api */
@@ -160,10 +161,14 @@ export default class Posting extends Vue {
   }
 
   send() {
-    if (this.sending || (!this.message.length && !this.uploads.length)) {
+    if (this.sending || (!this.message.length && !this.uploads.length) ) {
       return true;
     }
     this.sending = true;
+   
+    if(this.isUploadStatus === false){
+        alert("파일 업로드에 실패했습니다.")
+    }else{
     //@ts-ignore
     this.$http
       .post(
@@ -181,6 +186,7 @@ export default class Posting extends Vue {
       )
       .then(
         (response: { data: { id: any } }) => {
+            console.log("isUploadStatus",this.isUploadStatus)
           this.message = "";
           this.uploads = [];
           this.sending = false;
@@ -189,11 +195,11 @@ export default class Posting extends Vue {
         },
         () => console.log("Request failed.")
       );
+    }
   }
 
   uploadOne(image: File) {
     let formData = new FormData();
-
     formData.append(
       "file",
       //@ts-ignore
@@ -205,12 +211,11 @@ export default class Posting extends Vue {
         headers: {
           Authorization: "Bearer " + config.token,
           "Content-Type": "multipart/form-data",
-          //@ts-ignore
         },
       })
       .then(
         (response: any) => this.uploads.push(response.data),
-        () => console.log("Upload failed")
+        () => {this.isUploadStatus = false; console.log("Upload failed")}
       );
   }
 
