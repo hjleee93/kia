@@ -47,9 +47,7 @@ export default class Inspiration extends Vue {
     }
 
     tagResult(result: any) {
-        // this.$emit("tagResult", result)
         this.tagSearch = result;
-        console.log("여기여기", result);
     }
 
     mounted() {

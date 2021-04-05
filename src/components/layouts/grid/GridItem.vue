@@ -9,7 +9,8 @@
             style="width: 100%"
           />
         </template>
-        <template v-if="toot.tootSrcTypeIsVideo">
+  
+        <template v-if="toot.media_attachments[0].type === 'video'">
           <i class="icon icon-play"></i>
         </template>
         <!--동영상인 경우-->
