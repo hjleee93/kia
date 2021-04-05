@@ -112,20 +112,21 @@
 </template>
 
 <script lang="ts">
+import config from "@/lib/config";
 import { Component, Prop, Vue } from "vue-property-decorator";
 
 @Component({ components: {}, props: ["currentUser"] })
 export default class Login extends Vue {
   private email: string = "";
   private password: string = "";
-  private instance: string = "https://toot.wbcard.org/";
+  private instance: string = config.instance;
   private isLoginError: boolean = false;
   private isEmailActive: boolean = false;
   private isPwdActive: boolean = false;
   private clickedLogin: boolean = false;
   private emailRegExp = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
 
-  async mounted() {
+  mounted() {
     window.addEventListener("keyup", (event) => {
       if (event.keyCode === 13) {
         this.login();
@@ -156,6 +157,7 @@ export default class Login extends Vue {
       return raw !== "undefined" ? JSON.parse(raw) : {};
     },
   };
+
   private known = (val = null) => {
     if (val == null) {
       return this.store.out("known_instances");
@@ -163,6 +165,8 @@ export default class Login extends Vue {
       return this.store.in("known_instances", val!);
     }
   };
+
+  //todo:회원 가입용
   private registerWithInstance = (uri: any) => {
     var target = uri.origin;
     //@ts-ignore
@@ -192,8 +196,10 @@ export default class Login extends Vue {
         }
       );
   };
+
+
   private attemptLogin = (email: string, password: string) => {
-    console.log("instance", this.known());
+    
     let instance = this.known()[new URL(this.instance).host];
     //@ts-ignore
     this.$http
@@ -207,7 +213,6 @@ export default class Login extends Vue {
       })
       .then((response: any) => {
         this.store.in("instance", instance.host);
-
         //@ts-ignore
         this.store.in("token", response.data.access_token);
         this.$router.push("/hive");
