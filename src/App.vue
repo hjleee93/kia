@@ -18,8 +18,15 @@ export default class App extends Vue {
 
   async mounted() {
     initApp();
-    this.updateCurrentUser();
+    await this.updateCurrentUser();
+    await this.init();
   }
+
+  async init() {
+      const categories = await this.$api.getCategory();
+      this.$store.commit('categories', categories);
+  }
+
   async updateCurrentUser() {
     if (this.loggedIn === true) {
       try {
