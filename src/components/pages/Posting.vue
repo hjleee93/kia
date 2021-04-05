@@ -58,7 +58,7 @@
                             ><img :src="toot.account.avatar" alt=""
                           /></i>
                         </a>
-                        <button class="toot-delete-btn">삭제</button>
+                        <button class="toot-delete-btn" @click="tootDelete(toot)">삭제</button>
                         <div class="box-txt">
                           <strong class="username">{{
                             toot.account.acct
@@ -85,7 +85,7 @@
                             class="btn btn-hash"
                             :key="tag.id"
                           >
-                            #{{ tag.tag }}
+                            {{ tag.tag }}
                           </a>
                         </p>
                       </div>
@@ -233,6 +233,23 @@ export default class Posting extends Vue {
       }
     );
   }
+  tootDelete(toot: any){
+    
+    let endpoint = this.base + '/statuses/' + toot.id
+
+    if (toot.account.acct !== this.currentUser.acct) {
+        console.log('Can\'t delete someone else\'s toot')
+        return false
+    }
+    //@ts-ignore
+    this.$http.delete(endpoint, {
+        headers: { Authorization: 'Bearer ' + config.token }
+    }).then(() => {
+        alert("해당 톳이 삭제되었습니다.")
+    })
+    
+
+  }
 }
 </script>
 
@@ -301,7 +318,7 @@ label.fileSelect:hover {
 }
 .toot-delete-btn{
   float: right;
-   background: #666;
+  background: #666;
   padding: 0 1em;
   color: #111;
 }
