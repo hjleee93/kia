@@ -40,16 +40,12 @@ export default class App extends Vue {
     initApp();
   }
 
+
   logOut() {
     this.loggedIn = false;
-    this.currentUser = {};
-    this.$router.push("/login");
+    this.$router.push("/login").catch(() => {});
   }
-  created() {
-    //@ts-ignore
-    if (this.loggedIn && !this.currentUser) {
-    }
-  }
+ 
 }
 </script>
 <style>

@@ -215,7 +215,7 @@ export default class Login extends Vue {
         this.store.in("instance", instance.host);
         //@ts-ignore
         this.store.in("token", response.data.access_token);
-        this.$router.push("/hive");
+        this.$router.push("/hive").catch(() => {});
       })
       .catch(() => {
         this.error();

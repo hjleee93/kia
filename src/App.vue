@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <router-view :currentUser="currentUser" @logout="logOut" />
+    <router-view :currentUser="currentUser" />
   </div>
 </template>
 
@@ -36,11 +36,6 @@ export default class App extends Vue {
         console.log("Failed to fetch current user");
       }
     }
-  }
-  logOut() {
-    this.loggedIn = false;
-    this.currentUser = {};
-    this.$router.push("/login");
   }
   created() {
     //@ts-ignore

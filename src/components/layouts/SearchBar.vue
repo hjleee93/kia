@@ -128,7 +128,6 @@ export default class SearchBar extends Vue {
   );
   private searchResult: any[] = [];
   mounted() {
-    console.log(this.searchHistory);
     tootDropDown.init();
     gnb.init();
     search.init();
