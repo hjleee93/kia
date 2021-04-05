@@ -71,6 +71,7 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 import {albumPop, isDesktop} from "@/scripts/ui_common";
 //@ts-ignore
 import isotope from 'vueisotope';
+import config from "@/lib/config";
 
 @Component({ components: { isotope } })
 export default class AlbumShow extends Vue {
@@ -78,6 +79,29 @@ export default class AlbumShow extends Vue {
     isOpen : boolean = false;
     list : any[] = [];
     detailStc : string = '';
+    private imgArr: string[] = [];
+     private base = config.instance + "/api/v1";
+  private apiBase = this.base + "/timelines";
+  
+  private streamBase =
+    this.base.replace(/^https?/i, "ws") +
+    "/streaming?access_token=" +
+    config.token +
+    "&stream=";
+
+  private endpoints = {
+    rest: {
+      home: this.apiBase + "/home",
+      fed: this.apiBase + "/public",
+      local: this.apiBase + "/public?local=true",
+    },
+    stream: {
+      home: this.streamBase + "user",
+      fed: this.streamBase + "public",
+      local: this.streamBase + "public:local",
+    },
+  };  
+
 
     mounted() {
         albumPop.init(this.openCallback);
@@ -96,6 +120,7 @@ export default class AlbumShow extends Vue {
         const heightRatio = 1.0681818182;
 
         const imageList = this.getImgLists();
+        console.log("imageList", typeof (this.imgArr))
         for( let i = 0; i < imageList.length; i++ ) {
 
             if(!this.isOpen) {
@@ -166,6 +191,30 @@ export default class AlbumShow extends Vue {
     }
 
     getImgLists(){
+    //      let endpoint = this.endpoints.rest.fed;
+    // //@ts-ignore
+    // this.$http
+    //   .get(endpoint, {
+    //     params: Object.assign({ only_media: true }),
+    //     headers: { Authorization: "Bearer " + config.token },
+    //   })
+    //   .then(
+    //     (response: any) => {
+    //       //@ts-ignore
+    //       let result = response.data;          
+    //       for (let i = 0; i < result.length; i++) {
+    //         if(result[i].media_attachments[0].type === 'image'){
+    //             // this.imgArr.push(JSON.parse(JSON.stringify(result[i].media_attachments[0].url)))
+    //             }
+    //       }
+
+    //     },
+    //     (response: any) => {
+    //         console.log(endpoint + " request failed");
+    //     }
+    //   );
+           
+        //  return temp;
         return [
             'images/@temp/@temp_hive1.jpg',
             'images/@temp/@temp_hive2.jpg',

@@ -28,6 +28,7 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { dim, gnb, hashDropDown } from "@/scripts/ui_common";
+import config from "@/lib/config";
 
 @Component({ components: {} })
 export default class Hashtag extends Vue {
@@ -47,8 +48,19 @@ export default class Hashtag extends Vue {
     hashDropDown.txtClick();
   }
   btnDropdownClick(arg: string) {
+    //미디어 태그 분류
+    let mediaTag: any[] = []
     //@ts-ignore
     hashDropDown.btnDropdownClick(this.$refs[arg][0]);
+    //@ts-ignore
+    this.$http.get(config.instance + '/api/v1/timelines/tag/' + arg).then((response)=>{
+      for(const i in response.data){
+            if(response.data[i].media_attachments.length > 0){
+              mediaTag.push(response.data[i])
+            }            
+      }      
+      this.$emit('tagResult', mediaTag)
+    })
   }
   listsClose() {
     hashDropDown.listsClose();

@@ -53,7 +53,7 @@
     </div>
   
     <template v-if="category !== 'Hive'">
-    <Hashtag :tag="category" />
+    <Hashtag :tag="category" @tagResult="tagResult"/>
     </template>
   </div>
 </template>
@@ -76,6 +76,12 @@ export default class Category extends Vue {
     gnb.init();
     search.init();
     dim.init();
+
+  }
+  tagResult(result: any){
+    this.$emit("tagResult", result)
+    // console.log("여기여기", result)
+
   }
 
   openAlbum(): void {

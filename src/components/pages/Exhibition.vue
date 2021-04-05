@@ -4,14 +4,14 @@
       <div class="wrap-fixed">
         <div class="sec-fixed">
           <SearchBar />
-          <Category :category="category" />
+          <Category :category="category" @tagResult="tagResult"/>
           <div class="sec-grid-top">
             <BoxGridTop />
           </div>
           <div class="dim"></div>
         </div>
       </div>
-      <Grid />
+      <Grid :tagSearch="tagSearch"/>
     </div>
   </div>
 </template>
@@ -37,12 +37,20 @@ import { bus } from "@/main";
 })
 export default class Exhibition extends Vue {
   private category: string = "Exhibition";
+  private tagSearch: any[] = [];
+
   beforeUpdate() {
     tootDropDown.init();
     hashDropDown.init();
     search.init();
     dim.init();
     gnb.init();
+  }
+
+    tagResult(result: any){
+    // this.$emit("tagResult", result)
+    this.tagSearch = result;
+
   }
 
   mounted() {
