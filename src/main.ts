@@ -7,6 +7,7 @@ import isotope from 'vueisotope';
 import './scripts/masonry-horizontal.js';
 import axios from 'axios';
 import './plugin/axios';
+import './api/api';
 
 export const bus = new Vue();
 

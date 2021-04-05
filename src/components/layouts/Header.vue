@@ -7,7 +7,11 @@
       <nav class="navigation">
         <ul>
           <li class="list-ins">
-            <router-link to="#" class="btn btn-link">INS</router-link>
+              <router-link to="/INS"
+                           class="btn btn-link"
+                           @click.native="active = 'INS'"
+                           :class="{ active: isActive('INS') }"
+              >INS</router-link>
           </li>
           <li class="list-toot">
             <router-link to="#" class="btn btn-link">TOOT</router-link>
