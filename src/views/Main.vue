@@ -19,8 +19,6 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { initApp } from "@/scripts/ui_common";
-import config from "@/lib/config";
-
 import Header from "@/components/layouts/Header.vue";
 import MobileAlbum from "@/components/layouts/MobileAlbum.vue";
 
@@ -30,7 +28,6 @@ import MobileAlbum from "@/components/layouts/MobileAlbum.vue";
 export default class App extends Vue {
   @Prop() currentUser!: any;
   private loggedIn: boolean = localStorage.getItem("token") != null;
-  // private currentUser: any = {};
   private sendCategory: string = "";
 
   category(val: any) {
@@ -40,12 +37,10 @@ export default class App extends Vue {
     initApp();
   }
 
-
   logOut() {
     this.loggedIn = false;
     this.$router.push("/login").catch(() => {});
   }
- 
 }
 </script>
 <style>

@@ -28,7 +28,6 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { dim, gnb, hashDropDown } from "@/scripts/ui_common";
-import config from "@/lib/config";
 
 @Component({ components: {} })
 export default class Hashtag extends Vue {
@@ -37,31 +36,33 @@ export default class Hashtag extends Vue {
 
   mounted() {
     hashDropDown.init();
-    let tags = this.$store.getters.category(this.tag).tags
-      for(const i in tags){
-        this.hashtags.push(tags[i].name) 
-      }   
-   
+    let tags = this.$store.getters.category(this.tag).tags;
+    for (const i in tags) {
+      this.hashtags.push(tags[i].name);
+    }
   }
 
   txtClick() {
     hashDropDown.txtClick();
   }
-  btnDropdownClick(arg: string) {
+  async btnDropdownClick(arg: string) {
     //미디어 태그 분류
-    let mediaTag: any[] = []
+    let mediaTag: any[] = [];
     //@ts-ignore
     hashDropDown.btnDropdownClick(this.$refs[arg][0]);
-    
-    //@ts-ignore
-    this.$http.get(config.instance + '/api/v1/timelines/tag/' + arg).then((response)=>{
-      for(const i in response.data){
-            if(response.data[i].media_attachments.length > 0){
-              mediaTag.push(response.data[i])
-            }            
-      }      
-      this.$emit('tagResult', mediaTag)
-    })
+
+    try {
+      const result = await this.$api.getTagToots(arg);
+
+      for (const i in result.data) {
+        if (result.data[i].media_attachments.length > 0) {
+          mediaTag.push(result.data[i]);
+        }
+      }
+      this.$emit("tagResult", mediaTag);
+    } catch (err) {
+      console.log(err);
+    }
   }
   listsClose() {
     hashDropDown.listsClose();
