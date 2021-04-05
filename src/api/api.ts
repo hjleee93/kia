@@ -1,5 +1,6 @@
 import axios, {AxiosInstance} from 'axios'
 import Vue, {PluginObject} from "vue";
+import tempCategory from './../scripts/categoryList';
 
 export default class Api {
 
@@ -16,6 +17,10 @@ export default class Api {
             }
         } );
         return result.data;
+    }
+
+    async getCategory() {
+        return tempCategory;
     }
 }
 
