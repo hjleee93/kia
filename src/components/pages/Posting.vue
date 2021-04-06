@@ -3,23 +3,27 @@
     <div class="toot-form">
       <form @submit.prevent="send" @keydown.ctrl.enter.prevent="send">
         <label for="hashtag">Hashtag</label>
-
-        <select name="hashtag" id="hashtag" class="hashtag" v-model="selected">
-          <optgroup
+        <select name="hashtag" id="hashtag" class="hashtag" v-model="selected" v-for="lists in categoryList" :key="lists.idx" >
+          <!-- <optgroup
           class="hashtag-opt"
             v-for="lists in categoryList"
             :key="lists.idx"
             :label="lists.tags[0].name"
-          >
+          > -->
+          <!-- <div v-for="lists in categoryList" :key="lists.idx"> -->
+            <option value="" selected disabled>{{lists.tags[0].name}}</option>  
             <option
             class="hashtag-opt"
               :value="lists.name + ' #' + tag.name"
               v-for="(tag, idx) in lists.tags"
               :key="idx"
+            
             >
                {{ tag.name }}
+               
             </option>
-          </optgroup>
+          <!-- </div> -->
+          <!-- </optgroup> -->
         </select>
 
         <textarea placeholder="Toot something!" v-model="message"></textarea>
@@ -46,13 +50,13 @@
         </div>
       </form>
     </div>
-    <!-- <div>
-      
-      <template v-if="statuses.length === 0">
+      <template v-if="tootList.length === 0">
         <div class="no-data">
           <p class="txt">검색 결과가 없습니다.</p>
         </div>
       </template>
+    <!-- <div>
+      
       <div class="grid">
         <GridItemTest
           v-for="status in statuses"
@@ -174,11 +178,11 @@ export default class Posting extends Vue {
   private tootList: any[] = [];
   private isUploadStatus!: boolean;
   private categoryList: any[] = categoryList;
-  private selected: string = '#'+this.categoryList[0].tags[0].name
+  private selected: string = ''
   //   private active: boolean = false;
 
   async mounted() {
-
+console.log("posting", this.currentUser)
     await this.read();
   }
 
