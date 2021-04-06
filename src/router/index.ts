@@ -8,7 +8,7 @@ const routes: Array<RouteConfig> = [
         path: '/',
         name: 'Main',
         component: () => import('@/views/Main.vue'),
-        redirect:'/hive',
+        redirect: '/hive',
         children: [
             {
                 path: '/INS',
@@ -21,7 +21,7 @@ const routes: Array<RouteConfig> = [
                 path: '/hive',
                 name: 'Hive',
                 component: () => import(/* webpackChunkName: "about" */ '@/components/pages/Hive.vue'),
-                
+
 
             },
             {
@@ -36,13 +36,7 @@ const routes: Array<RouteConfig> = [
                 component: () => import(/* webpackChunkName: "about" */ '@/components/pages/Rank.vue')
 
             },
-            {
-                path: '/sample',
-                name: 'Sample',
-                component: () => import(/* webpackChunkName: "about" */ '@/components/pages/Sample.vue'),
 
-
-            },
             {
                 path: '/posting',
                 name: 'Posting',
@@ -93,11 +87,11 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
     if (to.path !== '/login' && localStorage.getItem("token") === null) {
         next('/login');
-    } 
+    }
     // if (to.path=== '/login' && localStorage.getItem("token") !== null) {
     //     next('/hive')
     // }    
-        else {
+    else {
         next()
     }
 })

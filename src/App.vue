@@ -7,7 +7,6 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { initApp } from "@/scripts/ui_common";
-import config from "@/lib/config";
 
 @Component({
   components: {},
@@ -23,31 +22,22 @@ export default class App extends Vue {
   }
 
   async init() {
-      const categories = await this.$api.getCategory();
-      this.$store.commit('categories', categories);
+    const categories = await this.$api.getCategory();
+    this.$store.commit("categories", categories);
   }
 
   async updateCurrentUser() {
     if (this.loggedIn === true) {
       try {
-        //@ts-ignore
-        const response = await this.$http.get(
-          config.instance + "/api/v1/accounts/verify_credentials",
-          {
-            headers: { Authorization: "Bearer " + config.token },
-          }
-        );
-
-        this.currentUser = response.data;
+        const result = await this.$api.getCurrentUser();
+        this.currentUser = result.data;
       } catch (err) {
         console.log("Failed to fetch current user");
       }
     }
   }
   created() {
-    //@ts-ignore
     if (this.loggedIn && !this.currentUser) {
-      //@ts-ignore
       this.updateCurrentUser();
     }
   }
