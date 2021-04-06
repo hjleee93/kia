@@ -51,7 +51,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
-import SearchHashtag from "../layouts/myTag/SearchHashtag.vue";
+import SearchHashtag from "@/components/layouts/myTag/SearchHashtag.vue";
 import { gnb } from "@/scripts/ui_common";
 
 @Component({ components: { SearchHashtag } })

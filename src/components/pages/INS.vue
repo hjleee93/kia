@@ -35,9 +35,9 @@
 <script lang="ts">
 import {Component, Prop, Vue} from "vue-property-decorator";
 
-import BestUser from '../layouts/rank/BestUser.vue'
-import Calendar from '../layouts/rank/Calendar.vue'
-import BestHashtag from '../layouts/rank/BestHastag.vue'
+import BestUser from '@/components/layouts/rank/BestUser.vue'
+import Calendar from '@/components/layouts/rank/Calendar.vue'
+import BestHashtag from '@/components/layouts/rank/BestHastag.vue'
 import {gnb} from "@/scripts/ui_common";
 import TootCard from "@/components/layouts/toot/TootCard.vue";
 

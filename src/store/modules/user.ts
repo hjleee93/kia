@@ -24,7 +24,6 @@ export default {
     actions: {
         async userStatus(context: any) {
             const result = await Vue.$api.getCurrentUser();
-            console.log("???")
             context.commit('currentUser', result)
         }
 

@@ -18,10 +18,10 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
-import Category from "../layouts/Category.vue";
-import Grid from "../layouts/grid/Grid.vue";
-import BoxGridTop from "../layouts/grid/BoxGridTop.vue";
-import SearchBar from "../layouts/SearchBar.vue";
+import Category from "@/components/layouts/Category.vue";
+import Grid from "@/components/layouts/grid/Grid.vue";
+import BoxGridTop from "@/components/layouts/grid/BoxGridTop.vue";
+import SearchBar from "@/components/layouts/SearchBar.vue";
 import {
     dim,
     gnb,
