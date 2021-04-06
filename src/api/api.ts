@@ -38,10 +38,10 @@ export default class Api {
         return result;
     }
 
-    async getMediaTootsOnly(limit?: number, option?:{}) {
+    async getMediaTootsOnly(limit?: number, option?: {}) {
         const result = await Vue.$axios.get("/api/v1/timelines/public",
             {
-                params: Object.assign({ only_media: true, limit : limit }),
+                params: Object.assign({ only_media: true, limit: limit }),
                 headers: { Authorization: "Bearer " + config.token },
             }
         );
@@ -85,6 +85,19 @@ export default class Api {
                 headers: { Authorization: "Bearer " + config.token },
             }
         );
+
+        return result;
+    }
+
+    async attemptLogin(email: string, password: string, instance: { client_id: any; client_secret: any; }) {
+        const result = await Vue.$axios.post("/oauth/token", {
+            client_id: instance.client_id,
+            client_secret: instance.client_secret,
+            grant_type: "password",
+            username: email,
+            password: password,
+            scope: ["read", "write", "follow"].join(" "),
+        })
 
         return result;
     }
