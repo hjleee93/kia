@@ -38,10 +38,10 @@ export default class Api {
         return result;
     }
 
-    async getMediaTootsOnly() {
+    async getMediaTootsOnly(limit?: number, option?:{}) {
         const result = await Vue.$axios.get("/api/v1/timelines/public",
             {
-                params: Object.assign({ only_media: true }),
+                params: Object.assign({ only_media: true, limit : limit }),
                 headers: { Authorization: "Bearer " + config.token },
             }
         );

@@ -102,7 +102,6 @@ export default class AlbumShow extends Vue {
     const heightRatio = 1.0681818182;
 
     const imageList = this.imgArr;
-    console.log(imageList);
     for (let i = 0; i < imageList.length; i++) {
       if (!this.isOpen) {
         return;
