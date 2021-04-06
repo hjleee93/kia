@@ -24,11 +24,13 @@ export default class Api {
         return tempCategory;
     }
 
-    async getCurrentUser() {
+    async getCurrentUser(token ?:string) {
+        
+        const userToken = config.token || token
         const response = await Vue.$axios.get('/api/v1/accounts/verify_credentials', {
-            headers: { Authorization: "Bearer " + config.token },
+            headers: { Authorization: "Bearer " + userToken },
         })
-        return response
+        return response.data
     }
 
     async getTagToots(category: string, max_id?: number, limit?: number, option?: {}) {

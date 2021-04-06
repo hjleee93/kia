@@ -124,8 +124,9 @@
 import config from "@/lib/config";
 import { Component, Prop, Vue } from "vue-property-decorator";
 
-@Component({ components: {}, props: ["currentUser"] })
+@Component({ components: {}})
 export default class Login extends Vue {
+    @Prop() currentUser!: any;
     private email: string = "";
     private password: string = "";
     private instance: string = process.env.VUE_APP_BASE_API!;
@@ -134,6 +135,7 @@ export default class Login extends Vue {
     private isPwdActive: boolean = false;
     private clickedLogin: boolean = false;
     private emailRegExp = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
+    private userToken: string = '';
 
     mounted() {
         window.addEventListener("keyup", (event) => {
@@ -143,6 +145,7 @@ export default class Login extends Vue {
         });
     }
     login() {
+        localStorage.removeItem("token");
         let uri = new URL(this.instance);
         if (this.known() === null || this.known()[uri.host] === null) {
             console.log("Login successful registerWithInstance");
@@ -174,7 +177,6 @@ export default class Login extends Vue {
         }
     };
 
-    //todo:회원 가입용
     private registerWithInstance = (uri: any) => {
         var target = uri.origin;
         //@ts-ignore
@@ -188,7 +190,6 @@ export default class Login extends Vue {
             .then(
                 //client_id가 unique 한지 확인 내가 쓴 톳 용
                 (response: any) => {
-                    console.log(response);
                     var known = this.known() || {};
                     known[uri.host] = {
                         host: uri.origin,
@@ -215,9 +216,16 @@ export default class Login extends Vue {
             );
             this.store.in("instance", instance.host);
             this.store.in("token", result.data.access_token);
-            this.$router.push("/hive").catch(() => {});
+            try {
+
+                this.updateCurrentUser(result.data.access_token);
+                this.$router.push("/hive").catch(() => {});
+            } catch (err) {
+                console.log(err);
+            }
         } catch (err) {
             console.log(err);
+            this.error();
         }
 
         // //@ts-ignore
@@ -242,6 +250,15 @@ export default class Login extends Vue {
     };
     error() {
         this.isLoginError = true;
+    }
+
+    async updateCurrentUser(token: string) {
+        try {
+            const result = await this.$api.getCurrentUser(token);
+            
+        } catch (err) {
+            console.log("Failed to fetch current user");
+        }
     }
 }
 </script>

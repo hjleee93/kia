@@ -1,11 +1,11 @@
 <template>
   <div id="app" class="no-drag">
-    <router-view v-if="isInit" :currentUser="currentUser" />
+    <router-view v-if="isInit" :currentUser="currentUser"  />
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import { initApp } from "@/scripts/ui_common";
 
 @Component({
@@ -13,10 +13,16 @@ import { initApp } from "@/scripts/ui_common";
 })
 export default class App extends Vue {
   private loggedIn: boolean = localStorage.getItem("token") != null;
-  private currentUser: any = {};
+  private currentUser!: any;
   private isInit : boolean = false;
-
+  
+  get getCurrentUser():any{
+    const currentUser = this.currentUser;
+    return currentUser;
+  }
+  
   async mounted() {
+    console.log("vuex",this.currentUser)
     initApp();
     await this.updateCurrentUser();
     await this.init();
@@ -32,7 +38,8 @@ export default class App extends Vue {
     if (this.loggedIn === true) {
       try {
         const result = await this.$api.getCurrentUser();
-        this.currentUser = result.data;
+        this.currentUser = result;
+        console.log(this.currentUser)
       } catch (err) {
         console.log("Failed to fetch current user");
       }
@@ -43,6 +50,7 @@ export default class App extends Vue {
       this.updateCurrentUser();
     }
   }
+  
 }
 </script>
 <style>
