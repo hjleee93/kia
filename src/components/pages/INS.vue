@@ -72,7 +72,7 @@ export default class INS extends Vue {
         //     favourites_count: '1,504',
         // },
     ];
-    private limitCount : number = 15;
+    private limitCount : number = 1;
     private loadingState : ETootLoadingState = ETootLoadingState.none;
 
     mounted() {
@@ -110,7 +110,18 @@ export default class INS extends Vue {
                 this.loadingState = ETootLoadingState.end;
             }
             else {
-                this.loadingState = ETootLoadingState.complete;
+                this.$nextTick(()=>{
+                    this.$nextTick(()=>{
+                        const el = document.documentElement;
+                        if( el.scrollHeight <= el.clientHeight ) {
+                            this.loadingState = ETootLoadingState.complete;
+                            this.loadToot();
+                        }
+                        else {
+                            this.loadingState = ETootLoadingState.complete;
+                        }
+                    });
+                })
 
             }
             this.tootList.push(...result);
