@@ -162,7 +162,7 @@
 
 <script lang="ts">
 import Hashtag from "@/components/layouts/Hashtag.vue";
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import config from "@/lib/config";
 import categoryList from "@/scripts/categoryList";
 
@@ -182,7 +182,6 @@ export default class Posting extends Vue {
   //   private active: boolean = false;
 
   async mounted() {
-console.log("posting", this.currentUser)
     await this.read();
   }
 
@@ -263,6 +262,11 @@ console.log("posting", this.currentUser)
     } catch (err) {
       console.log(err);
     }
+  }
+  @Watch('tootList')
+  async updateToot(){
+    const result = await this.$api.getMyToots(this.userId);    
+    this.tootList = result.data
   }
 }
 </script>
