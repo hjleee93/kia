@@ -173,9 +173,9 @@ export default class AlbumShow extends Vue {
     try {
       const result = await this.$api.getMediaTootsOnly();
 
-      for (let i = 0; i < result.data.length; i++) {
-        if (result.data[i].media_attachments[0].type === "image") {
-          this.imgArr.push(result.data[i].media_attachments[0].url);
+      for (let i = 0; i < result.length; i++) {
+        if (result[i].media_attachments[0].type === "image") {
+          this.imgArr.push(result[i].media_attachments[0].url);
         }
       }
     } catch (err) {

@@ -20,10 +20,10 @@
             class="grid"
             tabindex="11"
             :options="optionPc()"
-            :list="allToots.slice(start, end)"
+            :list="allToots"
         >
             <GridItem
-                v-for="(toot, index) in allToots.slice(start, end)"
+                v-for="(toot, index) in allToots"
                 :toot="toot"
                 :key="index"
             />
@@ -35,16 +35,27 @@
             class="grid"
             tabindex="100"
             :options="optionsMo()"
-            :list="allToots.slice(start, end)"
+            :list="allToots"
         >
             <GridItem
-                v-for="(toot, index) in allToots.slice(start, end)"
+                v-for="(toot, index) in allToots"
                 :toot="toot"
                 :key="index"
             />
         </isotope>
-
-        <button style="color: white" @click="moreItem">더보기</button>
+        <!-- <infinite-loading @infinite="infiniteHandler" spinner="waveDots">
+            <div
+                slot="no-more"
+                style="
+                    color: rgb(102, 102, 102);
+                    font-size: 14px;
+                    padding: 10px 0px;
+                "
+            >
+                목록의 끝입니다 :)
+            </div>
+        </infinite-loading> -->
+        <!-- <button style="color: white" @click="moreItem">더보기</button> -->
     </div>
 </template>
 
@@ -108,7 +119,6 @@ export default class Grid extends Vue {
     @Watch("allResult")
     changeResult() {
         this.allToots = this.allResult;
-        
     }
     mounted() {
         // this.changeResult();

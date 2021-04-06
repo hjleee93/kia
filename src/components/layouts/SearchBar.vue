@@ -151,7 +151,6 @@ export default class SearchBar extends Vue {
   inpFocus(arg: string) {
     this.isDone = false;
     search.inpFocus(this.$refs[arg]);
-    console.log("123",search.inpFocus(this.$refs[arg]))
     
   }
   searchToot() {

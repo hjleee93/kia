@@ -31,21 +31,24 @@ export default class Api {
         return response
     }
 
-    async getTagToots(category: string) {
+    async getTagToots(category: string, max_id?: number, limit?: number, option?: {}) {
         const result = await Vue.$axios.get(
-            "/api/v1/timelines/tag/" + category
+            "/api/v1/timelines/tag/" + category,
+            {
+                params: { only_media: true, limit, max_id, local: true }
+            }
         );
-        return result;
+        return result.data;
     }
 
-    async getMediaTootsOnly(limit?: number, option?: {}) {
+    async getMediaTootsOnly(max_id?: number, limit?: number, option?: {}) {
         const result = await Vue.$axios.get("/api/v1/timelines/public",
             {
-                params: Object.assign({ only_media: true, limit: limit }),
+                params: { only_media: true, limit, max_id, local: true },
                 headers: { Authorization: "Bearer " + config.token },
             }
         );
-        return result;
+        return result.data;
     }
     async getMyToots(userId: number) {
         const result = await Vue.$axios.get("/api/v1/accounts/" + userId + "/statuses"
