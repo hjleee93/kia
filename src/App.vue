@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" class="no-drag">
     <router-view v-if="isInit" :currentUser="currentUser" />
   </div>
 </template>
@@ -50,4 +50,7 @@ export default class App extends Vue {
 #app {
   height: 100%;
 }
+
+
+.no-drag {-ms-user-select: none; -moz-user-select: -moz-none; -webkit-user-select: none; -khtml-user-select: none; user-select:none;}
 </style>

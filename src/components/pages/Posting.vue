@@ -6,16 +6,18 @@
 
         <select name="hashtag" id="hashtag" class="hashtag" v-model="selected">
           <optgroup
+          class="hashtag-opt"
             v-for="lists in categoryList"
             :key="lists.idx"
             :label="lists.tags[0].name"
           >
             <option
+            class="hashtag-opt"
               :value="lists.name + ' #' + tag.name"
               v-for="(tag, idx) in lists.tags"
               :key="idx"
             >
-              <span> {{ tag.name }}</span>
+               {{ tag.name }}
             </option>
           </optgroup>
         </select>
@@ -172,10 +174,11 @@ export default class Posting extends Vue {
   private tootList: any[] = [];
   private isUploadStatus!: boolean;
   private categoryList: any[] = categoryList;
-  private selected: string = "";
+  private selected: string = '#'+this.categoryList[0].tags[0].name
   //   private active: boolean = false;
 
   async mounted() {
+
     await this.read();
   }
 
@@ -347,10 +350,26 @@ label.fileSelect:hover {
   display: block;
 }
 .hashtag {
-  background: #666;
+  
   margin-left: 1em;
-  /* padding: 0 1em; */
-  color: #fff;
+  /* padding: 0 1em; */  
   padding-left: 20px;
+   position: relative;
+    width: 180px;
+    height: 36px;
+    padding: 9px 0 7px 16px;
+    font-size: 14px;
+    line-height: 17px;
+    font-weight: 400;    
+    box-sizing: border-box;
+    text-align: left;
+    border: 1px solid #232f3b;
+    border-radius: 6px;
+  color: #fff;
+}
+.hashtag-opt{
+    background-color: #090f15;
+    color: #fff;
+ 
 }
 </style>

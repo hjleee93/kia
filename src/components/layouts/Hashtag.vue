@@ -36,9 +36,9 @@ export default class Hashtag extends Vue {
 
     mounted() {
         hashDropDown.init();
-        
+
         const tags = this.$store.getters.category(this.tag).tags;
-        
+
         for (const i in tags) {
             this.hashtags.push(tags[i].name);
         }
@@ -56,9 +56,9 @@ export default class Hashtag extends Vue {
         try {
             const result = await this.$api.getTagToots(arg);
 
-            for (const i in result.data) {
-                if (result.data[i].media_attachments.length > 0) {
-                    mediaTag.push(result.data[i]);
+            for (const i in result) {
+                if (result[i].media_attachments.length > 0) {
+                    mediaTag.push(result[i]);
                 }
             }
             this.$emit("tagResult", mediaTag);
@@ -72,4 +72,6 @@ export default class Hashtag extends Vue {
 }
 </script>
 
-<style></style>
+<style scoped>
+
+</style>
