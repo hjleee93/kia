@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <router-view :currentUser="currentUser" />
+    <router-view v-if="isInit" :currentUser="currentUser" />
   </div>
 </template>
 
@@ -14,6 +14,7 @@ import { initApp } from "@/scripts/ui_common";
 export default class App extends Vue {
   private loggedIn: boolean = localStorage.getItem("token") != null;
   private currentUser: any = {};
+  private isInit : boolean = false;
 
   async mounted() {
     initApp();
@@ -24,6 +25,7 @@ export default class App extends Vue {
   async init() {
     const categories = await this.$api.getCategory();
     this.$store.commit("categories", categories);
+    this.isInit = true;
   }
 
   async updateCurrentUser() {
