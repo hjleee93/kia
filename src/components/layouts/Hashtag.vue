@@ -36,12 +36,26 @@ export default class Hashtag extends Vue {
 
     mounted() {
         hashDropDown.init();
+        this.initCate();
+    }
 
-        const tags = this.$store.getters.category(this.tag).tags;
+    async initCate() {
+        const categories = await this.$api.getCategory();
 
-        for (const i in tags) {
-            this.hashtags.push(tags[i].name);
+        this.$store.commit("categories", categories);
+        const tags = this.$store.getters.category(this.tag)?.tags;
+
+        if (tags) {
+            for (const i in tags) {
+                this.hashtags.push(tags[i].name);
+            }
         }
+    }
+
+    @Watch("store.state.categories")
+    watchC() {
+        console.log("watch");
+        this.initCate();
     }
 
     txtClick() {
@@ -73,5 +87,4 @@ export default class Hashtag extends Vue {
 </script>
 
 <style scoped>
-
 </style>
