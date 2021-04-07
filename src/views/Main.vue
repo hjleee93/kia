@@ -7,7 +7,6 @@
         <section id="container">
           <router-view
             @category="category"
-            :currentUser="currentUser"
           ></router-view>
         </section>
       </div>
@@ -26,7 +25,7 @@ import MobileAlbum from "@/components/layouts/MobileAlbum.vue";
   components: { Header, MobileAlbum },
 })
 export default class App extends Vue {
-  @Prop() currentUser!: any;
+
   private loggedIn: boolean = localStorage.getItem("token") != null;
   private sendCategory: string = "";
 

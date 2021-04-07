@@ -87,7 +87,7 @@ import { bus } from "@/main";
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import Category from "./Category.vue";
 
-@Component({ props: ["currentUser"] })
+@Component({  })
 export default class Header extends Vue {
   @Prop() sendCategory!: string;
   private active: string = "";

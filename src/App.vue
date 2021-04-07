@@ -1,6 +1,7 @@
 <template>
     <div id="app" class="no-drag">
-        <router-view v-if="isInit" :currentUser="currentUser" />
+        <!-- <router-view v-if="isInit" :currentUser="currentUser" /> -->
+        <router-view/>
     </div>
 </template>
 
@@ -12,44 +13,35 @@ import { initApp } from "@/scripts/ui_common";
     components: {},
 })
 export default class App extends Vue {
-    private loggedIn: boolean = localStorage.getItem("token") != null;
-    private currentUser!: any;
-    private isInit: boolean = false;
-
-    get getCurrentUser(): any {
-        const currentUser = this.currentUser;
-        console.log("currentUser", currentUser);
-        return currentUser;
-    }
+    private token = localStorage.getItem("token");
+  
 
     async mounted() {
-        initApp();
-        await this.updateCurrentUser();
-        await this.init();
-    }
-
-    async init() {
-        const categories = await this.$api.getCategory();
-        this.$store.commit("categories", categories);
-        this.isInit = true;
-    }
-
-    async updateCurrentUser() {
-        if (this.loggedIn === true) {
-            try {
-                const result = await this.$api.getCurrentUser();
-                this.currentUser = result;
-                // console.log(this.currentUser);
-            } catch (err) {
-                console.log("Failed to fetch current user");
-            }
+        if(this.token !== null){
+            this.token = this.token.substr(1).slice(0,-1)
+            await this.$store.dispatch("userStatus", this.token)            
         }
     }
-    created() {
-        if (this.loggedIn && !this.currentUser) {
-            this.updateCurrentUser();
-        }
-    }
+
+    // async init() {
+        //     const categories = await this.$api.getCategory();
+    //     this.$store.commit("categories", categories);
+    //     this.isInit = true;
+    // }
+
+    // async updateCurrentUser(token: string) {
+    //     try {            
+    //         console.log("app mount")
+    //         await this.$store.dispatch("userStatus", token);
+    //     } catch (err) {
+    //         console.log("Failed to fetch current user");
+    //     }
+    // }
+    // created() {
+    //     if (this.loggedIn && !this.currentUser) {
+    //         this.updateCurrentUser();
+    //     }
+    // }
 }
 </script>
 <style>

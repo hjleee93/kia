@@ -153,7 +153,6 @@ export default class Login extends Vue {
                 this.attemptLogin(this.email, this.password);
             });
         } else {
-            console.log("====로그인클릭====");
             this.attemptLogin(this.email, this.password);
         }
     }
@@ -218,7 +217,6 @@ export default class Login extends Vue {
             this.store.in("instance", instance.host);
             this.store.in("token", result.data.access_token);
             try {
-                console.log("========attemptLogin=======");
                 await this.updateCurrentUser(result.data.access_token);
                 this.$router.push("/hive").catch(() => {});
             } catch (err) {
@@ -255,7 +253,6 @@ export default class Login extends Vue {
     }
 
     async updateCurrentUser(token: string) {
-        console.log("========updateCurrentUsert=======");
         try {
             console.log("token", token);
             await this.$store.dispatch("userStatus", token);

@@ -24,9 +24,9 @@ export default class Api {
         return tempCategory;
     }
 
-    async getCurrentUser(token ?:string) {
+    async getCurrentUser(token :string) {
         
-        const userToken = config.token || token
+        const userToken =  token
         const response = await Vue.$axios.get('/api/v1/accounts/verify_credentials', {
             headers: { Authorization: "Bearer " + userToken },
         })
