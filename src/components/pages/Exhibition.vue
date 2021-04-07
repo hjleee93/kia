@@ -46,7 +46,7 @@ export default class Exhibition extends Vue {
     private category: string = "Exhibition";
     private tagSearch: any[] = [];
 
-    private limitCount: number = 1;
+    private limitCount: number = 5;
     private loadingState: ETootLoadingState = ETootLoadingState.none;
 
     beforeUpdate() {

@@ -72,7 +72,7 @@ export default class INS extends Vue {
         //     favourites_count: '1,504',
         // },
     ];
-    private limitCount : number = 1;
+    private limitCount : number = 5;
     private loadingState : ETootLoadingState = ETootLoadingState.none;
 
     mounted() {

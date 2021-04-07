@@ -43,18 +43,7 @@
                 :key="index"
             />
         </isotope>
-        <!-- <infinite-loading @infinite="infiniteHandler" spinner="waveDots">
-            <div
-                slot="no-more"
-                style="
-                    color: rgb(102, 102, 102);
-                    font-size: 14px;
-                    padding: 10px 0px;
-                "
-            >
-                목록의 끝입니다 :)
-            </div>
-        </infinite-loading> -->
+
         <!-- <button style="color: white" @click="moreItem">더보기</button> -->
     </div>
 </template>
@@ -68,6 +57,7 @@ import GridItem from "./GridItem.vue";
 import isotope from "vueisotope";
 import { getDevice } from "@/scripts/ui_common";
 import config from "@/lib/config";
+import { nextTick } from "node_modules/vue/types/umd";
 
 @Component({ components: { GridItem, isotope } })
 export default class Grid extends Vue {
@@ -119,7 +109,32 @@ export default class Grid extends Vue {
     @Watch("allResult")
     changeResult() {
         this.allToots = this.allResult;
+
+        //@ts-ignore
+        imagesLoaded(document.querySelector(".grid"), () => {
+            console.log("all images are loaded");
+            setTimeout(() => {
+                //@ts-ignore
+                this.$refs.isotope.layout();
+            }, 100);
+        });
+        //  setTimeout(() => {
+        //     //@ts-ignore
+        //     this.$refs.isotope.layout();
+        // }, 100);
+        // this.$nextTick(()=>{
+        //      this.$nextTick(()=>{
+        //          this.$nextTick(()=>{
+        //              console.log(this.allToots.length)
+
+        //         //@ts-ignore
+        //         this.$refs.isotope.layout();
+        //          });
+
+        //      });
+        // });
     }
+
     mounted() {
         // this.changeResult();
         // this.getGridItem(10);
@@ -137,10 +152,10 @@ export default class Grid extends Vue {
 
         // isotope.init();
         this.device = getDevice();
-        setTimeout(() => {
-            //@ts-ignore
-            this.$refs.isotope.layout();
-        }, 100);
+        // setTimeout(() => {
+        //     //@ts-ignore
+        //     this.$refs.isotope.layout();
+        // }, 1000);
         window.addEventListener("resize", this.onResize);
     }
 
@@ -187,7 +202,7 @@ export default class Grid extends Vue {
             },
 
             horizontal: true,
-            horizontalOrder: false,
+            horizontalOrder: true,
             // transitionDuration: 0,
         };
     }
@@ -202,3 +217,13 @@ export default class Grid extends Vue {
     }
 }
 </script>
+
+<style scoped>
+/* .grid-item {
+  margin-bottom: 10px;
+} */
+
+.grid-item {
+    margin-bottom: 50px;
+}
+</style>

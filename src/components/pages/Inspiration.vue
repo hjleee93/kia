@@ -46,7 +46,7 @@ export default class Inspiration extends Vue {
     private category: string = "Inspiration";
     private tagSearch: any[] = [];
 
-    private limitCount: number = 1;
+    private limitCount: number = 5;
     private loadingState: ETootLoadingState = ETootLoadingState.none;
     beforeUpdate() {
         tootDropDown.init();

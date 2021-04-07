@@ -46,7 +46,7 @@ export default class Hive extends Vue {
     private category: string = "Hive";
     private allResult: any[] = [];
 
-    private limitCount: number = 1;
+    private limitCount: number = 5;
     private loadingState: ETootLoadingState = ETootLoadingState.none;
 
     beforeUpdate() {
@@ -85,7 +85,8 @@ export default class Hive extends Vue {
         let el = document.documentElement;
 
         if (el.scrollTop === 0) {
-        } else if (el.scrollTop + el.clientHeight >= el.scrollHeight - 150) {
+        } else if (el.scrollTop + el.clientHeight >= el.scrollHeight - 100) {
+            
             this.loadToot();
         }
     }

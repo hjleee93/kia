@@ -17,10 +17,14 @@ export default class App extends Vue {
   
 
     async mounted() {
-        if(this.token !== null){
-            this.token = this.token.substr(1).slice(0,-1)
-            await this.$store.dispatch("userStatus", this.token)            
-        }
+        // if(this.token !== null){
+        //     this.token = this.token.substr(1).slice(0,-1)
+        //     await this.$store.dispatch("userStatus", this.token).
+        //     then()
+        //     console.log("async-await", this.$store.dispatch("userStatus", this.token).then(()=>{
+        //         this.$store.getters.currentUser
+        //     })            
+        // }
     }
 
     // async init() {
