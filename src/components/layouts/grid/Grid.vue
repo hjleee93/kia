@@ -102,6 +102,14 @@ export default class Grid extends Vue {
     //   this.foundUser = this.result.accounts
     //   // this.allToots = this.result;
     // }
+    @Watch("device")
+    changeDevice() {
+        console.log(this.device, window.innerWidth)
+        setTimeout(() => {
+            //@ts-ignore
+                this.$refs.isotope.layout();
+            }, 100);
+    }
     @Watch("tagSearch")
     changeTag() {
         this.allToots = this.tagSearch;
@@ -112,8 +120,9 @@ export default class Grid extends Vue {
 
         //@ts-ignore
         imagesLoaded(document.querySelector(".grid"), () => {
-            console.log("all images are loaded");
+           
             setTimeout(() => {
+              
                 //@ts-ignore
                 this.$refs.isotope.layout();
             }, 100);
@@ -151,12 +160,15 @@ export default class Grid extends Vue {
         // );
 
         // isotope.init();
+    
         this.device = getDevice();
+        
+        // console.log(this.device)
         // setTimeout(() => {
         //     //@ts-ignore
         //     this.$refs.isotope.layout();
         // }, 1000);
-        window.addEventListener("resize", this.onResize);
+        window.addEventListener("resize", this.onResize, false);
     }
 
     // getGridItem(howMany = config.statusLimit) {
@@ -167,7 +179,7 @@ export default class Grid extends Vue {
     //       params: Object.assign({ only_media: true }),
     //       headers: { Authorization: "Bearer " + config.token },
     //     })
-    //     .then(
+    //     .then(f
     //       (response: any) => {
     //         //@ts-ignore
     //         var result = response.data;
@@ -180,7 +192,7 @@ export default class Grid extends Vue {
     // }
 
     beforeDestroy() {
-        window.removeEventListener("resize", this.onResize);
+        // window.removeEventListener("resize", this.onResize, false);
     }
 
     moreItem() {
@@ -189,8 +201,16 @@ export default class Grid extends Vue {
     }
 
     onResize() {
+          
         this.device = getDevice();
-        console.log(this.device);
+     
+        //  this.setTimeout(() => {
+        //     //@ts-ignore
+        //         this.$refs.isotope.layout();
+        //     }, 100);
+          
+        
+       
     }
 
     optionPc() {
