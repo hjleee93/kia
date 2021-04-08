@@ -134,10 +134,11 @@ export default class Login extends Vue {
     private emailRegExp = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
 
 
-    handleKeyDown(e: { code: string }) {
-        if (e.code === "Enter") {
+    handleKeyDown(e: any) {
+        if (e.code === "Enter" || e.keyCode === 13) {
             this.login();
         }
+        
     }
     created() {
         window.addEventListener("keydown", this.handleKeyDown); }
