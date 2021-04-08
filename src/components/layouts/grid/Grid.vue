@@ -104,11 +104,10 @@ export default class Grid extends Vue {
     // }
     @Watch("device")
     changeDevice() {
-        console.log(this.device, window.innerWidth)
         setTimeout(() => {
             //@ts-ignore
-                this.$refs.isotope.layout();
-            }, 100);
+            this.$refs.isotope.layout();
+        }, 100);
     }
     @Watch("tagSearch")
     changeTag() {
@@ -120,9 +119,7 @@ export default class Grid extends Vue {
 
         //@ts-ignore
         imagesLoaded(document.querySelector(".grid"), () => {
-           
             setTimeout(() => {
-              
                 //@ts-ignore
                 this.$refs.isotope.layout();
             }, 100);
@@ -160,17 +157,16 @@ export default class Grid extends Vue {
         // );
 
         // isotope.init();
-    
+
         this.device = getDevice();
-        
         // console.log(this.device)
         // setTimeout(() => {
         //     //@ts-ignore
         //     this.$refs.isotope.layout();
         // }, 1000);
-        window.addEventListener("resize", this.onResize, false);
+        // window.addEventListener("resize", this.onResize, false)
+        window.onresize = this.onResize;
     }
-
     // getGridItem(howMany = config.statusLimit) {
     //   let endpoint = this.endpoints.rest.fed;
     //   //@ts-ignore
@@ -201,16 +197,17 @@ export default class Grid extends Vue {
     }
 
     onResize() {
-          
+        console.log(
+            "onResize",
+            getDevice(),
+            window.innerWidth,
+            window.outerWidth
+        );
         this.device = getDevice();
-     
-        //  this.setTimeout(() => {
-        //     //@ts-ignore
-        //         this.$refs.isotope.layout();
-        //     }, 100);
-          
-        
-       
+        setTimeout(() => {
+            //@ts-ignore
+            this.$refs.isotope.layout();
+        }, 500);
     }
 
     optionPc() {

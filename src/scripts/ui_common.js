@@ -381,7 +381,7 @@ var Gnb = function Gnb() {
 
 
 var getDevice = function getDevice() {
-    return window.innerWidth >= 1024 ? "pc" : "mo";
+    return window.outerWidth  >= 1024 ? "pc" : "mo";
 };
 
 var isDesktop = function isDesktop() {
