@@ -223,6 +223,7 @@ export default class Posting extends Vue {
     private isUploadStatus!: boolean;
     private categoryList: any[] = categoryList;
     private selected: string = "";
+    private isSendData: boolean = false;
 
     private token = localStorage.getItem("token");
 
@@ -236,6 +237,7 @@ export default class Posting extends Vue {
     }
 
     async send() {
+        this.isSendData = false;
         if (this.sending || (!this.message.length && !this.uploads.length)) {
             return true;
         }
@@ -294,28 +296,33 @@ export default class Posting extends Vue {
                 .filter((toot) => toot.id !== status.id)
                 .slice(0, config.statusLimit - 1),
         ];
+        this.isSendData = true;
     }
     async read() {
         const result = await this.$api.getMyToots(this.userId);
         this.tootList = result.data;
     }
     async tootDelete(toot: any) {
-        if (toot.account.acct !== this.$store.getters.currentUser) {
+       this.isSendData = false;
+        if (toot.account.acct !== this.$store.getters.currentUser.acct) {
             console.log("Can't delete someone else's toot");
             return false;
         }
         //todo: delete try-catch 처리
         try {
             const result = await this.$api.deleteToot(toot.id);
+             this.isSendData = true;
             alert("해당 툿을 삭제햇습니다.");
         } catch (err) {
             console.log(err);
         }
     }
-    @Watch("tootList")
+    @Watch("isSendData")
     async updateToot() {
-        const result = await this.$api.getMyToots(this.userId);
-        this.tootList = result.data;
+        if (this.isSendData) {
+            const result = await this.$api.getMyToots(this.userId);
+            this.tootList = result.data;
+        }
     }
 }
 </script>
