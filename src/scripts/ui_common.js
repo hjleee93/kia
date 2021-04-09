@@ -168,8 +168,8 @@ var Gnb = function Gnb() {
     var init = function init() {
         domHeaderFixed = document.querySelector(".header-fixed");
         domWrapFixed = document.querySelector(".wrap-fixed");
-        domSecFixed = domWrapFixed.querySelector(".sec-fixed");
-        domBoxLayer = domWrapFixed.querySelector(".box-layer");
+        domSecFixed = domWrapFixed && domWrapFixed.querySelector(".sec-fixed");
+        domBoxLayer = domWrapFixed && domWrapFixed.querySelector(".box-layer");
 
         if (domWrapFixed) {
             domWrapFixed.style.height = "".concat(getSecFixedRect().height, "px");
