@@ -24,9 +24,9 @@ export default class Api {
         return tempCategory;
     }
 
-    async getCurrentUser(token :string) {
-        
-        const userToken =  token
+    async getCurrentUser(token: string) {
+
+        const userToken = token
         const response = await Vue.$axios.get('/api/v1/accounts/verify_credentials', {
             headers: { Authorization: "Bearer " + userToken },
         })
@@ -79,6 +79,7 @@ export default class Api {
     }
 
     async uploadToot(message: string, tagSelected: string, uploads: File[]) {
+        //issue : 빈칸인 경우 #만 노출되는 현상 
         const result = await Vue.$axios.post("/api/v1/statuses/", {
             status: message + `\n #` + tagSelected,
             media_ids: uploads
@@ -107,6 +108,23 @@ export default class Api {
         return result;
     }
 
+    async sendFavourite(tootId: number) {
+        const result = await Vue.$axios.post("/api/v1/statuses/" + tootId + "/favourite",
+            {
+                headers: { Authorization: "Bearer " + config.token },
+                
+            })
+        return result;
+    }
+  
+    async sendUnfavourite(tootId: number) {
+        const result = await Vue.$axios.post("/api/v1/statuses/" + tootId + "/unfavourite",
+            {
+                headers: { Authorization: "Bearer " + config.token },
+                
+            })
+        return result;
+    }
 }
 
 declare module 'vue/types/vue' {
