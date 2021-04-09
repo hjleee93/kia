@@ -65,9 +65,6 @@ const routes: Array<RouteConfig> = [
 
 
             },
-
-
-
         ]
     },
 
@@ -75,7 +72,15 @@ const routes: Array<RouteConfig> = [
         path: '/login',
         name: 'Login',
         component: () => import(/* webpackChunkName: "about" */ '@/views/Login.vue'),
-    }
+    },
+
+    {
+        path: '/mastodon/*',
+        name: 'mastodon',
+        component: () => import(/* webpackChunkName: "about" */ '@/views/Mastodon.vue'),
+    },
+
+
 ]
 
 const router = new VueRouter({

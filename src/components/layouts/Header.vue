@@ -8,7 +8,7 @@
                 <ul>
                     <li class="list-ins">
                         <router-link
-                            to="/INS"
+                            to="/mastodon/web/timelines/public"
                             class="btn btn-link"
                             @click.native="active = 'INS'"
                             :class="{ active: isActive('INS') }"
