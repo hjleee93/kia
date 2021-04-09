@@ -42,6 +42,7 @@
                 :toot="toot"
                 :key="index"
             />
+            
         </isotope>
 
         <!-- <button style="color: white" @click="moreItem">더보기</button> -->

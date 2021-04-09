@@ -56,7 +56,7 @@ export default class Api {
         const result = await Vue.$axios.get("/api/v1/accounts/" + userId + "/statuses"
         );
 
-        return result;
+        return result.data;
     }
     async deleteToot(tootId: number) {
         const result = await Vue.$axios.delete("/api/v1/statuses/" + tootId, {

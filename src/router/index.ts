@@ -40,7 +40,7 @@ const routes: Array<RouteConfig> = [
             {
                 path: '/posting',
                 name: 'Posting',
-                component: () => import(/* webpackChunkName: "about" */ '@/components/pages/Posting.vue'),
+                component: () => import(/* webpackChunkName: "about" */ '@/components/pages/Posting1.vue'),
 
 
             },
