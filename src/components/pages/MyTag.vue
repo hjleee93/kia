@@ -4,13 +4,18 @@
     <div class="content">
       <div class="wrap-fixed">
         <div class="sec-fixed">
-          <SearchHashtag :hashtag='hashtag' />
+          <SearchHashtag :hashtag='hashtag'  @myTags='getMyTags'/>
           <div class="sec-category">
             <div class="box-grid-top">
               <div class="floated left">
+                <template  v-if="!isSearch">
                 <p class="txt">검색결과</p>
+                </template>
                 <!--검색 전-->
-                <!--<p class="txt">총 0개의 검색 결과</p>--><!--검색 결과 없음-->
+                <template v-else>
+                  <p class="txt">총 {{myTagList.length}}개의 검색 결과</p>
+                </template>
+                  <!--검색 결과 없음-->
                 <!--<p class="txt">총 10개의 검색 결과</p>--><!--검색 결과 있음-->
               </div>
             </div>
@@ -26,13 +31,15 @@
             <p class="txt">해시태그를 검색해주세요.</p>
           </div>
 
+          <ul v-else-if="myTagList.length > 0" class="hash-lists">
+            
           <!--검색 결과 있음-->
-          <ul v-else-if="hashList.length" class="hash-lists">
-            <template v-for="hashData in hashList">
+            <template v-for="hashData in myTagList">
               <li>
-                <button class="btn btn-hash" @click="clickedHashtag(hashData.hash)">
+                {{hashData}}
+                <!-- <button class="btn btn-hash" @click="clickedHashtag(hashData.hash)">
                   <span class="hash"><span>#</span>{{ hashData.hash }}</span>
-                </button>
+                </button> -->
               </li>
             </template>
           </ul>
@@ -56,7 +63,9 @@ import { gnb } from "@/scripts/ui_common";
 
 @Component({ components: { SearchHashtag } })
 export default class MyTag extends Vue {
-  isSearch: boolean = true;
+  isSearch: boolean = false;
+  myTagList: string[] = [];
+  //todo: 내가 쓴 해시태그 가져오기 
   hashList: any[] = [
     { hash: "해시 태그명 노출1" },
     { hash: "해시 태그명 노출2" },
@@ -106,6 +115,15 @@ private hashtag: string = '';
   
   clickedHashtag(val: string){
     this.hashtag = val;
+  }
+  getMyTags(tags: string[]){
+    
+    if(tags){
+      this.myTagList = tags;
+      this.isSearch = true;
+    }
+    
+    console.log(this.myTagList)
   }
 }
 </script>
