@@ -3,7 +3,7 @@
         <div class="content">
             <div class="wrap-fixed">
                 <div class="sec-fixed">
-                    <SearchBar @searchResult="searchResult" />
+                    <SearchBar @searchResult="searchResult" :category="category" />
                     <Category :category="category" />
                     <div class="sec-grid-top">
                         <BoxGridTop />
@@ -43,7 +43,7 @@ enum ETootLoadingState {
     components: { SearchBar, Category, Grid, BoxGridTop },
 })
 export default class Hive extends Vue {
-    private category: string = "Hive";
+    private category: string = "Posting";
     private allResult: any[] = [];
     private userId: number = -1;
     private limitCount: number = 5;
@@ -111,6 +111,8 @@ export default class Hive extends Vue {
             this.loadingState = ETootLoadingState.loading;
 
             const result = await this.$api.getMyToots(this.userId);
+
+            console.log(result.length)
             
             if (result.length < this.limitCount) {
                 this.loadingState = ETootLoadingState.end;
@@ -120,6 +122,7 @@ export default class Hive extends Vue {
                         const el = document.documentElement;
                         if (el.scrollHeight <= el.clientHeight) {
                             this.loadingState = ETootLoadingState.complete;
+                            //todo:계속 같은거 로드됨 페이지네이션 해야댐
                             this.loadToot();
                         } else {
                             this.loadingState = ETootLoadingState.complete;

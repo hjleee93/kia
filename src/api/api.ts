@@ -23,6 +23,9 @@ export default class Api {
     async getCategory() {
         return tempCategory;
     }
+    getToken() {
+        return JSON.parse(localStorage.getItem('token')!)
+    }
 
     async getCurrentUser(token: string) {
 
@@ -108,23 +111,54 @@ export default class Api {
         return result;
     }
 
-    async sendFavourite(tootId: number) {
-        const result = await Vue.$axios.post("/api/v1/statuses/" + tootId + "/favourite",
-            {
-                headers: { Authorization: "Bearer " + config.token },
-                
-            })
-        return result;
+    
+private config = {
+    method: 'post',
+    url: 'https://toot.wbcard.org/api/v1/statuses/106028901858905279/favourite',
+    headers: {
+        'Authorization': 'Bearer RlHMG072CAXec3Jx1l8PI0cbZJ7vw9YwE--qneyMnkU'
     }
-  
-    async sendUnfavourite(tootId: number) {
-        const result = await Vue.$axios.post("/api/v1/statuses/" + tootId + "/unfavourite",
-            {
-                headers: { Authorization: "Bearer " + config.token },
-                
-            })
-        return result;
-    }
+};
+
+
+async sendFavourite(tootId: number, token: any) {
+    // console.log('token', config.token, token, this.getToken())
+    // console.log(this.config)
+
+    const result = await Vue.$axios({
+        method: 'post',
+        url: `https://toot.wbcard.org/api/v1/statuses/${tootId}/favourite`,
+        headers: {
+            'Authorization': `Bearer ${config.token}`
+        }
+    })
+    // post("/api/v1/statuses/" + tootId + "/favourite",
+    //     {
+    //         headers: { 'Authorization': 'Bearer ' + this.getToken() },
+
+    //     })
+
+    console.log('result', result)
+    return result;
+}
+
+async sendUnfavourite(tootId: number) {
+    console.log(config.token)
+
+     const result = await Vue.$axios({
+        method: 'post',
+        url: `https://toot.wbcard.org/api/v1/statuses/${tootId}/unfavourite`,
+        headers: {
+            'Authorization': `Bearer ${config.token}`
+        }
+    })
+    // .post("/api/v1/statuses/" + tootId + "/unfavourite",
+    //     {
+    //         headers: { 'Authorization': "Bearer " + config.token },
+
+    //     })
+    return result;
+}
 }
 
 declare module 'vue/types/vue' {
