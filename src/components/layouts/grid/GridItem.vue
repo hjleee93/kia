@@ -1,9 +1,11 @@
 <template>
   <div class="grid-item">
+  <template v-if="toot.media_attachments !== undefined">
+    <template v-if="toot.media_attachments[0] !== undefined">
     <a href="#" class="btn btn-link">
       <div class="box-img">
         
-        <template v-if="toot.media_attachments[0] !== undefined || toot.media_attachments.length>0">
+      
            <template v-if="toot.media_attachments[0].type === 'image'">
           <img
             :src="toot.media_attachments[0].preview_url"
@@ -15,8 +17,7 @@
         <template v-if="toot.media_attachments[0].type === 'video'">
           <i class="icon icon-play"></i>
         </template>
-         </template>
-        <!--동영상인 경우-->
+       
       </div>
       <div class="box-cont">
         
@@ -30,6 +31,8 @@
     <!--<button class="btn btn-like active"></button>-->
     <!--활성화 모션-->
     <!--<button class="btn btn-like active motion"></button>-->
+    </template>
+  </template>
   </div>
 </template>
 
@@ -40,9 +43,6 @@ import Like from "./Like.vue";
 @Component({ components: { Like } })
 export default class GridItem extends Vue {
     @Prop() toot!: any;
-    mounted() {
-        console.log(this.toot.media_attachments);
-    }
 }
 </script>
 

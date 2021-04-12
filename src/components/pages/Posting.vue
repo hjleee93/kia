@@ -66,11 +66,11 @@ export default class Hive extends Vue {
             this.token = this.token.substr(1).slice(0, -1);
             await this.$store.dispatch("userStatus", this.token);
             this.userId = this.$store.getters.currentUser.id;
-            console.log(this.userId)
         }
       await  this.loadToot();
         window.addEventListener("scroll", this.scrollHandler);
-        
+       
+       
     }
 
     searchResult(result: any) {
@@ -85,6 +85,7 @@ export default class Hive extends Vue {
             const result = await this.$api.getMyToots(this.userId);
             //@ts-ignore
             this.allResult = result;
+           
         } catch (err) {
             console.log(err);
         }
@@ -111,9 +112,7 @@ export default class Hive extends Vue {
             this.loadingState = ETootLoadingState.loading;
 
             const result = await this.$api.getMyToots(this.userId);
-
-            console.log(result.length)
-            
+             
             if (result.length < this.limitCount) {
                 this.loadingState = ETootLoadingState.end;
             } else {
