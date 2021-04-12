@@ -759,6 +759,7 @@ var Search = function Search() {
     };
 
     var inpFocus = function inpFocus() {
+        init();
         console.log("domWrap",domWrap)
         if (domWrap) {
             listsOpen();
