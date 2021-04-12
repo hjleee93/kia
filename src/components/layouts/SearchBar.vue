@@ -12,7 +12,7 @@
               <li>
                 <button
                   data-val="all"
-                  class="btn btn-dropdown"
+                  class="btn btn-dropdown"                    
                   @click="tootDrop('allToot')"
                   ref="allToot"
                 >
@@ -23,7 +23,8 @@
               <li>
                 <button
                   data-val="my"
-                  class="btn btn-dropdown active"
+                  class="btn btn-dropdown"
+                  :class="category === 'Posting' ? 'active' :''"
                   @click="tootDrop('myToot')"
                   ref="myToot"
                 >
@@ -62,7 +63,6 @@
                               - input에 focus이면서 text가 있으면 최근 검색어 노출하지 않습니다. search.historyListsClose 호출
                               - input에 focus이면서 text가 없으면 최근 검색어 노출합니다. search.historyListsOpen 호출
                             -->
-              <!-- todo검색: https://codepen.io/AndrewThian/pen/QdeOVa -->
 
               <input
                 type="text"
@@ -120,6 +120,7 @@ import config from "@/lib/config";
 
 @Component({ components: {} })
 export default class SearchBar extends Vue {
+  @Prop() category !: string;
   private searchInput: string = "";
   private isDone: boolean = false;
   private searchHistory: string[] = JSON.parse(
@@ -131,6 +132,7 @@ export default class SearchBar extends Vue {
     gnb.init();
     search.init();
     dim.init();
+    
   }
   beforeDestroy() {
       search.destroy();
@@ -140,6 +142,7 @@ export default class SearchBar extends Vue {
   }
   tootDrop(arg: string) {
     tootDropDown.btnDropdownClick(this.$refs[arg]);
+    console.log(arg)
   }
   mobileToggle(arg: string) {
     search.mobileToggle(this.$refs[arg]);

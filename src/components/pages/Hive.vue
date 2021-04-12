@@ -3,7 +3,7 @@
         <div class="content">
             <div class="wrap-fixed">
                 <div class="sec-fixed">
-                    <SearchBar @searchResult="searchResult" />
+                    <SearchBar @searchResult="searchResult" :category="category" />
                     <Category :category="category" />
                     <div class="sec-grid-top">
                         <BoxGridTop />
