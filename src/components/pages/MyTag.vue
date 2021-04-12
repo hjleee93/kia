@@ -4,7 +4,7 @@
     <div class="content">
       <div class="wrap-fixed">
         <div class="sec-fixed">
-          <SearchHashtag />
+          <SearchHashtag :hashtag='hashtag' />
           <div class="sec-category">
             <div class="box-grid-top">
               <div class="floated left">
@@ -30,7 +30,7 @@
           <ul v-else-if="hashList.length" class="hash-lists">
             <template v-for="hashData in hashList">
               <li>
-                <button class="btn btn-hash">
+                <button class="btn btn-hash" @click="clickedHashtag(hashData.hash)">
                   <span class="hash"><span>#</span>{{ hashData.hash }}</span>
                 </button>
               </li>
@@ -50,7 +50,7 @@
 <style></style>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import SearchHashtag from "@/components/layouts/myTag/SearchHashtag.vue";
 import { gnb } from "@/scripts/ui_common";
 
@@ -58,14 +58,14 @@ import { gnb } from "@/scripts/ui_common";
 export default class MyTag extends Vue {
   isSearch: boolean = true;
   hashList: any[] = [
-    { hash: "해시 태그명 노출" },
-    { hash: "해시 태그명 노출" },
-    { hash: "해시 태그명 노출" },
-    { hash: "해시 태그명 노출" },
-    { hash: "해시 태그명 노출" },
-    { hash: "해시 태그명 노출" },
-    { hash: "해시 태그명 노출" },
-    { hash: "해시 태그명 노출" },
+    { hash: "해시 태그명 노출1" },
+    { hash: "해시 태그명 노출2" },
+    { hash: "해시 태그명 노출3" },
+    { hash: "해시 태그명 노출4" },
+    { hash: "해시 태그명 노출5" },
+    { hash: "해시 태그명 노출6" },
+    { hash: "해시 태그명 노출7" },
+    { hash: "해시 태그명 노출8" },
     { hash: "해시 태그명 노출" },
     { hash: "해시 태그명 노출" },
     { hash: "해시 태그명 노출" },
@@ -99,9 +99,13 @@ export default class MyTag extends Vue {
     { hash: "해시 태그명 노출" },
     { hash: "해시 태그명 노출" },
   ];
-
+private hashtag: string = '';
   mounted() {
     gnb.init();
+  }
+  
+  clickedHashtag(val: string){
+    this.hashtag = val;
   }
 }
 </script>
