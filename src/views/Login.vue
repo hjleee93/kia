@@ -116,6 +116,8 @@
             </div>
         </div>
         <!--content(E)-->
+
+        <iframe class="iframe" ref="iframe" :src="`${baseURL}about`"></iframe>
     </div>
 </template>
 
@@ -124,6 +126,9 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 
 @Component({ components: {} })
 export default class Login extends Vue {
+
+    private baseURL: string = process.env.VUE_APP_BASE_API;
+
     private email: string = "";
     private password: string = "";
     private instance: string = process.env.VUE_APP_BASE_API!;
@@ -141,9 +146,10 @@ export default class Login extends Vue {
         
     }
     created() {
-        window.addEventListener("keydown", this.handleKeyDown); }
+        window.addEventListener("keydown", this.handleKeyDown);
+    }
     destroyed() {
-        window.removeEventListener("keydown", this.handleKeyDown); 
+        window.removeEventListener("keydown", this.handleKeyDown);
     }
 
     login() {
@@ -215,8 +221,28 @@ export default class Login extends Vue {
                 password,
                 instance
             );
+
+            console.log(result);
+
             this.store.in("instance", instance.host);
             this.store.in("token", result.data.access_token);
+
+            (this.$refs.iframe as HTMLIFrameElement).contentWindow.postMessage({
+                type : 'login',
+                email,
+                password,
+            }, '*');
+            await new Promise((resolve)=>{
+                const onMessage = (e)=>{
+                    const data = e.data || {};
+                    if( data.type === 'loadedPage' ) {
+                        window.removeEventListener('message', onMessage);
+                        resolve();
+                    }
+                }
+                window.addEventListener('message', onMessage);
+            })
+
             try {
                 await this.updateCurrentUser(result.data.access_token);
                 this.$router.push("/hive").catch(() => {});
@@ -224,6 +250,8 @@ export default class Login extends Vue {
                 console.log(err);
                 this.error();
             }
+
+
         } catch (err) {
             console.log(err);
             this.error();
@@ -269,5 +297,9 @@ export default class Login extends Vue {
 .btn.btn-login:active {
     background-color: #fff !important;
     color: #000 !important;
+}
+
+.iframe {
+    display: none;
 }
 </style>
