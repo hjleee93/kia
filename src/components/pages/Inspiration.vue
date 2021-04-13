@@ -6,7 +6,7 @@
                     <SearchBar :category="category" />
                     <Category :category="category" @tagResult="tagResult" />
                     <div class="sec-grid-top">
-                        <BoxGridTop />
+                        <BoxGridTop  @sortOrder="sortOrder"/>
                     </div>
                     <div class="dim"></div>
                 </div>
@@ -126,6 +126,10 @@ export default class Inspiration extends Vue {
             }
             this.tagSearch.push(...result);
         }
+    }
+
+      sortOrder(value: string){
+        console.log("value",value)
     }
 }
 </script>

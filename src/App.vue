@@ -8,6 +8,7 @@
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import { initApp } from "@/scripts/ui_common";
+import config from "./lib/config";
 
 @Component({
     components: {},
@@ -17,13 +18,17 @@ export default class App extends Vue {
   
 
     async mounted() {
+        
+        const result = await this.$api.getCurrentUser(config.token);
+        this.$store.dispatch("userStatus",config.token)
+        // console.log(this.$store.getters.)
         // if(this.token !== null){
         //     this.token = this.token.substr(1).slice(0,-1)
-        //     await this.$store.dispatch("userStatus", this.token).
-        //     then()
-        //     console.log("async-await", this.$store.dispatch("userStatus", this.token).then(()=>{
-        //         this.$store.getters.currentUser
-        //     })            
+        //     await this.$store.dispatch("userStatus", this.token)
+            
+        //     // console.log("async-await", this.$store.dispatch("userStatus", this.token).then(()=>{
+        //     //     this.$store.getters.currentUser
+        //     // })            )
         // }
     }
 

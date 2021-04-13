@@ -42,7 +42,6 @@
                 :toot="toot"
                 :key="index"
             />
-            
         </isotope>
 
         <!-- <button style="color: white" @click="moreItem">더보기</button> -->
@@ -121,9 +120,11 @@ export default class Grid extends Vue {
         //@ts-ignore
         imagesLoaded(document.querySelector(".grid"), () => {
             setTimeout(() => {
+                  if (this.$refs.isotope !== undefined) {
                 //@ts-ignore
                 this.$refs.isotope.layout();
-            }, 100);
+            }}, 100);
+            
         });
         //  setTimeout(() => {
         //     //@ts-ignore
@@ -198,16 +199,12 @@ export default class Grid extends Vue {
     }
 
     onResize() {
-        console.log(
-            "onResize",
-            getDevice(),
-            window.innerWidth,
-            window.outerWidth
-        );
         this.device = getDevice();
         setTimeout(() => {
-            //@ts-ignore
-            this.$refs.isotope.layout();
+            if (this.$refs.isotope !== undefined) {
+                //@ts-ignore
+                this.$refs.isotope.layout();
+            }
         }, 500);
     }
 

@@ -19,7 +19,7 @@
                         <h2 class="b-tit">툿</h2>
                         <div class="box-toot">
                             <div class="toot-lists">
-                                <toot-card v-for="toot in tootList" :toot="toot">
+                                <toot-card v-for="toot in tootList" :toot="toot" :key="toot.id">
                                 </toot-card>
                             </div>
                         </div>
@@ -92,6 +92,7 @@ export default class INS extends Vue {
         if (el.scrollTop === 0) {
 
         } else if (el.scrollTop + el.clientHeight >= el.scrollHeight - 150) {
+            console.log(el.scrollTop)
             this.loadToot();
         }
     }
@@ -114,6 +115,7 @@ export default class INS extends Vue {
                     this.$nextTick(()=>{
                         const el = document.documentElement;
                         if( el.scrollHeight <= el.clientHeight ) {
+                            
                             this.loadingState = ETootLoadingState.complete;
                             this.loadToot();
                         }

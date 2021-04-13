@@ -47,7 +47,11 @@ export default class SearchHashtag extends Vue {
     }
 
     searchMyTag(input: string) {
-        console.log(input);
+        //todo: 자신이 사용한 해시태그 get 연결
+        let result = ['123', '234', '안녕']
+        // let result:any[] = []
+        //결과값 저장
+        this.$emit('myTags', result)
         this.isDone = true;
     }
 }

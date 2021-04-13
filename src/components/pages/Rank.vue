@@ -87,9 +87,14 @@
                         <div class="sec-toot">
                             <h2 class="b-tit">인기 툿</h2>
                             <div class="box-toot">
-                                <div class="toot-lists">
-                                   <toot-card v-for="toot in tootList" :toot="toot" :key="toot.id"> 
-                                </toot-card>
+                                <div class="toot-lists" @scroll="scrollHandler">
+                                    <toot-card
+                                        v-for="toot in tootList"
+                                        :toot="toot"
+                                        :key="toot.id"
+                                        class="single-toot"
+                                    >
+                                    </toot-card>
                                 </div>
                             </div>
                         </div>
@@ -97,7 +102,7 @@
                     <div class="sec-right">
                         <!--best 사용자-->
                         <BestUser />
-                        <!--best 해스태그-->
+                        <!--best 해시태그-->
                         <BestHashtag />
                     </div>
                 </div>
@@ -124,7 +129,7 @@ enum ETootLoadingState {
     end,
 }
 
-@Component({ components: { Calendar, BestUser, BestHashtag,TootCard } })
+@Component({ components: { Calendar, BestUser, BestHashtag, TootCard } })
 export default class Rank extends Vue {
     private tootList: any[] = [];
 
@@ -134,7 +139,22 @@ export default class Rank extends Vue {
     mounted() {
         gnb.init();
         this.loadToot();
-        window.addEventListener("scroll", this.scrollHandler);
+        // window.addEventListener("scroll", this.scrollHandler);
+
+        const listElm = document.querySelector(".list");
+        if (listElm !== null) {
+            listElm.addEventListener("scroll", (e) => {
+                if (
+                    listElm.scrollTop + listElm.clientHeight >=
+                    listElm.scrollHeight
+                ) {
+                    this.scrollHandler();
+                }
+            });
+        }
+
+        // Initially load some items.
+        this.scrollHandler();
     }
 
     beforeDestroy() {
@@ -142,13 +162,16 @@ export default class Rank extends Vue {
     }
 
     scrollHandler() {
-        let el = document.documentElement;
+        console.log("scroll");
+        let el = document.querySelector(".wrap-content")!;
 
         if (el.scrollTop === 0) {
         } else if (el.scrollTop + el.clientHeight >= el.scrollHeight - 150) {
+            console.log("123", el.scrollTop);
             this.loadToot();
         }
     }
+
     onClickTab(event: Event) {
         tab.click(event.target);
     }
@@ -165,6 +188,7 @@ export default class Rank extends Vue {
             this.loadingState = ETootLoadingState.loading;
 
             const result = await this.$api.getToots(max_id, this.limitCount);
+
             if (result.length < this.limitCount) {
                 this.loadingState = ETootLoadingState.end;
             } else {

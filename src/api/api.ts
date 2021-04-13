@@ -43,6 +43,7 @@ export default class Api {
                 params: { only_media: true, limit, max_id, local: true }
             }
         );
+        console.log(result.data)
         return result.data;
     }
 
@@ -55,10 +56,24 @@ export default class Api {
         );
         return result.data;
     }
-    async getMyToots(userId: number) {
-        const result = await Vue.$axios.get("/api/v1/accounts/" + userId + "/statuses"
+    async getMyToots(max_id?: number, limit?: number, userId?: number) {
+        const result = await Vue.$axios.get("/api/v1/timelines/public",
+            {
+                params: { only_media: true, limit, max_id, local: true },
+                headers: { Authorization: "Bearer " + config.token },
+            }
         );
 
+        // for (let i = 0; i < result.length; i++) {
+        //     if (
+        //         result[i].account.id === this.$store.getters.currentUser.id
+        //     ) {
+        //         console.log("123",result[i]);
+        //         tempArr.push(result[i])
+        //     }
+        // }ZZf
+
+        console.log(result)
         return result.data;
     }
     async deleteToot(tootId: number) {
@@ -110,52 +125,52 @@ export default class Api {
 
         return result;
     }
+    async sendFavourite(tootId: number, token: any) {
 
-    
-private config = {
-    method: 'post',
-    url: 'https://toot.wbcard.org/api/v1/statuses/106028901858905279/favourite',
-    headers: {
-        'Authorization': 'Bearer RlHMG072CAXec3Jx1l8PI0cbZJ7vw9YwE--qneyMnkU'
+        const result = await Vue.$axios({
+            method: 'post',
+            url: `https://toot.wbcard.org/api/v1/statuses/${tootId}/favourite`,
+            headers: {
+                'Authorization': `Bearer ${config.token}`
+            }
+        })
+        // post("/api/v1/statuses/" + tootId + "/favourite",
+        //     {
+        //         headers: { 'Authorization': 'Bearer ' + this.getToken() },
+
+        //     })
+
+        return result;
     }
-};
+
+    async sendUnfavourite(tootId: number) {
 
 
-async sendFavourite(tootId: number, token: any) {
+        const result = await Vue.$axios({
+            method: 'post',
+            url: `https://toot.wbcard.org/api/v1/statuses/${tootId}/unfavourite`,
+            headers: {
+                'Authorization': `Bearer ${config.token}`
+            }
+        })
+        // .post("/api/v1/statuses/" + tootId + "/unfavourite",
+        //     {
+        //         headers: { 'Authorization': "Bearer " + config.token },
 
-    const result = await Vue.$axios({
-        method: 'post',
-        url: `https://toot.wbcard.org/api/v1/statuses/${tootId}/favourite`,
-        headers: {
-            'Authorization': `Bearer ${config.token}`
-        }
-    })
-    // post("/api/v1/statuses/" + tootId + "/favourite",
-    //     {
-    //         headers: { 'Authorization': 'Bearer ' + this.getToken() },
+        //     })
+        return result;
+    }
 
-    //     })
+    async searchHashtag(searchInput: string){
+        const result = await Vue.$axios.get('/api/v2/search',
+        {
+            params: Object.assign({ q: searchInput }),
+            headers: { Authorization: "Bearer " + config.token },
+          
+        });
 
-    return result;
-}
-
-async sendUnfavourite(tootId: number) {
-    
-
-     const result = await Vue.$axios({
-        method: 'post',
-        url: `https://toot.wbcard.org/api/v1/statuses/${tootId}/unfavourite`,
-        headers: {
-            'Authorization': `Bearer ${config.token}`
-        }
-    })
-    // .post("/api/v1/statuses/" + tootId + "/unfavourite",
-    //     {
-    //         headers: { 'Authorization': "Bearer " + config.token },
-
-    //     })
-    return result;
-}
+        return result.data
+    }
 }
 
 declare module 'vue/types/vue' {

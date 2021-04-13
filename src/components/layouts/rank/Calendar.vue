@@ -78,18 +78,13 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 import litepicker from "litepicker";
-import {
-    dim,
-    gnb,
-    calendar,
-    tab
-} from "@/scripts/ui_common";
+import { dim, gnb, calendar, tab } from "@/scripts/ui_common";
 
 @Component({ components: {} })
 export default class Calendar extends Vue {
     private startDate!: Date;
     private endDate!: Date;
-    
+
     mounted() {
         dim.init();
         gnb.init();
@@ -124,7 +119,6 @@ export default class Calendar extends Vue {
      * 다만 calendarComplete가 실행된후에 값을 저장합니다.
      */
     litepickerInit(): litepicker {
-        
         return new litepicker({
             element: document.getElementById("input-start")!,
             elementEnd: document.getElementById("input-end"),
@@ -183,10 +177,8 @@ export default class Calendar extends Vue {
         });
     }
 
-
     layerOpen() {
         calendar.layerOpen();
-       
     }
     calendarComplete() {
         calendar.calendarComplete();
@@ -195,18 +187,17 @@ export default class Calendar extends Vue {
         // // @ts-ignore
         // this.startDate = window.litepicker.options.startDate;
 
-        this.getDate()
-
-      
+        this.getDate();
     }
-    getDate(){
-          console.log(calendar.getDate());
+    getDate() {
+        //캘린더 날짜
+        this.startDate = calendar.getDate().start;
+        this.endDate = calendar.getDate().end;
+        console.log(this.startDate, this.endDate);
     }
     calendarReset() {
         calendar.calendarReset();
     }
-
-    
 }
 </script>
 
