@@ -167,7 +167,6 @@ var Gnb = function Gnb() {
     //초기화
 
     var init = function init() {
-        console.log("gnb~~init")
         domHeaderFixed = document.querySelector(".header-fixed");
         domWrapFixed = document.querySelector(".wrap-fixed");
         domSecFixed = domWrapFixed && domWrapFixed.querySelector(".sec-fixed");

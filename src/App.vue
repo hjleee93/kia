@@ -16,7 +16,10 @@ export default class App extends Vue {
 
     async mounted() {
         // const result = await this.$api.getCurrentUser(config.token);
-        this.$store.dispatch("userStatus", config.token);
+        if(config.token !== null){
+
+            this.$store.dispatch("userStatus", config.token);
+        }
     }
 }
 </script>

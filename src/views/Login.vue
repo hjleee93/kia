@@ -126,7 +126,6 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 
 @Component({ components: {} })
 export default class Login extends Vue {
-
     private baseURL: string = process.env.VUE_APP_BASE_API!;
 
     private email: string = "";
@@ -138,12 +137,10 @@ export default class Login extends Vue {
     private clickedLogin: boolean = false;
     private emailRegExp = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
 
-
     handleKeyDown(e: any) {
         if (e.code === "Enter" || e.keyCode === 13) {
             this.login();
         }
-        
     }
     created() {
         window.addEventListener("keydown", this.handleKeyDown);
@@ -184,33 +181,22 @@ export default class Login extends Vue {
         }
     };
 
-    private registerWithInstance = (uri: any) => {
-        var target = uri.origin;
-        //@ts-ignore
-        return this.$http
-            .post(target + "/api/v1/apps", {
-                client_name: "Vuetodon",
-                redirect_uris: "http://localhost:8081/hive",
-                scopes: ["read", "write", "follow"].join(" "),
-                website: "http://valerauko.net",
-            })
-            .then(
-                //client_id가 unique 한지 확인 내가 쓴 톳 용
-                (response: any) => {
-                    var known = this.known() || {};
-                    known[uri.host] = {
-                        host: uri.origin,
-                        client_id: response.data.client_id,
-                        client_secret: response.data.client_secret,
-                    };
-                    this.known(known);
-                    console.log("App registration successful");
-                },
-                (response: any) => {
-                    alert("App registration failed");
-                    console.log(response);
-                }
-            );
+    private registerWithInstance = async (uri: any) => {
+        //어플확인용
+        try {
+            const result = await this.$api.verifyApp();
+            var known = this.known() || {};
+            known[uri.host] = {
+                host: uri.origin,
+                client_id: result.data.client_id,
+                client_secret: result.data.client_secret,
+            };
+            this.known(known);
+            console.log("App registration successful");
+        } catch (err) {
+            alert("App registration failed");
+            console.log(err);
+        }
     };
 
     private attemptLogin = async (email: string, password: string) => {
@@ -221,27 +207,27 @@ export default class Login extends Vue {
                 password,
                 instance
             );
-
-            console.log(result);
-
             this.store.in("instance", instance.host);
             this.store.in("token", result.data.access_token);
-
-            (this.$refs.iframe as HTMLIFrameElement)?.contentWindow?.postMessage({
-                type : 'login',
-                email,
-                password,
-            }, '*');
-            await new Promise<void>((resolve)=>{
-                const onMessage = (e : MessageEvent)=>{
+            (this.$refs
+                .iframe as HTMLIFrameElement)?.contentWindow?.postMessage(
+                {
+                    type: "login",
+                    email,
+                    password,
+                },
+                "*"
+            );
+            await new Promise<void>((resolve) => {
+                const onMessage = (e: MessageEvent) => {
                     const data = e.data || {};
-                    if( data.type === 'loadedPage' ) {
-                        window.removeEventListener('message', onMessage);
+                    if (data.type === "loadedPage") {
+                        window.removeEventListener("message", onMessage);
                         resolve();
                     }
-                }
-                window.addEventListener('message', onMessage);
-            })
+                };
+                window.addEventListener("message", onMessage);
+            });
 
             try {
                 await this.updateCurrentUser(result.data.access_token);
@@ -250,32 +236,10 @@ export default class Login extends Vue {
                 console.log(err);
                 this.error();
             }
-
-
         } catch (err) {
             console.log(err);
             this.error();
         }
-
-        // //@ts-ignore
-        // this.$http
-        //   .post(instance.host + "/oauth/token", {
-        //     client_id: instance.client_id,
-        //     client_secret: instance.client_secret,
-        //     grant_type: "password",
-        //     username: email,
-        //     password: password,
-        //     scope: ["read", "write", "follow"].join(" "),
-        //   })
-        //   .then((response: any) => {
-        //     this.store.in("instance", instance.host);
-        //     //@ts-ignore
-        //     this.store.in("token", response.data.access_token);
-        //     this.$router.push("/hive").catch(() => {});
-        //   })
-        //   .catch(() => {
-        //     this.error();
-        //   });
     };
     error() {
         this.isLoginError = true;
@@ -283,9 +247,7 @@ export default class Login extends Vue {
 
     async updateCurrentUser(token: string) {
         try {
-            console.log("token", token);
             await this.$store.dispatch("userStatus", token);
-            // const result = await this.$api.getCurrentUser(token);
         } catch (err) {
             console.log("Failed to fetch current user");
         }

@@ -101,9 +101,9 @@ import Category from "./Category.vue";
 
 @Component({})
 export default class Header extends Vue {
-    private active: string = "";
+    private active: string = this.$store.getters.currCategory;
     private loggedIn: boolean = localStorage.getItem("token") != null;
-
+    
     isActive(value: string) {
         return this.active === value;
     }

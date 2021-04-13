@@ -5,6 +5,15 @@ import tempCategory from './../scripts/categoryList';
 
 export default class Api {
 
+    async verifyApp(){
+        const result = await Vue.$axios.post("api/v1/apps", {
+            client_name: "KIA",
+            redirect_uris: "urn:ietf:wg:oauth:2.0:oob",
+            scopes: ["read", "write", "follow"].join(" ")
+        });
+        return result;
+    }
+
     async login() {
         const result = await Vue.$axios.get('oauth/token')
     }
@@ -70,9 +79,7 @@ export default class Api {
         //         console.log("123",result[i]);
         //         tempArr.push(result[i])
         //     }
-        // }ZZf
-
-        console.log(result)
+        // }
         return result.data;
     }
     async deleteToot(tootId: number) {
