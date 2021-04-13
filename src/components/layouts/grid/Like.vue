@@ -16,14 +16,12 @@ export default class Like extends Vue {
     private isActive: boolean = false;
     private token = localStorage.getItem("token");
     async mounted() {
-    
         if (this.toot.favourited === true) {
             this.isActive = true;
         }
     }
 
     async likeToggle() {
-        
         if (this.isActive === true) {
             try {
                 this.isActive = !this.isActive;
@@ -34,7 +32,10 @@ export default class Like extends Vue {
         } else {
             try {
                 this.isActive = !this.isActive;
-                const result = await this.$api.sendFavourite(this.toot.id, this.token);
+                const result = await this.$api.sendFavourite(
+                    this.toot.id,
+                    this.token
+                );
             } catch (err) {
                 console.log(err);
             }

@@ -136,7 +136,7 @@ export default class Rank extends Vue {
     private limitCount: number = 5;
     private loadingState: ETootLoadingState = ETootLoadingState.none;
 
-    handleScroll(el: HTMLElement) {
+    handleScroll(el: any) {
         
         if ((el.target.offsetHeight + el.target.scrollTop) >= el.target.scrollHeight) {
             this.loadToot();

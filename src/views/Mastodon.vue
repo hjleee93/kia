@@ -24,7 +24,7 @@ export default class App extends Vue {
 
     mounted() {
         initApp();
-        gnb.init();
+        //gnb.init();
 
         const {params} = this.$route;
         const {pathMatch} = params;

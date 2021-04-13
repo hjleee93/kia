@@ -3,8 +3,8 @@
         <div class="content">
             <div class="wrap-fixed">
                 <div class="sec-fixed">
-                    <SearchBar @searchResult="searchResult" :category="category" />
-                    <Category :category="category" />
+                    <SearchBar @searchResult="searchResult" />
+                    <Category />
                     <div class="sec-grid-top">
                         <BoxGridTop  @sortOrder="sortOrder"/>
                     </div>
@@ -30,7 +30,6 @@ import {
     tootDropDown,
     getDevice,
 } from "@/scripts/ui_common";
-import { bus } from "@/main";
 
 enum ETootLoadingState {
     none,
@@ -56,11 +55,9 @@ export default class Hive extends Vue {
         dim.init();
         gnb.init();
     }
+
     async mounted() {
-       gnb.init();
-        this.$emit("category", this.category);
-        bus.$emit("category", this.category);
-        // this.getGridItem();
+       this.$store.commit('currCategory', 'Hive') 
         this.loadToot();
         window.addEventListener("scroll", this.scrollHandler);
     }

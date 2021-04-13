@@ -1,56 +1,23 @@
 <template>
     <div id="app" class="no-drag">
         <!-- <router-view v-if="isInit" :currentUser="currentUser" /> -->
-        <router-view/>
+        <router-view />
     </div>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
-import { initApp } from "@/scripts/ui_common";
 import config from "./lib/config";
 
 @Component({
     components: {},
 })
 export default class App extends Vue {
-    private token = localStorage.getItem("token");
-  
 
     async mounted() {
-        
-        const result = await this.$api.getCurrentUser(config.token);
-        this.$store.dispatch("userStatus",config.token)
-        // console.log(this.$store.getters.)
-        // if(this.token !== null){
-        //     this.token = this.token.substr(1).slice(0,-1)
-        //     await this.$store.dispatch("userStatus", this.token)
-            
-        //     // console.log("async-await", this.$store.dispatch("userStatus", this.token).then(()=>{
-        //     //     this.$store.getters.currentUser
-        //     // })            )
-        // }
+        // const result = await this.$api.getCurrentUser(config.token);
+        this.$store.dispatch("userStatus", config.token);
     }
-
-    // async init() {
-        //     const categories = await this.$api.getCategory();
-    //     this.$store.commit("categories", categories);
-    //     this.isInit = true;
-    // }
-
-    // async updateCurrentUser(token: string) {
-    //     try {            
-    //         console.log("app mount")
-    //         await this.$store.dispatch("userStatus", token);
-    //     } catch (err) {
-    //         console.log("Failed to fetch current user");
-    //     }
-    // }
-    // created() {
-    //     if (this.loggedIn && !this.currentUser) {
-    //         this.updateCurrentUser();
-    //     }
-    // }
 }
 </script>
 <style>

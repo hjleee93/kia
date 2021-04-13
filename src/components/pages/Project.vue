@@ -3,8 +3,8 @@
         <div class="content">
             <div class="wrap-fixed">
                 <div class="sec-fixed">
-                    <SearchBar :category="category"/>
-                    <Category :category="category" @tagResult="tagResult" />
+                    <SearchBar />
+                    <Category  @tagResult="tagResult" />
                     <div class="sec-grid-top">
                         <BoxGridTop  @sortOrder="sortOrder" />
                     </div>
@@ -29,7 +29,6 @@ import {
     tootDropDown,
     getDevice,
 } from "@/scripts/ui_common";
-import { bus } from "@/main";
 import config from "@/lib/config";
 
 enum ETootLoadingState {
@@ -58,8 +57,7 @@ export default class Project extends Vue {
     }
 
     mounted() {
-        this.$emit("category", this.category);
-        bus.$emit("category", this.category);
+        this.$store.commit('currCategory', 'Project')
         this.loadToot();
         window.addEventListener("scroll", this.scrollHandler);
     }

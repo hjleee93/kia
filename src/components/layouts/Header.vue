@@ -15,8 +15,11 @@
                             >INS</router-link
                         >
                     </li>
-                    <li class="list-toot"  @click="clickedHeader('Posting')">
-                        <router-link to="/posting" class="btn btn-link" :class="{ active: isActive('Posting') }"
+                    <li class="list-toot" @click="clickedHeader('Posting')">
+                        <router-link
+                            to="/posting"
+                            class="btn btn-link"
+                            :class="{ active: isActive('Posting') }"
                             >TOOT</router-link
                         >
                     </li>
@@ -93,19 +96,18 @@
 </template>
 
 <script lang="ts">
-import { bus } from "@/main";
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import Category from "./Category.vue";
 
 @Component({})
 export default class Header extends Vue {
-    @Prop() sendCategory!: string;
     private active: string = "";
     private loggedIn: boolean = localStorage.getItem("token") != null;
 
     isActive(value: string) {
         return this.active === value;
     }
+
     logOut() {
         this.$emit("logout");
         localStorage.removeItem("token");
@@ -114,8 +116,9 @@ export default class Header extends Vue {
         this.active = category;
     }
 
-    mounted() {
-        bus.$on("category", (category: string) => (this.active = category));
+    @Watch("$store.getters.currCategory")
+    getCategory() {
+        this.active = this.$store.getters.currCategory;
     }
 }
 </script>

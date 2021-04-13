@@ -144,6 +144,7 @@ if (!Array.prototype.find) {
 
 
 var Gnb = function Gnb() {
+    
     var t = 0; //현재 scroll값
 
     var dir = 0; //-1 => 스크롤 위 1 => 스크롤 아래
@@ -166,6 +167,7 @@ var Gnb = function Gnb() {
     //초기화
 
     var init = function init() {
+        console.log("gnb~~init")
         domHeaderFixed = document.querySelector(".header-fixed");
         domWrapFixed = document.querySelector(".wrap-fixed");
         domSecFixed = domWrapFixed && domWrapFixed.querySelector(".sec-fixed");

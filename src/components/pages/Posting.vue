@@ -5,9 +5,9 @@
                 <div class="sec-fixed">
                     <SearchBar
                         @searchResult="searchResult"
-                        :category="category"
+                       
                     />
-                    <Category :category="category" />
+                    <Category />
                     <div class="sec-grid-top">
                         <BoxGridTop @sortOrder="sortOrder" />
                     </div>
@@ -33,7 +33,6 @@ import {
     tootDropDown,
     getDevice,
 } from "@/scripts/ui_common";
-import { bus } from "@/main";
 
 enum ETootLoadingState {
     none,
@@ -45,14 +44,12 @@ enum ETootLoadingState {
 @Component({
     components: { SearchBar, Category, Grid, BoxGridTop },
 })
-export default class Hive extends Vue {
+export default class Posting extends Vue {
     private category: string = "Posting";
     private allResult: any[] = [];
     private userId: number = -1;
     private limitCount: number = 5;
     private loadingState: ETootLoadingState = ETootLoadingState.none;
-
-    private token = localStorage.getItem("token");
 
     beforeUpdate() {
         tootDropDown.init();
@@ -62,36 +59,21 @@ export default class Hive extends Vue {
         gnb.init();
     }
     async mounted() {
-        gnb.init();
-        this.$emit("category", this.category);
-        bus.$emit("category", this.category);
-        // this.getGridItem();
+        this.$store.commit('currCategory', 'Posting')        
         this.loadToot();
-        window.addEventListener("scroll", this.scrollHandler);
     }
 
     searchResult(result: any) {
         // this.result = result;
         // console.log("searchResult",this.result);
     }
-    beforeDestroy() {
-        window.removeEventListener("scroll", this.scrollHandler);
-    }
+   
     async getGridItem() {
         try {
             const result = await this.$api.getMediaTootsOnly();
             this.allResult = result;
         } catch (err) {
             console.log(err);
-        }
-    }
-
-    scrollHandler() {
-        let el = document.documentElement;
-
-        if (el.scrollTop === 0) {
-        } else if (el.scrollTop + el.clientHeight >= el.scrollHeight - 100) {
-            this.loadToot();
         }
     }
 

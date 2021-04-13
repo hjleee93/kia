@@ -127,7 +127,6 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { dim, getDevice, gnb, search, tootDropDown } from "@/scripts/ui_common";
-import config from "@/lib/config";
 
 @Component({ components: {} })
 export default class SearchBar extends Vue {
@@ -140,7 +139,6 @@ export default class SearchBar extends Vue {
     private searchResult: any[] = [];
     mounted() {
         tootDropDown.init();
-        gnb.init();
         search.init();
         dim.init();
     }

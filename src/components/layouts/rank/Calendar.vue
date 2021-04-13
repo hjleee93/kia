@@ -87,7 +87,6 @@ export default class Calendar extends Vue {
 
     mounted() {
         dim.init();
-        gnb.init();
         calendar.init();
         tab.init();
         //@ts-ignore

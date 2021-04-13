@@ -73,35 +73,7 @@ export default class Grid extends Vue {
     // // api
     private allToots: any[] = [];
     private foundUser: any[] = [];
-
-    // private base = config.instance + "/api/v1";
-    // private apiBase = this.base + "/timelines";
-
-    // private streamBase =
-    //   this.base.replace(/^https?/i, "ws") +
-    //   "/streaming?access_token=" +
-    //   config.token +
-    //   "&stream=";
-
-    // private endpoints = {
-    //   rest: {
-    //     home: this.apiBase + "/home",
-    //     fed: this.apiBase + "/public",
-    //     local: this.apiBase + "/public?local=true",
-    //   },
-    //   stream: {
-    //     home: this.streamBase + "user",
-    //     fed: this.streamBase + "public",
-    //     local: this.streamBase + "public:local",
-    //   },
-    // };
-
-    // @Watch("result")
-    // changeResult() {
-    //   console.log("result in Grid", this.result);
-    //   this.foundUser = this.result.accounts
-    //   // this.allToots = this.result;
-    // }
+    
     @Watch("device")
     changeDevice() {
         setTimeout(() => {

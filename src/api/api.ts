@@ -43,7 +43,6 @@ export default class Api {
                 params: { only_media: true, limit, max_id, local: true }
             }
         );
-        console.log(result.data)
         return result.data;
     }
 
