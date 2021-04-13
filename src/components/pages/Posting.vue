@@ -76,6 +76,7 @@ export default class Posting extends Vue {
         }
     }
 
+    @Watch("$store.state.user.currentUser")
     async getUserId() {
         if (this.$store.state.user.currentUser === null) {
             await this.$store.dispatch("userStatus", config.token);
@@ -84,36 +85,8 @@ export default class Posting extends Vue {
     }
 
     async loadToot() {
-        if (
-            this.loadingState === ETootLoadingState.none ||
-            this.loadingState === ETootLoadingState.complete
-        ) {
-            let max_id = undefined;
-            if (this.allResult.length) {
-                max_id = this.allResult[this.allResult.length - 1].id;
-            }
-            this.loadingState = ETootLoadingState.loading;
-
-            const result = await this.$api.getMyToots(this.userId);
-
-            if (result.length < this.limitCount) {
-                this.loadingState = ETootLoadingState.end;
-            } else {
-                this.$nextTick(() => {
-                    this.$nextTick(() => {
-                        const el = document.documentElement;
-                        if (el.scrollHeight <= el.clientHeight) {
-                            this.loadingState = ETootLoadingState.complete;
-                            this.loadToot();
-                        } else {
-                            this.loadingState = ETootLoadingState.complete;
-                        }
-                    });
-                });
-            }
-
-            this.allResult.push(...result);
-        }
+        const result = await this.$api.getMyToots(this.userId);
+        this.allResult.push(...result);
     }
 
     sortOrder(value: string) {
