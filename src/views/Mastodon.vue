@@ -19,7 +19,7 @@ import Header from "@/components/layouts/Header.vue";
     components: {Header},
 })
 export default class App extends Vue {
-    private baseURL: string = process.env.VUE_APP_BASE_API;
+    private baseURL: string = process.env.VUE_APP_BASE_API!;
     private path: string = '';
 
     mounted() {
@@ -37,7 +37,7 @@ export default class App extends Vue {
         window.addEventListener('message', this.onMessage);
     }
 
-    onMessage(e) {
+    onMessage(e : MessageEvent) {
         const data = e.data || {};
         const type = data.type;
         if (type === 'loadedPage') {

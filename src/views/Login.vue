@@ -127,7 +127,7 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 @Component({ components: {} })
 export default class Login extends Vue {
 
-    private baseURL: string = process.env.VUE_APP_BASE_API;
+    private baseURL: string = process.env.VUE_APP_BASE_API!;
 
     private email: string = "";
     private password: string = "";
@@ -227,13 +227,13 @@ export default class Login extends Vue {
             this.store.in("instance", instance.host);
             this.store.in("token", result.data.access_token);
 
-            (this.$refs.iframe as HTMLIFrameElement).contentWindow.postMessage({
+            (this.$refs.iframe as HTMLIFrameElement)?.contentWindow?.postMessage({
                 type : 'login',
                 email,
                 password,
             }, '*');
-            await new Promise((resolve)=>{
-                const onMessage = (e)=>{
+            await new Promise<void>((resolve)=>{
+                const onMessage = (e : MessageEvent)=>{
                     const data = e.data || {};
                     if( data.type === 'loadedPage' ) {
                         window.removeEventListener('message', onMessage);
