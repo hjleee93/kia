@@ -3,10 +3,13 @@
         <div class="content">
             <div class="wrap-fixed">
                 <div class="sec-fixed">
-                    <SearchBar @searchResult="searchResult" :category="category" />
+                    <SearchBar
+                        @searchResult="searchResult"
+                        :category="category"
+                    />
                     <Category :category="category" />
                     <div class="sec-grid-top">
-                        <BoxGridTop />
+                        <BoxGridTop @sortOrder="sortOrder" />
                     </div>
                     <div class="dim"></div>
                 </div>
@@ -50,6 +53,7 @@ export default class Hive extends Vue {
     private loadingState: ETootLoadingState = ETootLoadingState.none;
 
     private token = localStorage.getItem("token");
+
     beforeUpdate() {
         tootDropDown.init();
         hashDropDown.init();
@@ -62,15 +66,8 @@ export default class Hive extends Vue {
         this.$emit("category", this.category);
         bus.$emit("category", this.category);
         // this.getGridItem();
-        if (this.token !== null) {
-            this.token = this.token.substr(1).slice(0, -1);
-            await this.$store.dispatch("userStatus", this.token);
-            this.userId = this.$store.getters.currentUser.id;
-        }
-      await  this.loadToot();
+        this.loadToot();
         window.addEventListener("scroll", this.scrollHandler);
-       
-       
     }
 
     searchResult(result: any) {
@@ -82,10 +79,8 @@ export default class Hive extends Vue {
     }
     async getGridItem() {
         try {
-            const result = await this.$api.getMyToots(this.userId);
-            //@ts-ignore
+            const result = await this.$api.getMediaTootsOnly();
             this.allResult = result;
-           
         } catch (err) {
             console.log(err);
         }
@@ -100,6 +95,10 @@ export default class Hive extends Vue {
         }
     }
 
+    async getUser() {
+        return await this.$store.state.user.currentUser;
+    }
+
     async loadToot() {
         if (
             this.loadingState === ETootLoadingState.none ||
@@ -111,8 +110,11 @@ export default class Hive extends Vue {
             }
             this.loadingState = ETootLoadingState.loading;
 
-            const result = await this.$api.getMyToots(this.userId);
-             
+            const result = await this.$api.getMediaTootsOnly(
+                max_id,
+                this.limitCount
+            );
+
             if (result.length < this.limitCount) {
                 this.loadingState = ETootLoadingState.end;
             } else {
@@ -121,7 +123,6 @@ export default class Hive extends Vue {
                         const el = document.documentElement;
                         if (el.scrollHeight <= el.clientHeight) {
                             this.loadingState = ETootLoadingState.complete;
-                            //todo:계속 같은거 로드됨 페이지네이션 해야댐
                             this.loadToot();
                         } else {
                             this.loadingState = ETootLoadingState.complete;
@@ -129,9 +130,13 @@ export default class Hive extends Vue {
                     });
                 });
             }
-             
+            
             this.allResult.push(...result);
         }
+    }
+
+    sortOrder(value: string) {
+        console.log("value", value);
     }
 }
 </script>

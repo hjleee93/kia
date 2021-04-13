@@ -10,7 +10,6 @@ export default {
         //     return state.token;
         // },
         currentUser(state: any) {
-
             return state.currentUser;
         }
     },
@@ -19,7 +18,6 @@ export default {
         //     state.token = payload;
         // },
         currentUser(state: any, payload: any) {
-
             state.currentUser = payload;
         }
     },

@@ -6,7 +6,7 @@
                     <SearchBar @searchResult="searchResult" :category="category" />
                     <Category :category="category" />
                     <div class="sec-grid-top">
-                        <BoxGridTop />
+                        <BoxGridTop  @sortOrder="sortOrder"/>
                     </div>
                     <div class="dim"></div>
                 </div>
@@ -122,6 +122,11 @@ export default class Hive extends Vue {
             this.allResult.push(...result);
             
         }
+    }
+
+    
+    sortOrder(value: string){
+        console.log("value",value)
     }
 }
 </script>

@@ -1,5 +1,5 @@
 <template>
-    <div :key="toot.id">
+    <div :key="toot.id" >
         <div class="list">
             <div class="box-user-info">
                 <a href="#none" class="btn btn-user">
@@ -57,6 +57,7 @@ import {Component, Prop, Vue} from "vue-property-decorator";
 @Component({components: {}})
 export default class TootCard extends Vue {
     @Prop() private toot: any;
+ 
 
 }
 </script>

@@ -6,7 +6,7 @@
                     <SearchBar :category="category" />
                     <Category :category="category" @tagResult="tagResult" />
                     <div class="sec-grid-top">
-                        <BoxGridTop />
+                        <BoxGridTop @sortOrder="sortOrder" :tootCnt="tagSearch.length"/>
                     </div>
                     <div class="dim"></div>
                 </div>
@@ -127,6 +127,10 @@ export default class Exhibition extends Vue {
             }
             this.tagSearch.push(...result);
         }
+    }
+
+    sortOrder(value: string){
+        console.log("value",value)
     }
 }
 </script>
