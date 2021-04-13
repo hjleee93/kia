@@ -1,42 +1,47 @@
 <template>
-  <div id="layer">
-    <div class="layer-outer">
-      <div class="layer-inner type-alert">
-        <div class="layer-content">
-          <div class="alert-content">
-            <strong class="tit">앨범 쇼 이용 안내</strong>
-            <p class="txt">
-              모바일 버전에서는 지원되지 않는 기능입니다.<br />PC로 접속 후 이용
-              부탁드립니다.
-            </p>
-          </div>
-          <div class="alert-btn">
-            <button class="btn btn-confirm" @click="layerClose">
-              <span>확인</span>
-            </button>
-          </div>
-        </div>
-      </div>
-      <div class="layer-inner album-show type-full-size">
-        <div class="box-btn">
-          <button class="btn btn-close" @click="albumPopClose">
-            <span>닫기</span>
-          </button>
-        </div>
-        <div class="layer-content">
-          <div class="grid-wrap">
-            <isotope class="grid" :options="options()" :list="list">
-              <div class="grid-item" v-for="(item, index) in list" :key="index">
-                <button class="btn btn-image" @click="layerOpenDepth2(item)">
-                  <div
-                    class="box-img"
-                    :style="
-                      `width: ${item.width}px; background-image: url(${item.url})`
-                    "
-                  ></div>
-                </button>
-              </div>
-              <!--
+    <div id="layer">
+        <div class="layer-outer">
+            <div class="layer-inner type-alert">
+                <div class="layer-content">
+                    <div class="alert-content">
+                        <strong class="tit">앨범 쇼 이용 안내</strong>
+                        <p class="txt">
+                            모바일 버전에서는 지원되지 않는 기능입니다.<br />PC로
+                            접속 후 이용 부탁드립니다.
+                        </p>
+                    </div>
+                    <div class="alert-btn">
+                        <button class="btn btn-confirm" @click="layerClose">
+                            <span>확인</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="layer-inner album-show type-full-size">
+                <div class="box-btn">
+                    <button class="btn btn-close" @click="albumPopClose">
+                        <span>닫기</span>
+                    </button>
+                </div>
+                <div class="layer-content">
+                    <div class="grid-wrap">
+                        <isotope class="grid" :options="options()" :list="list">
+                            <div
+                                class="grid-item"
+                                v-for="(item, index) in list"
+                                :key="index"
+                            >
+                                <button
+                                    class="btn btn-image"
+                                    @click="layerOpenDepth2(item)"
+                                >
+                                    <div
+                                        class="box-img"
+                                        :style="`width: ${item.width}px; background-image: url(${item.url})`"
+                                    ></div>
+                                </button>
+                            </div>
+                            <!--
                               개발 관련하여 안내 사항
                               image를 강제로 188로 줄여 그 비율이 1.0681818182(176px)이 넘어가면
                               image를 강제로 width 480으로 늘려야합니다.
@@ -46,142 +51,150 @@
 
                               테스트 코드는 아래의 쪽 isotopeHorizontal 함수를 확인바랍니다.
                             -->
-              <!--
+                            <!--
                 <div class="grid-item">
                   <button class="btn btn-image" style="width: 변동px; background-image: url(src)" onclick="albumPop.layerOpenDepth2()">
                     <div class="box-img"></div>
                   </button>
                 </div>
                 -->
-            </isotope>
-          </div>
-        </div>
+                        </isotope>
+                    </div>
+                </div>
 
-        <!--상세 이미지-->
-        <div class="layer-depth2" @click="layerCloseDepth2()">
-          <div class="layer-depth2-content">
-            <div class="box-img">
-              <img :src="detailStc" alt="" />
+                <!--상세 이미지-->
+                <div class="layer-depth2" @click="layerCloseDepth2()">
+                    <div class="layer-depth2-content">
+                        <div class="box-img">
+                            <img :src="detailStc" alt="" />
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
         </div>
-      </div>
     </div>
-  </div>
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import { albumPop, isDesktop } from "@/scripts/ui_common";
 //@ts-ignore
 import isotope from "vueisotope";
-import config from "@/lib/config";
 
 @Component({ components: { isotope } })
 export default class AlbumShow extends Vue {
-  isOpen: boolean = false;
-  list: any[] = [];
-  detailStc: string = "";
-  private imgArr: string[] = [];
+    isOpen: boolean = false;
+    list: any[] = [];
+    detailStc: string = "";
+    category: string = "";
 
-  async mounted() {
-    this.getImgLists();
-    albumPop.init(this.openCallback);
-  }
+    private imgArr: string[] = [];
 
-  beforeDestroy() {
-    albumPop.destroy();
-  }
-
-  openCallback() {
-    this.isOpen = true;
-    this.init();
-  }
-
-  async init() {
-    const heightRatio = 1.0681818182;
-
-    const imageList = this.imgArr;
-    for (let i = 0; i < imageList.length; i++) {
-      if (!this.isOpen) {
-        return;
-      }
-
-      const img = document.createElement("img") as HTMLImageElement;
-      img.src = imageList[i];
-      await new Promise<void>((resolve) => {
-        img.onload = function() {
-          resolve();
-        };
-      });
-
-      let w;
-      const width = img.width;
-      const height = img.height;
-      const imgheightRatio = height / width;
-      const imgWidthRatio = width / height;
-      if (imgheightRatio > heightRatio) {
-        w = 480;
-      } else {
-        w = Math.min(188 * imgWidthRatio, 480);
-      }
-
-      this.list.push({
-        width: img.width,
-        url: imageList[i],
-      });
+    async mounted() {
+        this.getImgLists();
+        albumPop.init(this.openCallback);
     }
-  }
 
-  layerClose() {
-    this.isOpen = false;
-    albumPop.layerClose();
-  }
+    beforeDestroy() {
+        albumPop.destroy();
+    }
 
-  albumPopClose() {
-    this.isOpen = false;
-    this.list.length = 0;
-    albumPop.layerClose(() => {
-      // 상세 레이어 닫기
-      // isDesktop();
-      // document.querySelector("#layer .grid")!.innerHTML = "";
-    });
-  }
+    openCallback() {
+        this.isOpen = true;
+        this.init();
+    }
 
-  layerOpenDepth2(image: any) {
-    this.detailStc = image.url;
-    // document.querySelector(".layer-depth2 .box-img img").src = src;
-    albumPop.layerOpenDepth2(); //상세 레이어 열기
-  }
+    async init() {
+        const heightRatio = 1.0681818182;
 
-  layerCloseDepth2() {
-    albumPop.layerCloseDepth2();
-  }
+        const imageList = this.imgArr;
+        for (let i = 0; i < imageList.length; i++) {
+            if (!this.isOpen) {
+                return;
+            }
 
-  options() {
-    return {
-      layoutMode: "masonryHorizontal",
-      // initLayout: false,
-      mansonryHorizontal: {
-        itemSelector: ".grid-item",
-      },
-      transitionDuration: 0,
-    };
-  }
+            const img = document.createElement("img") as HTMLImageElement;
+            img.src = imageList[i];
+            await new Promise<void>((resolve) => {
+                img.onload = function () {
+                    resolve();
+                };
+            });
 
-  async getImgLists() {
-    try {
-      const result = await this.$api.getMediaTootsOnly();
+            let w;
+            const width = img.width;
+            const height = img.height;
+            const imgheightRatio = height / width;
+            const imgWidthRatio = width / height;
+            if (imgheightRatio > heightRatio) {
+                w = 480;
+            } else {
+                w = Math.min(188 * imgWidthRatio, 480);
+            }
 
-      for (let i = 0; i < result.length; i++) {
-        if (result[i].media_attachments[0].type === "image") {
-          this.imgArr.push(result[i].media_attachments[0].url);
+            this.list.push({
+                width: img.width,
+                url: imageList[i],
+            });
         }
-      }
-    } catch (err) {
-      console.log(err);
     }
-  }
+
+    layerClose() {
+        this.isOpen = false;
+        albumPop.layerClose();
+    }
+
+    albumPopClose() {
+        this.isOpen = false;
+        this.list.length = 0;
+        albumPop.layerClose(() => {
+            // 상세 레이어 닫기
+            // isDesktop();
+            // document.querySelector("#layer .grid")!.innerHTML = "";
+        });
+    }
+
+    layerOpenDepth2(image: any) {
+        this.detailStc = image.url;
+        // document.querySelector(".layer-depth2 .box-img img").src = src;
+        albumPop.layerOpenDepth2(); //상세 레이어 열기
+    }
+
+    layerCloseDepth2() {
+        albumPop.layerCloseDepth2();
+    }
+
+    options() {
+        return {
+            layoutMode: "masonryHorizontal",
+            // initLayout: false,
+            mansonryHorizontal: {
+                itemSelector: ".grid-item",
+            },
+            transitionDuration: 0,
+        };
+    }
+    @Watch("$store.getters.currCategory")
+    async getImgLists() {
+        let result: any = "";
+        this.imgArr = [];
+        this.category = this.$store.getters.currCategory;
+        try {
+            if (this.category === "Hive") {
+                result = await this.$api.getMediaTootsOnly();
+            } else {
+                result = await this.$api.getTagToots(this.category);
+            }
+
+            for (let i = 0; i < result.length; i++) {
+                if (result[i].media_attachments[0].type === "image") {
+                    this.imgArr.push(result[i].media_attachments[0].url);
+                }
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    }
 }
 </script>
 
