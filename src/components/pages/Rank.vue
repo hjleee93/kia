@@ -82,12 +82,12 @@
                 </div>
                 <!--컨텐츠 영역-->
                 <div class="wrap-content">
-                    <div class="sec-left">
+                    <div class="sec-left" @scroll="handleScroll">
                         <!--인기 툿-->
                         <div class="sec-toot">
                             <h2 class="b-tit">인기 툿</h2>
                             <div class="box-toot">
-                                <div class="toot-lists" @scroll="scrollHandler">
+                                <div class="toot-lists">
                                     <toot-card
                                         v-for="toot in tootList"
                                         :toot="toot"
@@ -136,42 +136,18 @@ export default class Rank extends Vue {
     private limitCount: number = 5;
     private loadingState: ETootLoadingState = ETootLoadingState.none;
 
-    mounted() {
-        gnb.init();
-        this.loadToot();
-        // window.addEventListener("scroll", this.scrollHandler);
-
-        const listElm = document.querySelector(".list");
-        if (listElm !== null) {
-            listElm.addEventListener("scroll", (e) => {
-                if (
-                    listElm.scrollTop + listElm.clientHeight >=
-                    listElm.scrollHeight
-                ) {
-                    this.scrollHandler();
-                }
-            });
-        }
-
-        // Initially load some items.
-        this.scrollHandler();
-    }
-
-    beforeDestroy() {
-        window.removeEventListener("scroll", this.scrollHandler);
-    }
-
-    scrollHandler() {
-        console.log("scroll");
-        let el = document.querySelector(".wrap-content")!;
-
-        if (el.scrollTop === 0) {
-        } else if (el.scrollTop + el.clientHeight >= el.scrollHeight - 150) {
-            console.log("123", el.scrollTop);
+    handleScroll(el: HTMLElement) {
+        
+        if ((el.target.offsetHeight + el.target.scrollTop) >= el.target.scrollHeight) {
             this.loadToot();
         }
     }
 
+    mounted() {
+        gnb.init();
+        this.loadToot();
+     
+    }
     onClickTab(event: Event) {
         tab.click(event.target);
     }
@@ -187,17 +163,17 @@ export default class Rank extends Vue {
             }
             this.loadingState = ETootLoadingState.loading;
 
-            const result = await this.$api.getToots(max_id, this.limitCount);
+            const result = await this.$api.getToots(max_id, 15);
 
             if (result.length < this.limitCount) {
                 this.loadingState = ETootLoadingState.end;
             } else {
+               
                 this.$nextTick(() => {
                     this.$nextTick(() => {
                         const el = document.documentElement;
                         if (el.scrollHeight <= el.clientHeight) {
                             this.loadingState = ETootLoadingState.complete;
-                            this.loadToot();
                         } else {
                             this.loadingState = ETootLoadingState.complete;
                         }
