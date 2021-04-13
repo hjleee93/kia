@@ -73,7 +73,7 @@ export default class Grid extends Vue {
     // // api
     private allToots: any[] = [];
     private foundUser: any[] = [];
-    
+
     @Watch("device")
     changeDevice() {
         setTimeout(() => {
@@ -141,28 +141,10 @@ export default class Grid extends Vue {
         // window.addEventListener("resize", this.onResize, false)
         window.onresize = this.onResize;
     }
-    // getGridItem(howMany = config.statusLimit) {
-    //   let endpoint = this.endpoints.rest.fed;
-    //   //@ts-ignore
-    //   this.$http
-    //     .get(endpoint, {
-    //       params: Object.assign({ only_media: true }),
-    //       headers: { Authorization: "Bearer " + config.token },
-    //     })
-    //     .then(f
-    //       (response: any) => {
-    //         //@ts-ignore
-    //         var result = response.data;
-    //         this.allToots = result;
-    //       },
-    //       (response: any) => {
-    //         console.log(endpoint + " request failed");
-    //       }
-    //     );
-    // }
+   
 
     beforeDestroy() {
-        // window.removeEventListener("resize", this.onResize, false);
+        window.removeEventListener('onresize', this.onResize, false)
     }
 
     moreItem() {

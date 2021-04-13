@@ -62,6 +62,10 @@ export default class Project extends Vue {
         window.addEventListener("scroll", this.scrollHandler);
     }
 
+    beforeDestroy() {
+        window.removeEventListener("scroll", this.scrollHandler);
+    }
+
     async getGridItem(howMany = config.statusLimit) {
         //미디어 태그 분류
         let mediaTag: any[] = [];

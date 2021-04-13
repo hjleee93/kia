@@ -34,7 +34,7 @@ export default class App extends Vue {
     }
 
     beforeDestroy() {
-        window.addEventListener('message', this.onMessage);
+        window.removeEventListener('message', this.onMessage);
     }
 
     onMessage(e : MessageEvent) {
