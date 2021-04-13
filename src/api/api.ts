@@ -64,22 +64,10 @@ export default class Api {
         );
         return result.data;
     }
-    async getMyToots(max_id?: number, limit?: number, userId?: number) {
-        const result = await Vue.$axios.get("/api/v1/timelines/public",
-            {
-                params: { only_media: true, limit, max_id, local: true },
-                headers: { Authorization: "Bearer " + config.token },
-            }
+    async getMyToots(userId: number) {
+        const result = await Vue.$axios.get("/api/v1/accounts/" + userId + "/statuses"
         );
 
-        // for (let i = 0; i < result.length; i++) {
-        //     if (
-        //         result[i].account.id === this.$store.getters.currentUser.id
-        //     ) {
-        //         console.log("123",result[i]);
-        //         tempArr.push(result[i])
-        //     }
-        // }
         return result.data;
     }
     async deleteToot(tootId: number) {

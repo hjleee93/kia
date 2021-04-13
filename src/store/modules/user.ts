@@ -24,7 +24,7 @@ export default {
     actions: {
         //@ts-ignore
         async userStatus({ commit }, token) {
-            const result = await Vue.$api.getCurrentUser(token);
+            const result = await Vue.$api.getCurrentUser(token);      
             commit('currentUser', result)
         }
 

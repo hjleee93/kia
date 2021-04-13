@@ -3,10 +3,7 @@
         <div class="content">
             <div class="wrap-fixed">
                 <div class="sec-fixed">
-                    <SearchBar
-                        @searchResult="searchResult"
-                       
-                    />
+                    <SearchBar @searchResult="searchResult" />
                     <Category />
                     <div class="sec-grid-top">
                         <BoxGridTop @sortOrder="sortOrder" />
@@ -33,6 +30,7 @@ import {
     tootDropDown,
     getDevice,
 } from "@/scripts/ui_common";
+import config from "@/lib/config";
 
 enum ETootLoadingState {
     none,
@@ -59,26 +57,30 @@ export default class Posting extends Vue {
         gnb.init();
     }
     async mounted() {
-        this.$store.commit('currCategory', 'Posting')        
-        this.loadToot();
+        this.$store.commit("currCategory", "Posting");
+        this.userId = await this.getUserId();
+        await this.loadToot();
     }
 
     searchResult(result: any) {
         // this.result = result;
         // console.log("searchResult",this.result);
     }
-   
+
     async getGridItem() {
         try {
-            const result = await this.$api.getMediaTootsOnly();
+            const result = await this.$api.getMyToots(this.userId);
             this.allResult = result;
         } catch (err) {
             console.log(err);
         }
     }
 
-    async getUser() {
-        return await this.$store.state.user.currentUser;
+    async getUserId() {
+        if (this.$store.state.user.currentUser === null) {
+            await this.$store.dispatch("userStatus", config.token);
+        }
+        return await this.$store.state.user.currentUser.id;
     }
 
     async loadToot() {
@@ -92,10 +94,7 @@ export default class Posting extends Vue {
             }
             this.loadingState = ETootLoadingState.loading;
 
-            const result = await this.$api.getMediaTootsOnly(
-                max_id,
-                this.limitCount
-            );
+            const result = await this.$api.getMyToots(this.userId);
 
             if (result.length < this.limitCount) {
                 this.loadingState = ETootLoadingState.end;
@@ -112,7 +111,7 @@ export default class Posting extends Vue {
                     });
                 });
             }
-            
+
             this.allResult.push(...result);
         }
     }
