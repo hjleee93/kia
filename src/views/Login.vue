@@ -99,29 +99,35 @@
                 </template>
 
                 <div class="art-second-btn">
-                    <a href="#" class="btn btn-link">등록하기</a>
+                    <a @click="signUp" class="btn btn-link">등록하기</a>
                 </div>
                 <ul class="art-link-lists">
                     <li>
-                        <a href="#" class="btn btn-link"
+                        <a @click="findPwd" class="btn btn-link"
                             >비밀번호를 잊어버리셨습니까?</a
                         >
                     </li>
                     <li>
-                        <a href="#" class="btn btn-link"
+                        <a @click="missingEmail" class="btn btn-link"
                             >확인 메일을 받지 못하셨습니까?</a
                         >
                     </li>
                 </ul>
             </div>
+            <iframe
+                class="iframe"
+                
+                ref="iframe"
+                :src="`${baseURL}about`"
+                allowtransparency="true"
+            ></iframe>
         </div>
         <!--content(E)-->
-
-        <iframe class="iframe" ref="iframe" :src="`${baseURL}about`"></iframe>
     </div>
 </template>
 
 <script lang="ts">
+import config from "@/lib/config";
 import { Component, Prop, Vue } from "vue-property-decorator";
 
 @Component({ components: {} })
@@ -137,12 +143,17 @@ export default class Login extends Vue {
     private clickedLogin: boolean = false;
     private emailRegExp = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
 
+
     handleKeyDown(e: any) {
         if (e.code === "Enter" || e.keyCode === 13) {
             this.login();
         }
     }
-    created() {
+
+    mounted() {
+     console.log(document.cookie)
+    }
+    created() { 
         window.addEventListener("keydown", this.handleKeyDown);
     }
     destroyed() {
@@ -252,6 +263,18 @@ export default class Login extends Vue {
             console.log("Failed to fetch current user");
         }
     }
+
+    findPwd(){
+        window.location.href=`${config.instance}/auth/password/new`
+    }
+    missingEmail(){
+        window.location.href=`${config.instance}/auth/confirmation/new`
+        
+    }
+    signUp(){
+        window.location.href=`${config.instance}/auth/sign_up`
+        
+    }
 }
 </script>
 
@@ -262,6 +285,13 @@ export default class Login extends Vue {
 }
 
 .iframe {
-    display: none;
+    /* display: contents; */
+    opacity: 0;
+    z-index: -1 !important;
+}
+.login,
+.content,
+.line {
+    /* z-index: 999; */
 }
 </style>

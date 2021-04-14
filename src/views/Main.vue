@@ -25,9 +25,11 @@ export default class App extends Vue {
     private loggedIn: boolean = localStorage.getItem("token") != null;
     
     async mounted() {
+       
         initApp();
     }
     logOut() {
+        
         this.loggedIn = false;
         this.$router.push("/login").catch(() => {});
     }

@@ -162,9 +162,9 @@ export default class Api {
             headers: { Authorization: "Bearer " + config.token },
           
         });
-
         return result.data
     }
+
 }
 
 declare module 'vue/types/vue' {

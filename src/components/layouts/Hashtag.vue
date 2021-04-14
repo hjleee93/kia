@@ -1,7 +1,12 @@
 <template>
     <div class="box-hash-dropdown">
         <button data-val="" class="txt" @click="txtClick">
-            <span># {{ hashtags[0] }}</span>
+            <template v-if="$store.getters.currCategory !== 'Posting'">
+                <span># {{ hashtags[0] }}</span>
+            </template>
+            <template v-else>
+                <span># ALL TAG</span>
+            </template>
         </button>
         <div class="lists">
             <strong class="tit">해시태그</strong
@@ -43,11 +48,21 @@ export default class Hashtag extends Vue {
         const categories = await this.$api.getCategory();
 
         this.$store.commit("categories", categories);
-        const tags = this.$store.getters.category(this.tag)?.tags;
 
-        if (tags) {
-            for (const i in tags) {
-                this.hashtags.push(tags[i].name);
+        if (this.$store.getters.currCategory === "Posting") {
+            
+            for (const i in this.$store.getters.categories) {
+                for(const j in this.$store.getters.categories[i].tags){
+                   this.hashtags.push(this.$store.getters.categories[i].tags[j].name); 
+                }
+                
+            }
+        } else {
+            const tags = this.$store.getters.category(this.tag)?.tags;
+            if (tags) {
+                for (const i in tags) {
+                    this.hashtags.push(tags[i].name);
+                }
             }
         }
     }
