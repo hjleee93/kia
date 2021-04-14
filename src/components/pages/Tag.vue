@@ -4,7 +4,7 @@
     <div class="content">
       <div class="wrap-fixed">
         <div class="sec-fixed">
-          <SearchHashtag :hashtag='hashtag'  @myTags='getMyTags'/>
+          <SearchHashtag :hashtag='hashtag'  @tags='getTags'/>
           <div class="sec-category">
             <div class="box-grid-top">
               <div class="floated left">
@@ -13,7 +13,7 @@
                 </template>
                 <!--검색 전-->
                 <template v-else>
-                  <p class="txt">총 {{myTagList.length}}개의 검색 결과</p>
+                  <p class="txt">총 {{tagList.length}}개의 검색 결과</p>
                 </template>
                   <!--검색 결과 없음-->
                 <!--<p class="txt">총 10개의 검색 결과</p>--><!--검색 결과 있음-->
@@ -31,15 +31,15 @@
             <p class="txt">해시태그를 검색해주세요.</p>
           </div>
 
-          <ul v-else-if="myTagList.length > 0" class="hash-lists">
+          <ul v-else-if="tagList.length > 0" class="hash-lists">
             
           <!--검색 결과 있음-->
-            <template v-for="hashData in myTagList">
+            <template v-for="hashData in tagList" >
               <li>
-                {{hashData}}
-                <!-- <button class="btn btn-hash" @click="clickedHashtag(hashData.hash)">
-                  <span class="hash"><span>#</span>{{ hashData.hash }}</span>
-                </button> -->
+                
+                <button class="btn btn-hash" @click="clickedHashtag(hashData.hash)">
+                  <span class="hash"><span>#</span>{{ hashData.name }}</span>
+                </button>
               </li>
             </template>
           </ul>
@@ -62,9 +62,9 @@ import SearchHashtag from "@/components/layouts/myTag/SearchHashtag.vue";
 import { gnb } from "@/scripts/ui_common";
 
 @Component({ components: { SearchHashtag } })
-export default class MyTag extends Vue {
+export default class Tag extends Vue {
   isSearch: boolean = false;
-  myTagList: string[] = [];
+  tagList: string[] = [];
   //todo: 내가 쓴 해시태그 가져오기 
   hashList: any[] = [
     { hash: "해시 태그명 노출1" },
@@ -111,19 +111,17 @@ export default class MyTag extends Vue {
 private hashtag: string = '';
   mounted() {
     gnb.init();
+    this.$store.commit('currCategory', 'Tag')
   }
   
   clickedHashtag(val: string){
     this.hashtag = val;
   }
-  getMyTags(tags: string[]){
-    
+  getTags(tags: string[]){
     if(tags){
-      this.myTagList = tags;
+      this.tagList = tags;
       this.isSearch = true;
     }
-    
-    console.log(this.myTagList)
   }
 }
 </script>

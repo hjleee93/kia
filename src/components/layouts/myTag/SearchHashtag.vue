@@ -17,7 +17,7 @@
                         class="btn btn-search"
                         @click="searchMyTag(inputHashtag)"
                         :class="[
-                            inputHashtag.length > 0 ? 'active' : '',
+                            inputHashtag.length === 0 ? '' : 'active',
                             isDone ? 'delete' : '',
                         ]"
                     ></button>
@@ -39,6 +39,7 @@ import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 export default class SearchHashtag extends Vue {
     @Prop() hashtag!: string;
     private inputHashtag: string = this.hashtag;
+    private isClicked: boolean = false;
     private isDone: boolean = false;
 
     @Watch("hashtag")
@@ -46,13 +47,16 @@ export default class SearchHashtag extends Vue {
         this.inputHashtag = this.hashtag;
     }
 
-    searchMyTag(input: string) {
-        //todo: 자신이 사용한 해시태그 get 연결
-        let result = ['123', '234', '안녕']
-        // let result:any[] = []
-        //결과값 저장
-        this.$emit('myTags', result)
-        this.isDone = true;
+    async searchMyTag(input: string) {
+        this.isClicked = !this.isClicked;
+          try {
+            const result = await this.$api.searchHashtag(this.inputHashtag);
+              this.$emit('tags', result.hashtags)
+              this.isDone = true;
+          }catch(err){
+              console.log(err)
+          }   
+        
     }
 }
 </script>

@@ -6,11 +6,10 @@
             </h1>
             <nav class="navigation">
                 <ul>
-                    <li class="list-ins">
+                    <li class="list-ins" @click="clickedHeader('INS')">
                         <router-link
                             to="/mastodon/web/timelines/public"
                             class="btn btn-link"
-                            @click.native="active = 'INS'"
                             :class="{ active: isActive('INS') }"
                             >INS</router-link
                         >
@@ -71,11 +70,11 @@
                     </li>
                     <li class="list-mytag">
                         <router-link
-                            to="/myTag"
-                            @click.native="active = 'MyTag'"
-                            :class="{ active: isActive('MyTag') }"
+                            to="/tag"
+                            @click.native="active = 'Tag'"
+                            :class="{ active: isActive('Tag') }"
                             class="btn btn-link"
-                            >MyTag</router-link
+                            >Tag</router-link
                         >
                     </li>
                     <li class="list-rank">
@@ -97,12 +96,12 @@
 
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
-import Category from "./Category.vue";
 
 @Component({})
 export default class Header extends Vue {
     private active: string = this.$store.getters.currCategory;
     private loggedIn: boolean = localStorage.getItem("token") != null;
+
     
     isActive(value: string) {
         return this.active === value;
@@ -111,14 +110,20 @@ export default class Header extends Vue {
     logOut() {
         this.$emit("logout");
         localStorage.removeItem("token");
+        window.location.href='/login'
+        
     }
+    
     clickedHeader(category: string) {
+        this.$store.commit('currCategory', category)
         this.active = category;
+        
     }
-
     @Watch("$store.getters.currCategory")
     getCategory() {
         this.active = this.$store.getters.currCategory;
+        
+        
     }
 }
 </script>

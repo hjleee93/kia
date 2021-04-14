@@ -125,18 +125,27 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import { dim, getDevice, gnb, search, tootDropDown } from "@/scripts/ui_common";
 
 @Component({ components: {} })
 export default class SearchBar extends Vue {
-    @Prop() category!: string;
     private searchInput: string = "";
     private isDone: boolean = false;
+    private category: string ='';
+
     private searchHistory: string[] = JSON.parse(
         localStorage.getItem("RecentKeyword")!
     );
+
     private searchResult: any[] = [];
+
+    @Watch("$store.getters.currCategory")
+    getCategory() {
+        this.category = this.$store.getters.currCategory;
+        
+        
+    }
     mounted() {
         tootDropDown.init();
         search.init();
@@ -196,6 +205,7 @@ export default class SearchBar extends Vue {
 
         try {
             const result = await this.$api.searchHashtag(this.searchInput);
+           
             this.isDone = true;
         } catch (err) {
             console.log(err);
