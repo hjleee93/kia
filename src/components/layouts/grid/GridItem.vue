@@ -21,17 +21,17 @@
                             </template>
                         </div>
                     </router-link>
-                    <div class="box-cont">
-                        <router-link :to="'/mastodon/web/statuses/' + toot.id">
-                        <template v-if="toot.content.length > 65">
-                            <p class="txt content" v-html="toot.content"></p>
-                            <p class="txt more"><span>더보기</span></p>
-                        </template>
-                        <template v-else>
-                          <p class="txt " v-html="toot.content"></p>
-                        </template>
-                    
-                            </router-link>
+                    <div class="box-cont">                        
+                            <template v-if="toot.content.length > 65">
+                                <p
+                                    class="txt content"
+                                    v-html="tootContent"></p>
+                                  <router-link :to="'/mastodon/web/statuses/' + toot.id"><p class="txt more"><span>더보기</span></p></router-link>
+                            </template>
+                            <template v-else>
+                                <p class="txt" v-html="toot.content"></p>
+                            </template>
+                        
                         <router-link
                             :to="'/mastodon/web/accounts/' + toot.account.id"
                         >
@@ -54,16 +54,27 @@
 
 <script lang="ts">
 import config from "@/lib/config";
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import Like from "./Like.vue";
 
 @Component({ components: { Like } })
 export default class GridItem extends Vue {
     @Prop() toot!: any;
+    private tootContent: string = '';
+    
+    mounted() {
+        this.tootContent = this.toot.content.replaceAll('https://toot.wbcard.org/tags', '#/mastodon/tags')
+    }
 
+    
     goUserDetail(userId: number) {
         window.location.href = `${config.instance}/web/accounts/${userId}`;
     }
+
+    tagLinkEdit(){
+        console.log(this.toot.content)
+    }
+  
 }
 </script>
 
@@ -72,7 +83,7 @@ export default class GridItem extends Vue {
     display: none !important;
 }
 .txt.content {
-text-align: left !important;
+    text-align: left !important;
     width: 100%;
     white-space: normal;
     display: -webkit-box;
@@ -80,7 +91,7 @@ text-align: left !important;
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
-.txt.more{
-  float: right;
+.txt.more {
+    float: right;
 }
 </style>
