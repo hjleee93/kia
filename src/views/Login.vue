@@ -116,6 +116,8 @@
             </div>
             
                 <iframe :src="`${baseURL}/auth/sign_up`" ref="reg-iframe" class="reg_iframe" :class="isRegister ? 'active' : ''"></iframe>
+                <iframe :src="`${baseURL}/auth/confirmation/new`" ref="missing-iframe" class="reg_iframe" :class="isMissingEmail ? 'active' : ''"></iframe>
+                <iframe :src="`${baseURL}/auth/password/new`" ref="pwd-iframe" class="reg_iframe" :class="isLostPwd ? 'active' : ''"></iframe>
             
             <iframe
                 class="iframe"
@@ -137,7 +139,9 @@ import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 export default class Login extends Vue {
 
 private isRegister: boolean = false;
-private iFrame !: HTMLElement;
+private isMissingEmail: boolean = false;
+private isLostPwd: boolean = false;
+
 
     private baseURL: string = process.env.VUE_APP_BASE_API!;
 
@@ -157,20 +161,23 @@ private iFrame !: HTMLElement;
         }
     }
 
-    mounted() {
-     this.iFrame = document.getElementById('loginIframe')!
-     
-    }
     @Watch('iFrame')
     watchFrame(){
          this.iFrame = document.getElementById('loginIframe')!
     }
    
-    created() { 
+    async mounted() { 
         window.addEventListener("keydown", this.handleKeyDown);
-        window.addEventListener('register',((e)=>{
-            console.log(e)
-        }));
+        
+        (this.$refs
+                .iframe as HTMLIFrameElement)?.contentWindow?.postMessage(
+                {
+                    type: "logout"
+                },
+                "*"
+            );
+            
+              
     }
     destroyed() {
         window.removeEventListener("keydown", this.handleKeyDown);
@@ -281,21 +288,16 @@ private iFrame !: HTMLElement;
     }
 
     findPwd(){
-        window.location.href=`${config.instance}/auth/password/new`
+     this.isLostPwd = true;
+        // window.location.href=`${config.instance}/auth/password/new`
     }
     missingEmail(){
-        window.location.href=`${config.instance}/auth/confirmation/new`
+        this.isMissingEmail = true;
+        // window.location.href=`${config.instance}/auth/confirmation/new`
         
     }
     signUp(){
         this.isRegister = true;
-       
-        (this.$refs.reg_iframe as HTMLIFrameElement)?.contentWindow?.postMessage(
-                {
-                    type: "register",
-                },
-                "*"
-            );
         // window.location.href=`${config.instance}/auth/sign_up`
         
     }
