@@ -4,7 +4,7 @@
             <div class="wrap-fixed">
                 <div class="sec-fixed">
                     <SearchBar @searchResult="searchResult" />
-                    <Category />
+                    <CategoryP />
                     <div class="sec-grid-top">
                         <BoxGridTop @sortOrder="sortOrder" />
                     </div>
@@ -18,7 +18,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
-import Category from "@/components/layouts/Category.vue";
+import CategoryP from "@/components/layouts/posting/CategoryP.vue";
 import Grid from "@/components/layouts/grid/Grid.vue";
 import BoxGridTop from "@/components/layouts/grid/BoxGridTop.vue";
 import SearchBar from "@/components/layouts/SearchBar.vue";
@@ -40,7 +40,7 @@ enum ETootLoadingState {
 }
 
 @Component({
-    components: { SearchBar, Category, Grid, BoxGridTop },
+    components: { SearchBar, CategoryP, Grid, BoxGridTop },
 })
 export default class Posting extends Vue {
     private category: string = "Posting";
@@ -67,14 +67,7 @@ export default class Posting extends Vue {
         // console.log("searchResult",this.result);
     }
 
-    async getGridItem() {
-        try {
-            const result = await this.$api.getMyToots(this.userId);
-            this.allResult = result;
-        } catch (err) {
-            console.log(err);
-        }
-    }
+
 
     @Watch("$store.state.user.currentUser")
     async getUserId() {
@@ -85,8 +78,24 @@ export default class Posting extends Vue {
     }
 
     async loadToot() {
+        const temp = [];
         const result = await this.$api.getMyToots(this.userId);
-        this.allResult.push(...result);
+        // if (result.length) {
+        //         max_id = result[result.length - 1].id;
+        //     }
+        const result2 = await this.$api.getMyToots(this.userId) 
+        
+        for (let i = 0; i < result.length; i++) {
+                if (result[i].media_attachments.length > 0) {
+                    temp.push(result[i])
+                    // if (result[i].media_attachments[0].type === "image") {
+                        this.allResult.push(result[i].media_attachments[0].url);
+                    // }
+                }
+            }
+
+        this.allResult.push(...temp);
+           console.log("!23",temp)
     }
 
     sortOrder(value: string) {

@@ -1,7 +1,7 @@
 <template>
     <div class="sec-grid">
         <!--검색 결과가 없는경우-->
-        <template v-if="allToots.length === 0 || allToots === undefined">
+        <template v-if="allToots === null || allToots.length === 0">
             <div class="no-data">
                 <p class="txt">검색 결과가 없습니다.</p>
             </div>
@@ -13,37 +13,38 @@
         <!--                :key="toot.id"-->
         <!--            />-->
         <!--        </div>-->
-        <isotope
-            v-if="device === 'pc'"
-            :key="device"
-            ref="isotope"
-            class="grid"
-            tabindex="11"
-            :options="optionPc()"
-            :list="allToots"
-        >
-            <GridItem
-                v-for="(toot, index) in allToots"
-                :toot="toot"
-                :key="index"
-            />
-        </isotope>
-        <isotope
-            v-else-if="device === 'mo'"
-            :key="device"
-            ref="isotope"
-            class="grid"
-            tabindex="100"
-            :options="optionsMo()"
-            :list="allToots"
-        >
-            <GridItem
-                v-for="(toot, index) in allToots"
-                :toot="toot"
-                :key="index"
-            />
-        </isotope>
-
+        <template v-if="allToots !== null">
+            <isotope
+                v-if="device === 'pc'"
+                :key="device"
+                ref="isotope"
+                class="grid"
+                tabindex="11"
+                :options="optionPc()"
+                :list="allToots"
+            >
+                <GridItem
+                    v-for="(toot, index) in allToots"
+                    :toot="toot"
+                    :key="index"
+                />
+            </isotope>
+            <isotope
+                v-else-if="device === 'mo'"
+                :key="device"
+                ref="isotope"
+                class="grid"
+                tabindex="100"
+                :options="optionsMo()"
+                :list="allToots"
+            >
+                <GridItem
+                    v-for="(toot, index) in allToots"
+                    :toot="toot"
+                    :key="index"
+                />
+            </isotope>
+        </template>
         <!-- <button style="color: white" @click="moreItem">더보기</button> -->
     </div>
 </template>
@@ -57,7 +58,6 @@ import GridItem from "./GridItem.vue";
 import isotope from "vueisotope";
 import { getDevice } from "@/scripts/ui_common";
 import config from "@/lib/config";
-import { nextTick } from "node_modules/vue/types/umd";
 
 @Component({ components: { GridItem, isotope } })
 export default class Grid extends Vue {
@@ -92,11 +92,11 @@ export default class Grid extends Vue {
         //@ts-ignore
         imagesLoaded(document.querySelector(".grid"), () => {
             setTimeout(() => {
-                  if (this.$refs.isotope !== undefined) {
-                //@ts-ignore
-                this.$refs.isotope.layout();
-            }}, 100);
-            
+                if (this.$refs.isotope !== undefined) {
+                    //@ts-ignore
+                    this.$refs.isotope.layout();
+                }
+            }, 100);
         });
         //  setTimeout(() => {
         //     //@ts-ignore
@@ -141,10 +141,9 @@ export default class Grid extends Vue {
         // window.addEventListener("resize", this.onResize, false)
         window.onresize = this.onResize;
     }
-   
 
     beforeDestroy() {
-        window.removeEventListener('onresize', this.onResize, false)
+        window.removeEventListener("onresize", this.onResize, false);
     }
 
     moreItem() {
@@ -183,6 +182,12 @@ export default class Grid extends Vue {
                 itemSelector: ".grid-item",
             },
         };
+    }
+
+    @Watch("$store.getters.searchResult")
+    searchResult() {
+        this.allToots = this.$store.getters.searchResult;
+        console.log(this.allToots)
     }
 }
 </script>

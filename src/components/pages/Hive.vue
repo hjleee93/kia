@@ -44,7 +44,7 @@ enum ETootLoadingState {
 export default class Hive extends Vue {
     private category: string = "Hive";
     private allResult: any[] = [];
-
+    private tootCnt: number = -1;
     private limitCount: number = 5;
     private loadingState: ETootLoadingState = ETootLoadingState.none;
 
@@ -59,6 +59,7 @@ export default class Hive extends Vue {
     async mounted() {
        this.$store.commit('currCategory', 'Hive') 
         this.loadToot();
+        
         window.addEventListener("scroll", this.scrollHandler);
     }
 
@@ -87,7 +88,7 @@ export default class Hive extends Vue {
             this.loadToot();
         }
     }
-
+  
     async loadToot() {
         if (
             this.loadingState === ETootLoadingState.none ||

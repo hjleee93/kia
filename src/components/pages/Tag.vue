@@ -96,10 +96,9 @@
 
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
-import SearchHashtag from "@/components/layouts/myTag/SearchHashtag.vue";
 import { gnb } from "@/scripts/ui_common";
 
-@Component({ components: { SearchHashtag } })
+@Component({ components: {  } })
 export default class Tag extends Vue {
     isSearch: boolean = false;
     tagList: string[] = [];
@@ -149,14 +148,14 @@ export default class Tag extends Vue {
         }
     }
 
-    async searchTag(input: string, newSearch ?: boolean) {
-        if(newSearch){
-              this.tagList = [];
+    async searchTag(input: string, newSearch?: boolean) {
+        if (newSearch) {
+            this.tagList = [];
             this.offset = 0;
         }
         this.isSearch = true;
         const limit = 30;
- 
+
         try {
             const result = await this.$api.searchHashtag(
                 input,

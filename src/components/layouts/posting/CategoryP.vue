@@ -10,8 +10,8 @@
                 <!--<button class="btn btn-category active"></button>-->
                 <li class="list-all divider">
                     <button
-                        @click="clickedCategory('Hive')"
-                        :class="{ active: isActive('Hive') }"
+                        @click="clickedCategory('Posting')"
+                        :class="{ active: isActive('Posting') }"
                         class="btn btn-category"
                     >
                         <span>All</span>
@@ -38,7 +38,7 @@
                 <li class="list-exhibition divider">
                     <button
                         class="btn btn-category"
-                        @click="clickedCategory('exhibition')"
+                        @click="clickedCategory('Exhibition')"
                         :class="{ active: isActive('Exhibition') }"
                     >
                         <span>Exhibition</span>
@@ -51,12 +51,8 @@
                 </li>
             </ul>
         </div>
-        <template v-if="$store.getters.currCategory !== 'Hive'">
-            <Hashtag
-                :tag="$store.getters.currCategory"
-                @tagResult="tagResult"
-            />
-        </template>
+
+        <Hashtag :tag="$store.getters.currCategory" @tagResult="tagResult" />
     </div>
 </template>
 
@@ -66,9 +62,11 @@ import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import { albumPop, dim, gnb } from "@/scripts/ui_common";
 
 @Component({ components: { Hashtag } })
-export default class Category extends Vue {
+export default class CategoryP extends Vue {
     private active: string = this.$store.getters.currCategory;
+
     isActive(value: string) {
+
         return this.active === value;
     }
 
@@ -81,7 +79,6 @@ export default class Category extends Vue {
     }
     clickedCategory(category: string) {
         this.active = category;
-        this.$router.push("/" + category.toLowerCase()).catch(() => {});
     }
 
     @Watch("$store.getters.currCategory")

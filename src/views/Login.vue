@@ -114,6 +114,9 @@
                     </li>
                 </ul>
             </div>
+            
+                <iframe :src="`${baseURL}/auth/sign_up`" ref="reg-iframe" class="reg_iframe" :class="isRegister ? 'active' : ''"></iframe>
+            
             <iframe
                 class="iframe"
                 
@@ -128,10 +131,14 @@
 
 <script lang="ts">
 import config from "@/lib/config";
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 
 @Component({ components: {} })
 export default class Login extends Vue {
+
+private isRegister: boolean = false;
+private iFrame !: HTMLElement;
+
     private baseURL: string = process.env.VUE_APP_BASE_API!;
 
     private email: string = "";
@@ -151,10 +158,19 @@ export default class Login extends Vue {
     }
 
     mounted() {
-     console.log(document.cookie)
+     this.iFrame = document.getElementById('loginIframe')!
+     
     }
+    @Watch('iFrame')
+    watchFrame(){
+         this.iFrame = document.getElementById('loginIframe')!
+    }
+   
     created() { 
         window.addEventListener("keydown", this.handleKeyDown);
+        window.addEventListener('register',((e)=>{
+            console.log(e)
+        }));
     }
     destroyed() {
         window.removeEventListener("keydown", this.handleKeyDown);
@@ -272,9 +288,18 @@ export default class Login extends Vue {
         
     }
     signUp(){
-        window.location.href=`${config.instance}/auth/sign_up`
+        this.isRegister = true;
+       
+        (this.$refs.reg_iframe as HTMLIFrameElement)?.contentWindow?.postMessage(
+                {
+                    type: "register",
+                },
+                "*"
+            );
+        // window.location.href=`${config.instance}/auth/sign_up`
         
     }
+    
 }
 </script>
 
@@ -293,5 +318,14 @@ export default class Login extends Vue {
 .content,
 .line {
     /* z-index: 999; */
+}
+.reg_iframe{
+    display: none;
+}
+.reg_iframe.active{
+    height: 100%;
+    width: 100%;
+    position: relative;
+    display: block;
 }
 </style>
