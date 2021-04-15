@@ -1,7 +1,6 @@
 import config from '@/lib/config';
 import axios, { AxiosInstance } from 'axios'
 import Vue, { PluginObject } from "vue";
-import tempCategory from './../scripts/categoryList';
 
 export default class Api {
 
@@ -29,9 +28,6 @@ export default class Api {
         return result.data;
     }
 
-    async getCategory() {
-        return tempCategory;
-    }
     getToken() {
         return JSON.parse(localStorage.getItem('token')!)
     }
@@ -64,7 +60,7 @@ export default class Api {
         );
         return result.data;
     }
-    async getMyToots(userId: number,max_id?: number,) {
+    async getMyToots(userId: number, max_id?: number,) {
         const result = await Vue.$axios.get("/api/v1/accounts/" + userId + "/statuses", {
             headers: {
                 params: { max_id },
@@ -72,7 +68,6 @@ export default class Api {
             }
         }
         );
-        console.log(result)
         return result.data;
     }
     async deleteToot(tootId: number) {
@@ -148,24 +143,28 @@ export default class Api {
         return result;
     }
 
+    
     async searchToot(searchInput: string) {
-        const result = await Vue.$axios.get('/api/v2/search',
-            {
-                params: Object.assign({ q: searchInput }),
-                headers: { Authorization: "Bearer " + config.token },
+        const result = await Vue.$axios({
+            method: 'get',
+            url: `${config.instance}/api/v2/search/`,
+            headers: {
+                Authorization: `Bearer ${config.token}`
+            },
+            params: Object.assign({ q: searchInput })
 
-            });
+
+        })
         return result.data
     }
 
-    async searchHashtag(searchInput: string, offset?: number, limit ?: number) {
+    async searchHashtag(searchInput: string, offset?: number, limit?: number) {
         const result = await Vue.$axios.get('/api/v2/search',
             {
-                params: Object.assign({ q: searchInput, type : 'hashtags',offset: offset, limit: limit}),
+                params: Object.assign({ q: searchInput, type: 'hashtags', offset: offset, limit: limit }),
                 headers: { Authorization: "Bearer " + config.token },
 
             });
-            console.log(result)
         return result.data.hashtags
     }
 

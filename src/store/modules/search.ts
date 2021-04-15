@@ -2,8 +2,7 @@ export default {
     state: {
       searchResult: undefined
     },
-    getters: {
-      
+    getters: {      
         searchResult(state:any){
            return state.searchResult;
        }

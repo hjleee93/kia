@@ -122,8 +122,6 @@ export default class Header extends Vue {
     @Watch("$store.getters.currCategory")
     getCategory() {
         this.active = this.$store.getters.currCategory;
-        
-        
     }
 }
 </script>

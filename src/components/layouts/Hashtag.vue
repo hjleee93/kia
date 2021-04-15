@@ -33,7 +33,7 @@
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import { dim, gnb, hashDropDown } from "@/scripts/ui_common";
-
+import tempCategory from '@/scripts/categoryList';
 @Component({ components: {} })
 export default class Hashtag extends Vue {
     @Prop() tag!: string;
@@ -44,8 +44,13 @@ export default class Hashtag extends Vue {
         this.initCate();
     }
 
+     async getCategory() {
+        return tempCategory;
+    }
     async initCate() {
-        const categories = await this.$api.getCategory();
+        const categories =await this.getCategory();
+
+        console.log(categories)
 
         this.$store.commit("categories", categories);
 

@@ -202,6 +202,7 @@ export default class SearchBar extends Vue {
 
         try {
             const result = await this.$api.searchToot(this.searchInput);
+            
             //검색결과 없는 경우
             if (result.accounts.length === 0 && result.statuses.length === 0) {
                 this.$store.commit("searchResult", null);
