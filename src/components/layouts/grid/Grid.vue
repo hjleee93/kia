@@ -187,7 +187,6 @@ export default class Grid extends Vue {
     @Watch("$store.getters.searchResult")
     searchResult() {
         this.allToots = this.$store.getters.searchResult;
-        console.log(this.allToots)
     }
 }
 </script>

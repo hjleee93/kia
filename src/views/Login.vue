@@ -171,28 +171,32 @@ export default class Login extends Vue {
             this.login();
         }
     }
-    beforeCreate() {     
-        window.addEventListener("message", this.logout, false);   
-    }
 
     async mounted() {
         window.addEventListener("keydown", this.handleKeyDown);
+        window.addEventListener('message', (e)=>{
+            if(e.data)
+            (this.$refs.iframe as HTMLIFrameElement)?.contentWindow?.postMessage(
+    {
+        type: "logout",
+    },
+    "*"
+        });
 
+       
+        // (this.$refs.iframe as HTMLIFrameElement)?.contentWindow?.postMessage(
+        //     {
+        //         type: "logout",
+        //     },
+        //     "*"
+        // );
     }
-   
+
     destroyed() {
         window.removeEventListener("keydown", this.handleKeyDown);
-        window.removeEventListener("message", this.logout, false);
+        // window.removeEventListener("message", this.logout, false);
     }
- 
-    logout(e:MessageEvent) {
-        (this.$refs.iframe as HTMLIFrameElement)?.contentWindow?.postMessage(
-            {
-                type: "logout",
-            },
-            "*"
-        );
-    }
+  
 
     login() {
         let uri = new URL(this.instance);
@@ -264,6 +268,7 @@ export default class Login extends Vue {
                 },
                 "*"
             );
+
             await new Promise<void>((resolve) => {
                 const onMessage = (e: MessageEvent) => {
                     const data = e.data || {};

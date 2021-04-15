@@ -142,8 +142,7 @@ export default class Tag extends Vue {
         let el = document.documentElement;
 
         if (el.scrollTop === 0) {
-        } else if (el.scrollTop + el.clientHeight >= el.scrollHeight - 150) {
-console.log(el.scrollHeight)
+        } else if (el.scrollTop + el.clientHeight > el.scrollHeight) {
             this.searchTag(this.inputHashtag);
         }
     }
