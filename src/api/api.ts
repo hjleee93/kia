@@ -5,7 +5,7 @@ import tempCategory from './../scripts/categoryList';
 
 export default class Api {
 
-    async verifyApp(){
+    async verifyApp() {
         const result = await Vue.$axios.post("api/v1/apps", {
             client_name: "KIA",
             redirect_uris: "urn:ietf:wg:oauth:2.0:oob",
@@ -64,10 +64,15 @@ export default class Api {
         );
         return result.data;
     }
-    async getMyToots(userId: number) {
-        const result = await Vue.$axios.get("/api/v1/accounts/" + userId + "/statuses"
+    async getMyToots(userId: number,max_id?: number,) {
+        const result = await Vue.$axios.get("/api/v1/accounts/" + userId + "/statuses", {
+            headers: {
+                params: { max_id },
+                Authorization: "Bearer " + config.token,
+            }
+        }
         );
-
+        console.log(result)
         return result.data;
     }
     async deleteToot(tootId: number) {
@@ -128,17 +133,10 @@ export default class Api {
                 'Authorization': `Bearer ${config.token}`
             }
         })
-        // post("/api/v1/statuses/" + tootId + "/favourite",
-        //     {
-        //         headers: { 'Authorization': 'Bearer ' + this.getToken() },
-
-        //     })
-
         return result;
     }
 
     async sendUnfavourite(tootId: number) {
-
 
         const result = await Vue.$axios({
             method: 'post',
@@ -147,23 +145,30 @@ export default class Api {
                 'Authorization': `Bearer ${config.token}`
             }
         })
-        // .post("/api/v1/statuses/" + tootId + "/unfavourite",
-        //     {
-        //         headers: { 'Authorization': "Bearer " + config.token },
-
-        //     })
         return result;
     }
 
-    async searchHashtag(searchInput: string){
+    async searchToot(searchInput: string) {
         const result = await Vue.$axios.get('/api/v2/search',
-        {
-            params: Object.assign({ q: searchInput }),
-            headers: { Authorization: "Bearer " + config.token },
-          
-        });
+            {
+                params: Object.assign({ q: searchInput }),
+                headers: { Authorization: "Bearer " + config.token },
+
+            });
         return result.data
     }
+
+    async searchHashtag(searchInput: string, offset?: number, limit ?: number) {
+        const result = await Vue.$axios.get('/api/v2/search',
+            {
+                params: Object.assign({ q: searchInput, type : 'hashtags',offset: offset, limit: limit}),
+                headers: { Authorization: "Bearer " + config.token },
+
+            });
+            console.log(result)
+        return result.data.hashtags
+    }
+
 
 }
 

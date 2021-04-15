@@ -4,7 +4,39 @@
         <div class="content">
             <div class="wrap-fixed">
                 <div class="sec-fixed">
-                    <SearchHashtag :hashtag="hashtag" @tags="getTags" />
+                    <!-- <SearchHashtag :hashtag="hashtag" @tags="getTags" /> -->
+                    <div class="sec-search">
+                        <div class="box-layer">
+                            <div class="box-search-form">
+                                <div class="box-input">
+                                    <label class="input">
+                                        <input
+                                            v-model="inputHashtag"
+                                            type="text"
+                                            name="search"
+                                            placeholder="해시태그 검색"
+                                            autocomplete="off"
+                                        />
+                                    </label>
+                                    <!--조회 전-->
+                                    <button
+                                        class="btn btn-search"
+                                        @click="searchTag(inputHashtag)"
+                                        :class="[
+                                            inputHashtag.length === 0
+                                                ? ''
+                                                : 'active',
+                                            isDone ? 'delete' : '',
+                                        ]"
+                                    ></button>
+                                    <!--조회 중-->
+                                    <!--<button class="btn btn-search active"></button>-->
+                                    <!--조회 완료-->
+                                    <!--<button class="btn btn-search delete"></button>-->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="sec-category">
                         <div class="box-grid-top">
                             <div class="floated left">
@@ -31,12 +63,10 @@
                     <!--검색 전-->
                     <div v-if="!isSearch" class="box-no-data">
                         <p class="txt">해시태그를 검색해주세요.</p>
-
                     </div>
                     <ul v-else-if="tagList.length > 0" class="hash-lists">
                         <!--검색 결과 있음-->
                         <template v-for="hashData in tagList">
-                          
                             <li>
                                 <button
                                     class="btn btn-hash"
@@ -74,20 +104,57 @@ export default class Tag extends Vue {
     isSearch: boolean = false;
     tagList: string[] = [];
     private hashtag: string = "";
+    private inputHashtag: string = "";
+    private isDone: boolean = false;
+    private offset = 0;
+
     mounted() {
         gnb.init();
         this.$store.commit("currCategory", "Tag");
+        window.addEventListener("scroll", this.scrollHandler);
+    }
+
+    beforeDestroy() {
+        window.removeEventListener("scroll", this.scrollHandler);
     }
 
     clickedHashtag(val: string) {
         this.hashtag = val;
-        this.$router.push(`/mastodon/web/timelines/tag/${val}`)
-
+        this.$router.push(`/mastodon/web/timelines/tag/${val}`);
     }
     getTags(tags: string[]) {
         if (tags) {
             this.tagList = tags;
             this.isSearch = true;
+        }
+    }
+
+    scrollHandler() {
+        let el = document.documentElement;
+
+        if (el.scrollTop === 0) {
+        } else if (el.scrollTop + el.clientHeight >= el.scrollHeight - 150) {
+            console.log(el.scrollTop);
+            this.searchTag(this.inputHashtag);
+        }
+    }
+
+    async searchTag(input: string) {
+        this.isSearch = true;
+        const limit = 30;
+
+        try {
+            const result = await this.$api.searchHashtag(
+                input,
+                this.offset,
+                limit
+            );
+
+            this.offset += limit;
+            this.tagList.push(...result);
+            this.isDone = true;
+        } catch (err) {
+            console.log(err);
         }
     }
 }
