@@ -21,7 +21,7 @@
                                     <!--조회 전-->
                                     <button
                                         class="btn btn-search"
-                                        @click="searchTag(inputHashtag)"
+                                        @click="searchTag(inputHashtag, true)"
                                         :class="[
                                             inputHashtag.length === 0
                                                 ? ''
@@ -112,10 +112,20 @@ export default class Tag extends Vue {
         gnb.init();
         this.$store.commit("currCategory", "Tag");
         window.addEventListener("scroll", this.scrollHandler);
+        window.addEventListener("keydown", this.handleKeyDown);
     }
 
     beforeDestroy() {
         window.removeEventListener("scroll", this.scrollHandler);
+        window.removeEventListener("keydown", this.handleKeyDown);
+    }
+
+    handleKeyDown(e: any) {
+        if (e.code === "Enter" || e.keyCode === 13) {
+            this.tagList = [];
+            this.offset = 0;
+            this.searchTag(this.inputHashtag);
+        }
     }
 
     clickedHashtag(val: string) {
@@ -139,10 +149,14 @@ export default class Tag extends Vue {
         }
     }
 
-    async searchTag(input: string) {
+    async searchTag(input: string, newSearch ?: boolean) {
+        if(newSearch){
+              this.tagList = [];
+            this.offset = 0;
+        }
         this.isSearch = true;
         const limit = 30;
-
+ 
         try {
             const result = await this.$api.searchHashtag(
                 input,

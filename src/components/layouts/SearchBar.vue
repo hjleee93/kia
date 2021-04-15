@@ -44,20 +44,20 @@
                 </div>
                 <div class="box-search-input">
                     <div class="box-input">
-                        
                         <label class="input" @click="listsOpen">
-                           
                             <input
                                 type="text"
                                 name="search"
-                                :placeholder="$store.getters.currCategory === 'Posting' ?'내용검색' : 
-                                '사용자, 내용 검색'"
+                                :placeholder="
+                                    $store.getters.currCategory === 'Posting'
+                                        ? '내용검색'
+                                        : '사용자, 내용 검색'
+                                "
                                 v-model="searchInput"
                                 autocomplete="off"
                                 @focus="inpFocus('searchInput')"
                                 ref="searchInput"
                             />
-                            <!-- todo: 사용자:username검색, 내용검색: content -->
                         </label>
                         <!--조회 전-->
                         <button
@@ -114,7 +114,7 @@ import { dim, getDevice, gnb, search, tootDropDown } from "@/scripts/ui_common";
 export default class SearchBar extends Vue {
     private searchInput: string = "";
     private isDone: boolean = false;
-    private category: string ='';
+    private category: string = "";
 
     private searchHistory: string[] = JSON.parse(
         localStorage.getItem("RecentKeyword")!
@@ -125,23 +125,38 @@ export default class SearchBar extends Vue {
     @Watch("$store.getters.currCategory")
     getCategory() {
         this.category = this.$store.getters.currCategory;
-        
-        
     }
     mounted() {
         tootDropDown.init();
         search.init();
         dim.init();
+         window.addEventListener("keydown", this.handleKeyDown);
     }
+
     beforeDestroy() {
-        search.destroy();
+        search.destroy();        
+        window.removeEventListener("keydown", this.handleKeyDown);
     }
+
+    handleKeyDown(e: any) {
+        if (e.code === "Enter" || e.keyCode === 13) {
+            this.searchToot();
+        }
+    }
+
+    @Watch("searchInput")
+    watchInput() {
+        if (this.searchInput.length >= 0) {
+            dim.close();
+        }
+    }
+    
     txtClick() {
         tootDropDown.txtClick();
     }
     tootDrop(arg: string) {
         tootDropDown.btnDropdownClick(this.$refs[arg]);
-        console.log(arg);
+        this.$router.push('/Posting').catch(() => {});
     }
     mobileToggle(arg: string) {
         search.mobileToggle(this.$refs[arg]);
@@ -186,9 +201,15 @@ export default class SearchBar extends Vue {
         }
 
         try {
-            const result = await this.$api.searchHashtag(this.searchInput);
-           
+            const result = await this.$api.searchToot(this.searchInput);
+            //검색결과 없는 경우
+            if (result.accounts.length === 0 && result.statuses.length === 0) {
+                this.$store.commit("searchResult", null);
+            } else {
+                this.$store.commit("searchResult", result.statuses);
+            }
             this.isDone = true;
+            dim.close();
         } catch (err) {
             console.log(err);
         }
