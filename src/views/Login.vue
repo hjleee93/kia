@@ -114,14 +114,28 @@
                     </li>
                 </ul>
             </div>
-            
-                <iframe :src="`${baseURL}/auth/sign_up`" ref="reg-iframe" class="reg_iframe" :class="isRegister ? 'active' : ''"></iframe>
-                <iframe :src="`${baseURL}/auth/confirmation/new`" ref="missing-iframe" class="reg_iframe" :class="isMissingEmail ? 'active' : ''"></iframe>
-                <iframe :src="`${baseURL}/auth/password/new`" ref="pwd-iframe" class="reg_iframe" :class="isLostPwd ? 'active' : ''"></iframe>
-            
+
+            <iframe
+                :src="`${baseURL}/auth/sign_up`"
+                ref="reg-iframe"
+                class="reg_iframe"
+                :class="isRegister ? 'active' : ''"
+            ></iframe>
+            <iframe
+                :src="`${baseURL}/auth/confirmation/new`"
+                ref="missing-iframe"
+                class="reg_iframe"
+                :class="isMissingEmail ? 'active' : ''"
+            ></iframe>
+            <iframe
+                :src="`${baseURL}/auth/password/new`"
+                ref="pwdIframe"
+                class="reg_iframe"
+                :class="isLostPwd ? 'active' : ''"
+            ></iframe>
+
             <iframe
                 class="iframe"
-                
                 ref="iframe"
                 :src="`${baseURL}about`"
                 allowtransparency="true"
@@ -137,11 +151,9 @@ import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 
 @Component({ components: {} })
 export default class Login extends Vue {
-
-private isRegister: boolean = false;
-private isMissingEmail: boolean = false;
-private isLostPwd: boolean = false;
-
+    private isRegister: boolean = false;
+    private isMissingEmail: boolean = false;
+    private isLostPwd: boolean = false;
 
     private baseURL: string = process.env.VUE_APP_BASE_API!;
 
@@ -154,33 +166,32 @@ private isLostPwd: boolean = false;
     private clickedLogin: boolean = false;
     private emailRegExp = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
 
-
     handleKeyDown(e: any) {
         if (e.code === "Enter" || e.keyCode === 13) {
             this.login();
         }
     }
+    beforeCreate() {     
+        window.addEventListener("message", this.logout, false);   
+    }
 
-    @Watch('iFrame')
-    watchFrame(){
-         this.iFrame = document.getElementById('loginIframe')!
+    async mounted() {
+        window.addEventListener("keydown", this.handleKeyDown);
+
     }
    
-    async mounted() { 
-        window.addEventListener("keydown", this.handleKeyDown);
-        
-        (this.$refs
-                .iframe as HTMLIFrameElement)?.contentWindow?.postMessage(
-                {
-                    type: "logout"
-                },
-                "*"
-            );
-            
-              
-    }
     destroyed() {
         window.removeEventListener("keydown", this.handleKeyDown);
+        window.removeEventListener("message", this.logout, false);
+    }
+ 
+    logout(e:MessageEvent) {
+        (this.$refs.iframe as HTMLIFrameElement)?.contentWindow?.postMessage(
+            {
+                type: "logout",
+            },
+            "*"
+        );
     }
 
     login() {
@@ -243,6 +254,7 @@ private isLostPwd: boolean = false;
             );
             this.store.in("instance", instance.host);
             this.store.in("token", result.data.access_token);
+
             (this.$refs
                 .iframe as HTMLIFrameElement)?.contentWindow?.postMessage(
                 {
@@ -287,21 +299,18 @@ private isLostPwd: boolean = false;
         }
     }
 
-    findPwd(){
-     this.isLostPwd = true;
+    findPwd() {
+        this.isLostPwd = true;
         // window.location.href=`${config.instance}/auth/password/new`
     }
-    missingEmail(){
+    missingEmail() {
         this.isMissingEmail = true;
         // window.location.href=`${config.instance}/auth/confirmation/new`
-        
     }
-    signUp(){
+    signUp() {
         this.isRegister = true;
         // window.location.href=`${config.instance}/auth/sign_up`
-        
     }
-    
 }
 </script>
 
@@ -321,10 +330,10 @@ private isLostPwd: boolean = false;
 .line {
     /* z-index: 999; */
 }
-.reg_iframe{
+.reg_iframe {
     display: none;
 }
-.reg_iframe.active{
+.reg_iframe.active {
     height: 100%;
     width: 100%;
     position: relative;

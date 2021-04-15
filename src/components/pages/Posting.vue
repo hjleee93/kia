@@ -80,9 +80,7 @@ export default class Posting extends Vue {
     async loadToot() {
         const temp = [];
         const result = await this.$api.getMyToots(this.userId);
-        // if (result.length) {
-        //         max_id = result[result.length - 1].id;
-        //     }
+       
         const result2 = await this.$api.getMyToots(this.userId) 
         
         for (let i = 0; i < result.length; i++) {
@@ -95,7 +93,7 @@ export default class Posting extends Vue {
             }
 
         this.allResult.push(...temp);
-           console.log("!23",temp)
+           
     }
 
     sortOrder(value: string) {

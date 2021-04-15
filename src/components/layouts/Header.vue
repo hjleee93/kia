@@ -110,7 +110,8 @@ export default class Header extends Vue {
     logOut() {
         this.$emit("logout");
         localStorage.removeItem("token");
-        window.location.href='/login'
+        window.location.href='/'
+        
         
     }
     
