@@ -174,8 +174,11 @@ export default class Tag extends Vue {
                 this.offset,
                 limit
             );
-
-            this.offset += limit;
+            if (result.length < 30) {
+                this.offset += result.length;
+            } else {
+                this.offset += limit;
+            }
             this.tagList.push(...result);
             this.isDone = true;
         } catch (err) {

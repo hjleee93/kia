@@ -22,7 +22,7 @@
                         </div>
                     </router-link>
                     <div class="box-cont">
-                         <template v-if="height > 65">
+                        <template v-if="height > 65">
                             <p
                                 ref="txtBox"
                                 class="txt content"
@@ -36,8 +36,7 @@
                             >
                         </template>
 
-                        <template v-else> 
-                            
+                        <template v-else>
                             <p
                                 class="txt"
                                 ref="txtBox"
@@ -74,7 +73,7 @@ import Like from "./Like.vue";
 export default class GridItem extends Vue {
     @Prop() toot!: any;
     private tootContent: string = "";
-     private height: number = 0;
+    private height: number = 0;
 
     mounted() {
         if (this.toot.content !== undefined) {
@@ -87,8 +86,10 @@ export default class GridItem extends Vue {
     }
 
     matchHeight() {
-        this.height = this.$refs.txtBox.clientHeight;
-        
+        if (this.$refs.txtBox !== undefined) {
+            //@ts-ignore
+            this.height = this.$refs.txtBox.clientHeight;
+        }
     }
 
     goUserDetail(userId: number) {

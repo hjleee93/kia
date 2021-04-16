@@ -50,8 +50,6 @@ export default class Hashtag extends Vue {
     async initCate() {
         const categories =await this.getCategory();
 
-        console.log(categories)
-
         this.$store.commit("categories", categories);
 
         if (this.$store.getters.currCategory === "Posting") {

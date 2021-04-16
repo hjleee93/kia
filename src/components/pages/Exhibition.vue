@@ -3,10 +3,13 @@
         <div class="content">
             <div class="wrap-fixed">
                 <div class="sec-fixed">
-                    <SearchBar  />
-                    <Category  @tagResult="tagResult" />
+                    <SearchBar />
+                    <Category @tagResult="tagResult" />
                     <div class="sec-grid-top">
-                        <BoxGridTop @sortOrder="sortOrder" :tootCnt="tagSearch.length"/>
+                        <BoxGridTop
+                            @sortOrder="sortOrder"
+                            :tootCnt="tagSearch.length"
+                        />
                     </div>
                     <div class="dim"></div>
                 </div>
@@ -18,7 +21,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
-import Category from "@/components/layouts/Category.vue"
+import Category from "@/components/layouts/Category.vue";
 
 import Grid from "@/components/layouts/grid/Grid.vue";
 import BoxGridTop from "@/components/layouts/grid/BoxGridTop.vue";
@@ -44,7 +47,7 @@ enum ETootLoadingState {
 export default class Exhibition extends Vue {
     private category: string = "Exhibition";
     private tagSearch: any[] = [];
-
+    private tootCnt: number = -1;
     private limitCount: number = 5;
     private loadingState: ETootLoadingState = ETootLoadingState.none;
 
@@ -60,7 +63,7 @@ export default class Exhibition extends Vue {
     }
 
     mounted() {
-        this.$store.commit('currCategory', 'Exhibition')
+        this.$store.commit("currCategory", "Exhibition");
         this.loadToot();
         window.addEventListener("scroll", this.scrollHandler);
     }
@@ -131,8 +134,8 @@ export default class Exhibition extends Vue {
         }
     }
 
-    sortOrder(value: string){
-        console.log("value",value)
+    sortOrder(value: string) {
+        console.log("value", value);
     }
 }
 </script>

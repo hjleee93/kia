@@ -6,7 +6,7 @@
                     <SearchBar />
                     <Category  @tagResult="tagResult" />
                     <div class="sec-grid-top">
-                        <BoxGridTop  @sortOrder="sortOrder" />
+                        <BoxGridTop :tootCnt="tagSearch.length" @sortOrder="sortOrder" />
                     </div>
                     <div class="dim"></div>
                 </div>
@@ -44,6 +44,7 @@ enum ETootLoadingState {
 export default class Project extends Vue {
     private category: string = "Project";
     private tagSearch: any[] = [];
+      private tootCnt: number = -1;
     private limitCount: number = 5;
     private loadingState: ETootLoadingState = ETootLoadingState.none;
     beforeUpdate() {

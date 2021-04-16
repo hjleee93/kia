@@ -4,7 +4,7 @@
             <div id="wrap">
                 <Header @logout="logOut" />
                 <section id="container">
-                    <router-view></router-view>
+                    <router-view ></router-view>
                 </section>
             </div>
             <MobileAlbum />

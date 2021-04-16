@@ -1,5 +1,5 @@
 <template>
-    <div id="content" class="login">
+    <div id="content" class="login" :key="componentKey">
         <!--content(S)-->
         <div class="content">
             <div class="sec-header">
@@ -114,27 +114,32 @@
                     </li>
                 </ul>
             </div>
-
+            <template v-if="isRegister">
+                <iframe
+                    :src="`${baseURL}auth/sign_up`"
+                    ref="regIframe"
+                    class="reg_iframe"
+                    :class="isRegister ? 'active' : ''"
+                ></iframe>
+            </template>
+            <template v-if="isMissingEmail">
+                <iframe
+                    :src="`${baseURL}auth/confirmation/new`"
+                    ref="missingIframe"
+                    class="reg_iframe"
+                    :class="isMissingEmail ? 'active' : ''"
+                ></iframe>
+            </template>
+            <template v-if="isLostPwd">
+                <iframe
+                    :src="`${baseURL}auth/password/new`"
+                    ref="pwdIframe"
+                    class="reg_iframe"
+                    :class="isLostPwd ? 'active' : ''"
+                ></iframe>
+            </template>
             <iframe
-                :src="`${baseURL}/auth/sign_up`"
-                ref="reg-iframe"
-                class="reg_iframe"
-                :class="isRegister ? 'active' : ''"
-            ></iframe>
-            <iframe
-                :src="`${baseURL}/auth/confirmation/new`"
-                ref="missing-iframe"
-                class="reg_iframe"
-                :class="isMissingEmail ? 'active' : ''"
-            ></iframe>
-            <iframe
-                :src="`${baseURL}/auth/password/new`"
-                ref="pwdIframe"
-                class="reg_iframe"
-                :class="isLostPwd ? 'active' : ''"
-            ></iframe>
-
-            <iframe
+                @load="loggout()"
                 class="iframe"
                 ref="iframe"
                 :src="`${baseURL}about`"
@@ -154,9 +159,8 @@ export default class Login extends Vue {
     private isRegister: boolean = false;
     private isMissingEmail: boolean = false;
     private isLostPwd: boolean = false;
-
     private baseURL: string = process.env.VUE_APP_BASE_API!;
-
+    private isIframeLoaded: boolean = false;
     private email: string = "";
     private password: string = "";
     private instance: string = process.env.VUE_APP_BASE_API!;
@@ -165,38 +169,50 @@ export default class Login extends Vue {
     private isPwdActive: boolean = false;
     private clickedLogin: boolean = false;
     private emailRegExp = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
+    private componentKey: number = 0;
 
     handleKeyDown(e: any) {
         if (e.code === "Enter" || e.keyCode === 13) {
             this.login();
         }
     }
-
-    async mounted() {
-        window.addEventListener("keydown", this.handleKeyDown);
-        window.addEventListener('message', (e)=>{
-            if(e.data)
-            (this.$refs.iframe as HTMLIFrameElement)?.contentWindow?.postMessage(
-    {
-        type: "logout",
-    },
-    "*"
-        });
-
-       
+    loggout() {
+        if (this.isIframeLoaded === false) {
+            (this.$refs
+                .iframe as HTMLIFrameElement)?.contentWindow?.postMessage(
+                {
+                    type: "logout",
+                },
+                "*"
+            );
+            this.isIframeLoaded = true;
+        }
         // (this.$refs.iframe as HTMLIFrameElement)?.contentWindow?.postMessage(
         //     {
         //         type: "logout",
         //     },
         //     "*"
         // );
+
+        // await new Promise<void>((resolve) => {
+        //     const onMessage = (e: MessageEvent) => {
+        //         const data = e.data || {};
+        //         if (data.type === "loadedPage") {
+        //             console.log('remove')
+        //             window.removeEventListener("message", onMessage);
+        //             resolve();
+        //         }
+        //     };
+        //     window.addEventListener("message", onMessage);
+        // });
+    }
+    async mounted() {
+        window.addEventListener("keydown", this.handleKeyDown);
     }
 
     destroyed() {
         window.removeEventListener("keydown", this.handleKeyDown);
-        // window.removeEventListener("message", this.logout, false);
     }
-  
 
     login() {
         let uri = new URL(this.instance);

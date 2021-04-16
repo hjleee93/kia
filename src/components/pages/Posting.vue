@@ -6,7 +6,10 @@
                     <SearchBar @searchResult="searchResult" />
                     <CategoryP />
                     <div class="sec-grid-top">
-                        <BoxGridTop @sortOrder="sortOrder" />
+                        <BoxGridTop
+                            :tootCnt="allResult.length"
+                            @sortOrder="sortOrder"
+                        />
                     </div>
                     <div class="dim"></div>
                 </div>
@@ -45,6 +48,7 @@ enum ETootLoadingState {
 export default class Posting extends Vue {
     private category: string = "Posting";
     private allResult: any[] = [];
+    private recentResult: any[] = [];
     private userId: number = -1;
     private limitCount: number = 5;
     private loadingState: ETootLoadingState = ETootLoadingState.none;
@@ -57,17 +61,33 @@ export default class Posting extends Vue {
         gnb.init();
     }
     async mounted() {
+        window.addEventListener("scroll", this.scrollHandler);
         this.$store.commit("currCategory", "Posting");
         this.userId = await this.getUserId();
         await this.loadToot();
     }
-
+    @Watch('recentResult')
+    @Watch('allResult')
+    result() {
+        if (this.recentResult.length > 0) {
+            this.allResult = this.recentResult;
+        }
+    }
     searchResult(result: any) {
         // this.result = result;
         // console.log("searchResult",this.result);
     }
+    beforeDestroy() {
+        window.removeEventListener("scroll", this.scrollHandler);
+    }
+    scrollHandler() {
+        let el = document.documentElement;
 
-
+        if (el.scrollTop === 0) {
+        } else if (el.scrollTop + el.clientHeight >= el.scrollHeight - 100) {
+            this.loadToot();
+        }
+    }
 
     @Watch("$store.state.user.currentUser")
     async getUserId() {
@@ -78,26 +98,70 @@ export default class Posting extends Vue {
     }
 
     async loadToot() {
-        const temp = [];
-        const result = await this.$api.getMyToots(this.userId);
-       
-        const result2 = await this.$api.getMyToots(this.userId) 
-        
-        for (let i = 0; i < result.length; i++) {
-                if (result[i].media_attachments.length > 0) {
-                    temp.push(result[i])
-                    // if (result[i].media_attachments[0].type === "image") {
-                        this.allResult.push(result[i].media_attachments[0].url);
-                    // }
-                }
+        if (
+            this.loadingState === ETootLoadingState.none ||
+            this.loadingState === ETootLoadingState.complete
+        ) {
+            let max_id = undefined;
+            if (this.allResult.length) {
+                max_id = this.allResult[this.allResult.length - 1].id;
             }
+            this.loadingState = ETootLoadingState.loading;
 
-        this.allResult.push(...temp);
-           
+            const result = await this.$api.getMyToots(this.userId, max_id);
+
+            if (result.length < this.limitCount) {
+                this.loadingState = ETootLoadingState.end;
+            } else {
+                this.$nextTick(() => {
+                    this.$nextTick(() => {
+                        const el = document.documentElement;
+                        if (el.scrollHeight <= el.clientHeight) {
+                            this.loadingState = ETootLoadingState.complete;
+                            this.loadToot();
+                        } else {
+                            this.loadingState = ETootLoadingState.complete;
+                        }
+                    });
+                });
+            }
+            this.allResult.push(...result);
+        }
     }
 
-    sortOrder(value: string) {
-        console.log("value", value);
+    async sortOrder(value?: string) {
+        if (
+            this.loadingState === ETootLoadingState.none ||
+            this.loadingState === ETootLoadingState.complete
+        ) {
+            let max_id = undefined;
+            if (this.recentResult.length) {
+                max_id = this.recentResult[this.recentResult.length - 1].id;
+            }
+            this.loadingState = ETootLoadingState.loading;
+
+            const result = await this.$api.getMediaTootsOnly(
+                max_id,
+                this.limitCount
+            );
+
+            if (result.length < this.limitCount) {
+                this.loadingState = ETootLoadingState.end;
+            } else {
+                this.$nextTick(() => {
+                    this.$nextTick(() => {
+                        const el = document.documentElement;
+                        if (el.scrollHeight <= el.clientHeight) {
+                            this.loadingState = ETootLoadingState.complete;
+                            this.sortOrder();
+                        } else {
+                            this.loadingState = ETootLoadingState.complete;
+                        }
+                    });
+                });
+            }
+            this.recentResult.push(...result);
+        }
     }
 }
 </script>

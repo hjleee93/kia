@@ -45,7 +45,6 @@
                 />
             </isotope>
         </template>
-        <!-- <button style="color: white" @click="moreItem">더보기</button> -->
     </div>
 </template>
 

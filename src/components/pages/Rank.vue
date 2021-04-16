@@ -136,23 +136,25 @@ export default class Rank extends Vue {
     private limitCount: number = 5;
     private loadingState: ETootLoadingState = ETootLoadingState.none;
 
-    handleScroll(el: any) {
-        
-        if ((el.target.offsetHeight + el.target.scrollTop) >= el.target.scrollHeight) {
-            this.loadToot();
-        }
-    }
-
     mounted() {
         gnb.init();
         this.loadToot();
-     
+    }
+
+    handleScroll(el: any) {
+        if (
+            el.target.offsetHeight + el.target.scrollTop >=
+            el.target.scrollHeight
+        ) {
+            this.loadToot();
+        }
     }
     onClickTab(event: Event) {
         tab.click(event.target);
     }
 
     async loadToot() {
+        
         if (
             this.loadingState === ETootLoadingState.none ||
             this.loadingState === ETootLoadingState.complete
@@ -168,7 +170,6 @@ export default class Rank extends Vue {
             if (result.length < this.limitCount) {
                 this.loadingState = ETootLoadingState.end;
             } else {
-               
                 this.$nextTick(() => {
                     this.$nextTick(() => {
                         const el = document.documentElement;

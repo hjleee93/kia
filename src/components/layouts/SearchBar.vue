@@ -60,14 +60,22 @@
                             />
                         </label>
                         <!--조회 전-->
-                        <button
-                            @click="searchToot"
-                            class="btn btn-search"
-                            :class="[
-                                searchInput ? 'active' : '',
-                                isDone ? 'delete' : '',
-                            ]"
-                        ></button>
+                        <template v-if="!isDone">
+                            <button
+                                @click="searchToot"
+                                class="btn btn-search"
+                                :class="[
+                                    searchInput ? 'active' : '',
+                                    isDone ? 'delete' : '',
+                                ]"
+                            ></button>
+                        </template>
+                        <template v-else>
+                            <button
+                                class="btn btn-search delete"
+                                @click="deleteResult"
+                            ></button>
+                        </template>
                         <!--조회 중-->
                         <!-- <template v-if="!searchInput">
       <button class="btn btn-search active"></button>-->
@@ -116,6 +124,7 @@ export default class SearchBar extends Vue {
     private isDone: boolean = false;
     private category: string = "";
 
+    private isAllToot!: Boolean;
     private searchHistory: string[] = JSON.parse(
         localStorage.getItem("RecentKeyword")!
     );
@@ -125,16 +134,22 @@ export default class SearchBar extends Vue {
     @Watch("$store.getters.currCategory")
     getCategory() {
         this.category = this.$store.getters.currCategory;
+        
+        if(this.category==='Posting'){
+            this.isAllToot = false;
+        }else{
+            this.isAllToot = true;
+        }
     }
     mounted() {
         tootDropDown.init();
         search.init();
         dim.init();
-         window.addEventListener("keydown", this.handleKeyDown);
+        window.addEventListener("keydown", this.handleKeyDown);
     }
 
     beforeDestroy() {
-        search.destroy();        
+        search.destroy();
         window.removeEventListener("keydown", this.handleKeyDown);
     }
 
@@ -150,13 +165,19 @@ export default class SearchBar extends Vue {
             dim.close();
         }
     }
-    
+
     txtClick() {
         tootDropDown.txtClick();
     }
     tootDrop(arg: string) {
         tootDropDown.btnDropdownClick(this.$refs[arg]);
-        this.$router.push('/Posting').catch(() => {});
+        if (arg === "myToot") {
+            this.isAllToot = false;
+            this.$router.push("/Posting").catch(() => {});
+        } else if (arg === "allToot") {
+            this.isAllToot = true;
+            this.$router.push("/Hive").catch(() => {});
+        }
     }
     mobileToggle(arg: string) {
         search.mobileToggle(this.$refs[arg]);
@@ -201,8 +222,10 @@ export default class SearchBar extends Vue {
         }
 
         try {
+            //검색 페이지 별로 분류
+        
             const result = await this.$api.searchToot(this.searchInput);
-            
+
             //검색결과 없는 경우
             if (result.accounts.length === 0 && result.statuses.length === 0) {
                 this.$store.commit("searchResult", null);
@@ -225,6 +248,12 @@ export default class SearchBar extends Vue {
     }
     clickedRctKeyword(keyword: string) {
         this.searchInput = keyword;
+    }
+
+    deleteResult() {
+        this.searchInput = '';
+        this.isDone = false;
+        location.reload();
     }
 }
 </script>

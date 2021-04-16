@@ -60,16 +60,26 @@ export default class Api {
         );
         return result.data;
     }
+
     async getMyToots(userId: number, max_id?: number,) {
-        const result = await Vue.$axios.get("/api/v1/accounts/" + userId + "/statuses", {
+
+        const result = await Vue.$axios({
+            method: 'get',
+            url: `${config.instance}/api/v1/accounts/${userId}/statuses`,
             headers: {
-                params: { max_id },
-                Authorization: "Bearer " + config.token,
-            }
-        }
-        );
-        return result.data;
+                Authorization: `Bearer ${config.token}`
+            },
+            params: Object.assign({ only_media: true, max_id })
+
+
+        })
+        console.log(result)
+        return result.data
+
     }
+
+
+
     async deleteToot(tootId: number) {
         const result = await Vue.$axios.delete("/api/v1/statuses/" + tootId, {
             headers: { Authorization: "Bearer " + config.token },
@@ -143,7 +153,7 @@ export default class Api {
         return result;
     }
 
-    
+
     async searchToot(searchInput: string) {
         const result = await Vue.$axios({
             method: 'get',

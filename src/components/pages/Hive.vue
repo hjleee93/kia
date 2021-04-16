@@ -6,7 +6,10 @@
                     <SearchBar @searchResult="searchResult" />
                     <Category />
                     <div class="sec-grid-top">
-                        <BoxGridTop  @sortOrder="sortOrder"/>
+                        <BoxGridTop
+                            :tootCnt="allResult.length"
+                            @sortOrder="sortOrder"
+                        />
                     </div>
                     <div class="dim"></div>
                 </div>
@@ -57,9 +60,9 @@ export default class Hive extends Vue {
     }
 
     async mounted() {
-       this.$store.commit('currCategory', 'Hive') 
+        this.$store.commit("currCategory", "Hive");
         this.loadToot();
-        
+
         window.addEventListener("scroll", this.scrollHandler);
     }
 
@@ -84,11 +87,10 @@ export default class Hive extends Vue {
 
         if (el.scrollTop === 0) {
         } else if (el.scrollTop + el.clientHeight >= el.scrollHeight - 100) {
-            
             this.loadToot();
         }
     }
-  
+
     async loadToot() {
         if (
             this.loadingState === ETootLoadingState.none ||
@@ -99,8 +101,11 @@ export default class Hive extends Vue {
                 max_id = this.allResult[this.allResult.length - 1].id;
             }
             this.loadingState = ETootLoadingState.loading;
-            
-            const result = await this.$api.getMediaTootsOnly(max_id, this.limitCount);
+
+            const result = await this.$api.getMediaTootsOnly(
+                max_id,
+                this.limitCount
+            );
 
             if (result.length < this.limitCount) {
                 this.loadingState = ETootLoadingState.end;
@@ -118,13 +123,11 @@ export default class Hive extends Vue {
                 });
             }
             this.allResult.push(...result);
-            
         }
     }
 
-    
-    sortOrder(value: string){
-        console.log("value",value)
+    sortOrder(value: string) {
+        console.log("value", value);
     }
 }
 </script>
