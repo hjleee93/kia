@@ -1,5 +1,8 @@
 <template>
-  <div id="content" class="login" :key="componentKey">
+  <div id="content" class="login">
+    <template v-if="isRegister || isMissingEmail || isLostPwd">
+      <Header />
+    </template>
     <!--content(S)-->
     <div class="content">
       <div class="sec-header">
@@ -134,7 +137,7 @@
         ></iframe>
       </template>
       <iframe
-        @load="loggout()"
+        @load="loggout($event)"
         class="iframe"
         ref="iframe"
         :src="`${baseURL}about`"
@@ -148,8 +151,8 @@
 <script lang="ts">
 import config from "@/lib/config";
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
-
-@Component({ components: {} })
+import Header from "@/components/layouts/Header.vue";
+@Component({ components: { Header } })
 export default class Login extends Vue {
   private isRegister: boolean = false;
   private isMissingEmail: boolean = false;
@@ -171,7 +174,8 @@ export default class Login extends Vue {
       this.login();
     }
   }
-  loggout() {
+  loggout(e: Event) {
+    console.log((this.$refs.iframe as HTMLIFrameElement).src);
     if (this.isIframeLoaded === false) {
       (this.$refs.iframe as HTMLIFrameElement)?.contentWindow?.postMessage(
         {
@@ -181,24 +185,6 @@ export default class Login extends Vue {
       );
       this.isIframeLoaded = true;
     }
-    // (this.$refs.iframe as HTMLIFrameElement)?.contentWindow?.postMessage(
-    //     {
-    //         type: "logout",
-    //     },
-    //     "*"
-    // );
-
-    // await new Promise<void>((resolve) => {
-    //     const onMessage = (e: MessageEvent) => {
-    //         const data = e.data || {};
-    //         if (data.type === "loadedPage") {
-    //             console.log('remove')
-    //             window.removeEventListener("message", onMessage);
-    //             resolve();
-    //         }
-    //     };
-    //     window.addEventListener("message", onMessage);
-    // });
   }
   async mounted() {
     window.addEventListener("keydown", this.handleKeyDown);
