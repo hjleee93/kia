@@ -21,17 +21,30 @@
                             </template>
                         </div>
                     </router-link>
-                    <div class="box-cont">                        
-                            <template v-if="toot.content.length > 65">
-                                <p
-                                    class="txt content"
-                                    v-html="tootContent"></p>
-                                  <router-link :to="'/mastodon/web/statuses/' + toot.id"><p class="txt more"><span>더보기</span></p></router-link>
-                            </template>
-                            <template v-else>
-                                <p class="txt" v-html="toot.content"></p>
-                            </template>
-                        
+                    <div class="box-cont">
+                         <template v-if="height > 65">
+                            <p
+                                ref="txtBox"
+                                class="txt content"
+                                v-html="tootContent"
+                            ></p>
+                            <router-link
+                                :to="'/mastodon/web/statuses/' + toot.id"
+                                ><p class="txt more">
+                                    <span>더보기</span>
+                                </p></router-link
+                            >
+                        </template>
+
+                        <template v-else> 
+                            
+                            <p
+                                class="txt"
+                                ref="txtBox"
+                                v-html="toot.content"
+                            ></p>
+                        </template>
+
                         <router-link
                             :to="'/mastodon/web/accounts/' + toot.account.id"
                         >
@@ -60,21 +73,31 @@ import Like from "./Like.vue";
 @Component({ components: { Like } })
 export default class GridItem extends Vue {
     @Prop() toot!: any;
-    private tootContent: string = '';
-    
+    private tootContent: string = "";
+     private height: number = 0;
+
     mounted() {
-        this.tootContent = this.toot.content.replaceAll('https://toot.wbcard.org/tags', '#/mastodon/tags')
+        if (this.toot.content !== undefined) {
+            this.tootContent = this.toot.content.replaceAll(
+                "https://toot.wbcard.org/tags",
+                "#/mastodon/tags"
+            );
+        }
+        this.matchHeight();
     }
 
-    
+    matchHeight() {
+        this.height = this.$refs.txtBox.clientHeight;
+        
+    }
+
     goUserDetail(userId: number) {
         window.location.href = `${config.instance}/web/accounts/${userId}`;
     }
 
-    tagLinkEdit(){
-        console.log(this.toot.content)
+    tagLinkEdit() {
+        console.log(this.toot.content);
     }
-  
 }
 </script>
 
