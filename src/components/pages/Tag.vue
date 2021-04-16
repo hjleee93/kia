@@ -18,17 +18,28 @@
                                             autocomplete="off"
                                         />
                                     </label>
-                                    <!--조회 전-->
-                                    <button
-                                        class="btn btn-search"
-                                        @click="searchTag(inputHashtag, true)"
-                                        :class="[
-                                            inputHashtag.length === 0
-                                                ? ''
-                                                : 'active',
-                                            isDone ? 'delete' : '',
-                                        ]"
-                                    ></button>
+                                    <!--검색용-->
+                                    <template v-if="!isDone">
+                                        <button
+                                            class="btn btn-search"
+                                            @click="
+                                                searchTag(inputHashtag, true)
+                                            "
+                                            :class="[
+                                                inputHashtag.length === 0
+                                                    ? ''
+                                                    : 'active',
+                                                isDone ? 'delete' : '',
+                                            ]"
+                                        ></button>
+                                    </template>
+                                    <!-- 삭제용 -->
+                                    <template v-else>
+                                        <button
+                                            class="btn btn-search delete"
+                                            @click="deleteTag"
+                                        ></button>
+                                    </template>
                                     <!--조회 중-->
                                     <!--<button class="btn btn-search active"></button>-->
                                     <!--조회 완료-->
@@ -98,7 +109,7 @@
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import { gnb } from "@/scripts/ui_common";
 
-@Component({ components: {  } })
+@Component({ components: {} })
 export default class Tag extends Vue {
     isSearch: boolean = false;
     tagList: string[] = [];
@@ -142,18 +153,20 @@ export default class Tag extends Vue {
         let el = document.documentElement;
 
         if (el.scrollTop === 0) {
-        } else if (el.scrollTop + el.clientHeight > el.scrollHeight) {
+        } else if (el.scrollTop + el.clientHeight > el.scrollHeight - 150) {
             this.searchTag(this.inputHashtag);
         }
     }
 
     async searchTag(input: string, newSearch?: boolean) {
+        const limit = 30;
+
         if (newSearch) {
             this.tagList = [];
             this.offset = 0;
         }
         this.isSearch = true;
-        const limit = 30;
+        const el = document.documentElement;
 
         try {
             const result = await this.$api.searchHashtag(
@@ -168,6 +181,13 @@ export default class Tag extends Vue {
         } catch (err) {
             console.log(err);
         }
+    }
+    deleteTag() {
+        this.isSearch = false;
+        this.inputHashtag = "";
+        this.tagList = [];
+        this.offset = 0;
+        this.isDone = false;
     }
 }
 </script>
