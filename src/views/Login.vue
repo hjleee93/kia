@@ -114,30 +114,33 @@
       </div>
       <template v-if="isRegister">
         <iframe
+          @load="loaded()"
           :src="`${baseURL}auth/sign_up`"
-          ref="regIframe"
+          ref="iframe"
           class="reg_iframe"
           :class="isRegister ? 'active' : ''"
         ></iframe>
       </template>
       <template v-if="isMissingEmail">
         <iframe
+          @load="loaded()"
           :src="`${baseURL}auth/confirmation/new`"
-          ref="missingIframe"
+          ref="iframe"
           class="reg_iframe"
           :class="isMissingEmail ? 'active' : ''"
         ></iframe>
       </template>
       <template v-if="isLostPwd">
         <iframe
+          @load="loaded()"
           :src="`${baseURL}auth/password/new`"
-          ref="pwdIframe"
+          ref="iframe"
           class="reg_iframe"
           :class="isLostPwd ? 'active' : ''"
         ></iframe>
       </template>
       <iframe
-        @load="loggout($event)"
+        @load="loaded()"
         class="iframe"
         ref="iframe"
         :src="`${baseURL}about`"
@@ -174,8 +177,12 @@ export default class Login extends Vue {
       this.login();
     }
   }
-  loggout(e: Event) {
-    console.log((this.$refs.iframe as HTMLIFrameElement).src);
+  async loaded() {
+    console.log("123", this.$refs.iframe as HTMLIFrameElement);
+    // console.log(
+    //   "?",
+    //   (this.$refs.iframe as HTMLIFrameElement)?.contentWindow?.location.href
+    // );
     if (this.isIframeLoaded === false) {
       (this.$refs.iframe as HTMLIFrameElement)?.contentWindow?.postMessage(
         {
