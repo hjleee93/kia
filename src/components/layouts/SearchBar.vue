@@ -35,6 +35,7 @@
                             </li>
                         </ul>
                     </div>
+
                     <!--모바일 전용 search open버튼-->
                     <button
                         class="btn btn-m-search open"
@@ -42,6 +43,45 @@
                         ref="mobileSearch"
                     ></button>
                 </div>
+                <!-- 사용자, 검색어 추가 dropdown -->
+                <template v-if="$store.getters.currCategory !== 'Posting'">
+                    <div class="box-toot-dropdown2">
+                        <button data-val="" class="btn txt2" @click="txtClick2">
+                            <span>내용</span>
+                        </button>
+                        <div class="lists2">
+                            <ul>
+                                <!--비선택-->
+                                <li>
+                                    <button
+                                        data-val="contents"
+                                        class="btn btn-dropdown2"
+                                        @click="tootDrop2('contents')"
+                                        ref="contents"
+                                    >
+                                        <span>내용</span>
+                                    </button>
+                                </li>
+                                <!--선택-->
+                                <li>
+                                    <button
+                                        data-val="user"
+                                        class="btn btn-dropdown2"
+                                        :class="
+                                            category === 'Posting'
+                                                ? 'active'
+                                                : ''
+                                        "
+                                        @click="tootDrop2('user')"
+                                        ref="user"
+                                    >
+                                        <span>사용자</span>
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </template>
                 <div class="box-search-input">
                     <div class="box-input">
                         <label class="input" @click="listsOpen">
@@ -51,7 +91,7 @@
                                 :placeholder="
                                     $store.getters.currCategory === 'Posting'
                                         ? '내용검색'
-                                        : '사용자, 내용 검색'
+                                        : '검색'
                                 "
                                 v-model="searchInput"
                                 autocomplete="off"
@@ -116,15 +156,23 @@
 
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
-import { dim, getDevice, gnb, search, tootDropDown } from "@/scripts/ui_common";
+import {
+    dim,
+    getDevice,
+    gnb,
+    search,
+    tootDropDown,
+    tootDropDown2,
+} from "@/scripts/ui_common";
 
 @Component({ components: {} })
 export default class SearchBar extends Vue {
     private searchInput: string = "";
     private isDone: boolean = false;
     private category: string = "";
-
     private isAllToot!: Boolean;
+    private searchType: string = "contents";
+
     private searchHistory: string[] = JSON.parse(
         localStorage.getItem("RecentKeyword")!
     );
@@ -134,15 +182,16 @@ export default class SearchBar extends Vue {
     @Watch("$store.getters.currCategory")
     getCategory() {
         this.category = this.$store.getters.currCategory;
-        
-        if(this.category==='Posting'){
+
+        if (this.category === "Posting") {
             this.isAllToot = false;
-        }else{
+        } else {
             this.isAllToot = true;
         }
     }
     mounted() {
         tootDropDown.init();
+        tootDropDown2.init();
         search.init();
         dim.init();
         window.addEventListener("keydown", this.handleKeyDown);
@@ -154,8 +203,10 @@ export default class SearchBar extends Vue {
     }
 
     handleKeyDown(e: any) {
-        if (e.code === "Enter" || e.keyCode === 13) {
-            this.searchToot();
+        if (this.searchInput.length !== 0) {
+            if (e.keyCode === 13) {
+                this.searchToot();
+            }
         }
     }
 
@@ -168,6 +219,13 @@ export default class SearchBar extends Vue {
 
     txtClick() {
         tootDropDown.txtClick();
+    }
+    txtClick2() {
+        tootDropDown2.txtClick();
+    }
+    tootDrop2(arg: string) {
+        tootDropDown2.btnDropdownClick(this.$refs[arg]);
+        this.searchType = arg;
     }
     tootDrop(arg: string) {
         tootDropDown.btnDropdownClick(this.$refs[arg]);
@@ -191,51 +249,80 @@ export default class SearchBar extends Vue {
         search.inpFocus(this.$refs[arg]);
     }
     async searchToot() {
-        //스토리지에 없는 경우
-        if (!localStorage.getItem("RecentKeyword")) {
-            this.searchHistory = [];
-            this.searchHistory.push(this.searchInput);
-            localStorage.setItem(
-                "RecentKeyword",
-                JSON.stringify(this.searchHistory)
-            );
-        }
-        //스토리지에 있는 경우
-        else {
-            //최근 검색어 10개 제한
-            if (this.searchHistory.length === 10) {
-                this.searchHistory.pop();
-                localStorage.removeItem("RecentKeyword");
+        if (this.searchInput.length !== 0) {
+            let result!: any;
+            let hasDuplicatedKeyword: boolean = false;
+            //스토리지에 없는 경우
+            if (!localStorage.getItem("RecentKeyword")) {
+                this.searchHistory = [];
+                this.searchHistory.push(this.searchInput);
                 localStorage.setItem(
                     "RecentKeyword",
                     JSON.stringify(this.searchHistory)
                 );
             }
-            this.searchHistory = JSON.parse(
-                localStorage.getItem("RecentKeyword")!
-            );
-            this.searchHistory.unshift(this.searchInput);
-            localStorage.setItem(
-                "RecentKeyword",
-                JSON.stringify(this.searchHistory)
-            );
-        }
-
-        try {
-            //검색 페이지 별로 분류
-        
-            const result = await this.$api.searchToot(this.searchInput);
-
-            //검색결과 없는 경우
-            if (result.accounts.length === 0 && result.statuses.length === 0) {
-                this.$store.commit("searchResult", null);
-            } else {
-                this.$store.commit("searchResult", result.statuses);
+            //스토리지에 있는 경우
+            else {
+                //중복검색어 체크용 
+                for (const i in this.searchHistory) {
+                    if (this.searchHistory[i] === this.searchInput) {
+                        this.searchHistory.splice(i, 1);
+                        this.searchHistory.unshift(this.searchInput);
+                        localStorage.setItem(
+                            "RecentKeyword",
+                            JSON.stringify(this.searchHistory)
+                        );
+                        hasDuplicatedKeyword = true;
+                        break;
+                    } 
+                    else {
+                       hasDuplicatedKeyword = false;
+                    }
+                }
+                
+                if(!hasDuplicatedKeyword){
+                    //최근 검색어 10개 제한
+                    if (this.searchHistory.length === 10) {
+                            this.searchHistory.pop();
+                            localStorage.removeItem("RecentKeyword");
+                            localStorage.setItem(
+                                "RecentKeyword",
+                                JSON.stringify(this.searchHistory)
+                            );
+                        }
+                        this.searchHistory = JSON.parse(
+                            localStorage.getItem("RecentKeyword")!
+                        );
+                        this.searchHistory.unshift(this.searchInput);
+                        localStorage.setItem(
+                            "RecentKeyword",
+                            JSON.stringify(this.searchHistory)
+                        );
+                }
             }
-            this.isDone = true;
-            dim.close();
-        } catch (err) {
-            console.log(err);
+            try {
+                //검색 페이지 별로 분류
+                if (this.searchType === "user") {
+                    console.log("유저검색");
+                    result = await this.$api.searchUser(this.searchInput);
+                } else if (this.searchType === "contents") {
+                    console.log("내용검색");
+                    result = await this.$api.searchToot(this.searchInput);
+                }
+
+                //검색결과 없는 경우
+                if (result.length === 0) {
+                    this.$store.commit("searchResult", null);
+                } else {
+                    this.$store.commit("searchResult", result);
+                }
+                this.$store.commit("tootCnt", result.length);
+                this.isDone = true;
+
+                dim.close();
+            } catch (err) {
+                console.log(err);
+            }
         }
     }
     deleteHistory(idx: number) {
@@ -251,11 +338,26 @@ export default class SearchBar extends Vue {
     }
 
     deleteResult() {
-        this.searchInput = '';
+        this.searchInput = "";
         this.isDone = false;
         location.reload();
     }
 }
 </script>
 
-<style></style>
+<style scoped>
+@media (min-width: 1024px) {
+    .box-layer {
+        width: 568px !important;
+    }
+}
+.box-search-form {
+    flex-wrap: nowrap !important;
+}
+
+@media (min-width: 320px) and (max-width: 1023px) {
+    #content.hive .box-toot-dropdown2 .lists2 {
+        left: 135px !important;
+    }
+}
+</style>
