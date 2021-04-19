@@ -194,6 +194,7 @@ export default class Login extends Vue {
     }
   }
   async mounted() {
+      this.$store.commit("currCategory", "Login");
     window.addEventListener("keydown", this.handleKeyDown);
   }
 
