@@ -3,11 +3,10 @@
         <div class="content">
             <div class="wrap-fixed">
                 <div class="sec-fixed">
-                    <SearchBar @searchResult="searchResult" />
+                    <SearchBar />
                     <Category />
                     <div class="sec-grid-top">
                         <BoxGridTop
-                            :tootCnt="allResult.length"
                             @sortOrder="sortOrder"
                         />
                     </div>
@@ -47,7 +46,6 @@ enum ETootLoadingState {
 export default class Hive extends Vue {
     private category: string = "Hive";
     private allResult: any[] = [];
-    private tootCnt: number = -1;
     private limitCount: number = 5;
     private loadingState: ETootLoadingState = ETootLoadingState.none;
 
@@ -66,10 +64,7 @@ export default class Hive extends Vue {
         window.addEventListener("scroll", this.scrollHandler);
     }
 
-    searchResult(result: any) {
-        // this.result = result;
-        // console.log("searchResult",this.result);
-    }
+ 
     beforeDestroy() {
         window.removeEventListener("scroll", this.scrollHandler);
     }
@@ -77,6 +72,7 @@ export default class Hive extends Vue {
         try {
             const result = await this.$api.getMediaTootsOnly();
             this.allResult = result;
+           
         } catch (err) {
             console.log(err);
         }
@@ -123,6 +119,7 @@ export default class Hive extends Vue {
                 });
             }
             this.allResult.push(...result);
+             this.$store.commit("tootCnt", this.allResult.length);
         }
     }
 

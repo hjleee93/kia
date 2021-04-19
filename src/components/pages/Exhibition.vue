@@ -131,6 +131,7 @@ export default class Exhibition extends Vue {
                 });
             }
             this.tagSearch.push(...result);
+            this.$store.commit("tootCnt", this.tagSearch.length);
         }
     }
 

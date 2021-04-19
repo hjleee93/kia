@@ -4,7 +4,6 @@
             <template v-if="toot.media_attachments[0] !== undefined">
                 <a href="#" class="btn btn-link">
                     <router-link :to="'/mastodon/web/statuses/' + toot.id">
-                    
                         <div class="box-img">
                             
                             <template

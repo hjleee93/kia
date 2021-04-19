@@ -126,6 +126,8 @@ export default class Posting extends Vue {
                 });
             }
             this.allResult.push(...result);
+            
+             this.$store.commit("tootCnt", this.allResult.length);
         }
     }
 

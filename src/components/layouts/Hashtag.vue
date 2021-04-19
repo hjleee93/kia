@@ -67,6 +67,7 @@ export default class Hashtag extends Vue {
                     this.hashtags.push(tags[i].name);
                 }
             }
+            
         }
     }
 
@@ -93,6 +94,8 @@ export default class Hashtag extends Vue {
                     mediaTag.push(result[i]);
                 }
             }
+            
+             this.$store.commit("tootCnt", mediaTag.length);
             this.$emit("tagResult", mediaTag);
         } catch (err) {
             console.log(err);

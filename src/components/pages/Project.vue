@@ -4,9 +4,9 @@
             <div class="wrap-fixed">
                 <div class="sec-fixed">
                     <SearchBar />
-                    <Category  @tagResult="tagResult" />
+                    <Category @tagResult="tagResult" />
                     <div class="sec-grid-top">
-                        <BoxGridTop :tootCnt="tagSearch.length" @sortOrder="sortOrder" />
+                        <BoxGridTop @sortOrder="sortOrder" />
                     </div>
                     <div class="dim"></div>
                 </div>
@@ -44,7 +44,6 @@ enum ETootLoadingState {
 export default class Project extends Vue {
     private category: string = "Project";
     private tagSearch: any[] = [];
-      private tootCnt: number = -1;
     private limitCount: number = 5;
     private loadingState: ETootLoadingState = ETootLoadingState.none;
     beforeUpdate() {
@@ -58,7 +57,7 @@ export default class Project extends Vue {
     }
 
     mounted() {
-        this.$store.commit('currCategory', 'Project')
+        this.$store.commit("currCategory", "Project");
         this.loadToot();
         window.addEventListener("scroll", this.scrollHandler);
     }
@@ -126,12 +125,13 @@ export default class Project extends Vue {
                 });
             }
             this.tagSearch.push(...result);
+
+            this.$store.commit("tootCnt", this.tagSearch.length);
         }
     }
 
-      
-    sortOrder(value: string){
-        console.log("value",value)
+    sortOrder(value: string) {
+        console.log("value", value);
     }
 }
 </script>
