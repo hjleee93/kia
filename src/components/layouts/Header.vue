@@ -139,7 +139,7 @@ export default class Header extends Vue {
         if (this.$store.getters.currCategory.toLowerCase() === "login") {
             window.location.href = "/";
         } else {
-            this.$router.push("/");
+            this.$router.push("/").catch(() => {});
         }
     }
 }
