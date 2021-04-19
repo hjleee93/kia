@@ -73,7 +73,7 @@ export default class Api {
 
 
         })
-        console.log(result)
+        
         return result.data
 
     }
@@ -161,12 +161,29 @@ export default class Api {
             headers: {
                 Authorization: `Bearer ${config.token}`
             },
-            params: Object.assign({ q: searchInput })
+            params:{ q: searchInput }
 
 
         })
-        return result.data
+
+        return result.data.statuses
     }
+
+    async searchUser(searchInput: string) {
+        const result = await Vue.$axios({
+            method: 'get',
+            url: `${config.instance}/api/v2/search/`,
+            headers: {
+                Authorization: `Bearer ${config.token}`
+            },
+            params:{ q: searchInput }
+
+
+        })
+        return result.data.accounts
+    }
+   
+
 
     async searchHashtag(searchInput: string, offset?: number, limit?: number) {
         const result = await Vue.$axios.get('/api/v2/search',
