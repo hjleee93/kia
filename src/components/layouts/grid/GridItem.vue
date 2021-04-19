@@ -4,7 +4,9 @@
             <template v-if="toot.media_attachments[0] !== undefined">
                 <a href="#" class="btn btn-link">
                     <router-link :to="'/mastodon/web/statuses/' + toot.id">
+                    
                         <div class="box-img">
+                            
                             <template
                                 v-if="
                                     toot.media_attachments[0].type === 'video'
@@ -14,11 +16,13 @@
                             </template>
                             <template v-else>
                                 <img
+                                :class="toot.sensitive ? 'sensitive' : ''"
                                     :src="toot.media_attachments[0].preview_url"
                                     alt=""
                                     style="width: 100%"
                                 />
-                            </template>
+                            
+                    </template>
                         </div>
                     </router-link>
                     <div class="box-cont">
@@ -117,5 +121,8 @@ export default class GridItem extends Vue {
 }
 .txt.more {
     float: right;
+}
+.sensitive{
+    filter: blur(1.5em);
 }
 </style>
