@@ -619,6 +619,198 @@ var DropDown = function DropDown(wrap) {
         getDom: getDom
     };
 };
+
+
+var DropDown2 = function DropDown2(wrap) {
+    var domWrap = null;
+    var domTxt = null;
+    var domBtnLists = null;
+    var domActiveBtn = null;
+    var info = {};
+
+    var init = function init() {
+        domWrap = document.querySelector(wrap);
+
+        if (domWrap) {
+            domTxt = domWrap.querySelector(".txt2");
+            domBtnLists = Array.prototype.slice.call(domWrap.querySelectorAll(".btn-dropdown2")); //현재 값 찾기
+            domBtnLists.find(function (btn, i) {
+                if (btn.classList.contains("active")) {
+                    domActiveBtn = btn;
+                    domTxt.dataset.val = btn.dataset.val || '';
+                    domTxt.querySelector("span").innerHTML = btn.textContent;
+                    return true;
+                } else {
+                    return false;
+                }
+            });
+            info.flag = true;
+        }
+    };
+
+    var getDom = function getDom() {
+        return {
+            wrap: domWrap,
+            txt: domTxt,
+            btnLists: domBtnLists,
+            activeBtn: domActiveBtn
+        };
+    };
+
+    var isMobileHashDropdown = function isMobileHashDropdown() {
+        return wrap === ".box-hash-dropdown" && isMobile();
+    };
+
+    var listenerFun = function listenerFun(e) {
+        e.stopPropagation();
+
+        if (e.currentTarget === domWrap) {
+            return false;
+        } else {
+            listsClose();
+        }
+    };
+
+    var txtClick = function txtClick() {
+        listsOpen();
+    };
+
+    var listsOpen = function listsOpen() {
+        if (info.flag && domWrap
+            /* && domWrap.querySelector(".lists").style.display !== "block"*/
+        ) {
+            // hash - mobile 일 경우
+            if (isMobileHashDropdown()) {
+                wrapOverflow.hidden();
+                domWrap.classList.add("open");
+                var div = document.createElement('div');
+                div.id = "boxHashDropdownList";
+                domWrap.querySelector(".lists2").removeAttribute("style");
+                var clone = domWrap.querySelector(".lists2").cloneNode(true);
+                div.append(clone);
+                document.querySelector("#content").append(div);
+                domWrap.querySelector(".lists2").remove();
+                setTimeout(function () {
+                    document.querySelector("#boxHashDropdownList").classList.add("open");
+                }, 300);
+            } else {
+                domWrap.querySelector(".lists2").style.display = "block";
+                setTimeout(function () {
+                    domWrap.classList.add("open");
+                    document.querySelector("body").addEventListener("click", listenerFun);
+                    domWrap.addEventListener("click", listenerFun);
+                }, 100);
+            }
+        }
+    };
+
+    var listCloseDesktop = function listCloseDesktop(callback) {
+        document.querySelector("body").removeEventListener("click", listenerFun);
+        domWrap.removeEventListener("click", listenerFun);
+        domWrap.classList.remove("close");
+        domWrap.querySelector(".lists2").style.display = "none";
+        info.flag = true;
+
+        if (callback && typeof callback === 'function') {
+            callback();
+        }
+    };
+
+    var listCloseMobile = function listCloseMobile(callback) {
+        domWrap.classList.remove("close");
+        var lists = document.querySelector("#boxHashDropdownList .lists2").cloneNode(true);
+
+        if (wrap === ".box-hash-dropdown") {
+            document.querySelector("#boxHashDropdownList").remove();        }
+
+        domWrap.append(lists);
+        domWrap.querySelector(".lists2").style.display = "none";
+        info.flag = true;
+        wrapOverflow.auto();
+
+        if (callback && typeof callback === 'function') {
+            callback();
+        }
+    };
+
+    var listsClose = function listsClose(callback) {
+        if (domWrap) {
+            domWrap.classList.add("close");
+            domWrap.classList.remove("open");
+            info.flag = false; // hash - mobile 일 경우
+
+            if (isMobileHashDropdown()) {
+                //mobile 정상 이벤트
+                if (document.querySelector("#boxHashDropdownList")) {
+                    document.querySelector("#boxHashDropdownList").classList.remove("open");
+                    setTimeout(function () {
+                        listCloseMobile(callback);
+                    }, 300);
+                } //mobile resize 될때
+                else {
+                    listCloseDesktop(callback);
+                }
+            } else {
+                //desktop 정상 이벤트
+                if (!document.querySelector("#boxHashDropdownList")) {
+                    setTimeout(function () {
+                        listCloseDesktop(callback);
+                    }, 300);
+                } else {
+                    document.querySelector("#boxHashDropdownList").classList.remove("open"); // document.querySelector("#boxHashDropdownList").remove();
+
+                    listCloseMobile(callback);
+                }
+            }
+        }
+    };
+
+    var btnDropdownClick = function btnDropdownClick(self, callback) {
+        if (domWrap && self) {
+            var _self$dataset;
+
+            var txt = self.textContent || '';
+            var val = ((_self$dataset = self.dataset) === null || _self$dataset === void 0 ? void 0 : _self$dataset.val) || '';
+            domTxt.querySelector("span").innerHTML = txt;
+            domTxt.dataset.val = val;
+
+            if (document.querySelector("#boxHashDropdownList")) {
+                domBtnLists = Array.prototype.slice.call(document.querySelector("#boxHashDropdownList").querySelectorAll(".btn-dropdown2"));
+                ;
+            } else {
+                domBtnLists = Array.prototype.slice.call(domWrap.querySelectorAll(".btn-dropdown2"));
+            }
+
+            domBtnLists.find(function (btn) {
+                if (btn.classList.contains("active")) {
+                    btn.classList.remove("active");
+                }
+            });
+            self.classList.add("active");
+            listsClose(callback);
+        }
+    };
+
+    var destroy = function destroy() {
+        document.querySelector("body").removeEventListener("click", listenerFun);
+        domWrap.removeEventListener("click", listenerFun);
+        domWrap = null;
+        domTxt = null;
+        domBtnLists = null;
+        domActiveBtn = null;
+        info = {};
+    };
+
+    return {
+        init: init,
+        txtClick: txtClick,
+        btnDropdownClick: btnDropdownClick,
+        listsOpen: listsOpen,
+        listsClose: listsClose,
+        destroy: destroy,
+        getDom: getDom
+    };
+};
 /**
  *
  * @returns {{init: init, listsClose: listsClose, btnHistoryClick: btnHistoryClick, getDom: (function(): {btnLists: null, activeBtn: null, inp: null, searchHistory: null, wrap: null}), mobileToggle: mobileToggle, inpFocusOut: (function(): void), btnDeleteClick: btnDeleteClick, destroy: destroy, inpFocus: inpFocus, listsOpen: listsOpen, info: {}}}
@@ -1311,6 +1503,7 @@ var appHeight = function appHeight() {
 };
 
 var tootDropDown = DropDown(".box-toot-dropdown"); //toot drop down
+var tootDropDown2 = DropDown2(".box-toot-dropdown2"); //toot drop down
 var hashDropDown = DropDown(".box-hash-dropdown"); //hash drop down
 
 var search = Search(); //search box
@@ -1330,6 +1523,7 @@ export {
     albumPop,
     search,
     tootDropDown,
+    tootDropDown2,
     hashDropDown,
     isotope,
 }
