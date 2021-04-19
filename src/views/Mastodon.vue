@@ -1,48 +1,48 @@
 <template>
     <div id="wrap">
-        <Header>
-        </Header>
+        <Header> </Header>
 
         <iframe class="iframe" ref="iframe" :src="`${baseURL}${path}`">
         </iframe>
-
-
     </div>
 </template>
 
 <script lang="ts">
-import {Component, Prop, Vue} from "vue-property-decorator";
-import {gnb, initApp} from "@/scripts/ui_common";
+import { Component, Prop, Vue } from "vue-property-decorator";
+import { gnb, initApp } from "@/scripts/ui_common";
 import Header from "@/components/layouts/Header.vue";
 
 @Component({
-    components: {Header},
+    components: { Header },
 })
 export default class App extends Vue {
     private baseURL: string = process.env.VUE_APP_BASE_API!;
-    private path: string = '';
+    private path: string = "";
 
     mounted() {
         initApp();
         //gnb.init();
 
-        const {params} = this.$route;
-        const {pathMatch} = params;
+        const { params } = this.$route;
+        const { pathMatch } = params;
         this.path = pathMatch;
 
-        window.addEventListener('message', this.onMessage);
+        window.addEventListener("message", this.onMessage);
+
+        window.addEventListener("message", this.iframeHandler)
     }
 
     beforeDestroy() {
-        window.removeEventListener('message', this.onMessage);
+        window.removeEventListener("message", this.onMessage);
+        window.removeEventListener("message", this.iframeHandler)
     }
 
-    onMessage(e : MessageEvent) {
+    onMessage(e: MessageEvent) {
         const data = e.data || {};
         const type = data.type;
-        if (type === 'loadedPage') {
+        if (type === "loadedPage") {
             const url = new URL(data.url);
-            if (url.pathname === '/auth/sign_in') {
+            if (url.pathname === "/auth/sign_in") {
                 //로그아웃
                 localStorage.removeItem("token");
                 this.$router.push("/login").catch(() => {});
@@ -50,6 +50,11 @@ export default class App extends Vue {
         }
     }
 
+    iframeHandler(e: MessageEvent) {
+        if (e.data.url === `${this.baseURL}about`) {
+            window.location.href = "/";
+        }
+    }
 }
 </script>
 <style scoped lang="scss">

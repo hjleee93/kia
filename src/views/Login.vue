@@ -187,14 +187,7 @@ export default class Login extends Vue {
             (this.$refs.iframe as HTMLIFrameElement).src !==
             "https://toot.wbcard.org/about"
         ) {
-            window.addEventListener("message", (event) => {
-                if (event.origin.startsWith(this.baseURL.slice(0, -1))) {
-                    if (event.data.url === "https://toot.wbcard.org/about") {
-                        window.location.href = "/";
-                    }
-                    console.log(event.data.url);
-                }
-            });
+             window.addEventListener("message", this.iframeHandler)
         }
         if (this.isIframeLoaded === false) {
             (this.$refs
@@ -207,6 +200,11 @@ export default class Login extends Vue {
             this.isIframeLoaded = true;
         }
     }
+    iframeHandler(e: MessageEvent) {
+        if (e.data.url === `${this.baseURL}about`) {
+            window.location.href = "/";
+        }
+    }
     async mounted() {
         this.$store.commit("currCategory", "Login");
         window.addEventListener("keydown", this.handleKeyDown);
@@ -214,6 +212,7 @@ export default class Login extends Vue {
 
     destroyed() {
         window.removeEventListener("keydown", this.handleKeyDown);
+         window.removeEventListener("message", this.iframeHandler)
     }
 
     login() {
