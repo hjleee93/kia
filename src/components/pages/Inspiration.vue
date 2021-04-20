@@ -44,7 +44,7 @@ enum ETootLoadingState {
 export default class Inspiration extends Vue {
     private category: string = "Inspiration";
     private tagSearch: any[] = [];
-    private limitCount: number = 5;
+    private limitCount: number = 10;
     private loadingState: ETootLoadingState = ETootLoadingState.none;
     beforeUpdate() {
         tootDropDown.init();

@@ -290,6 +290,7 @@ export default class Login extends Vue {
 
             try {
                 await this.updateCurrentUser(result.data.access_token);
+                this.$store.commit('userToken',JSON.parse(localStorage.getItem("token")!))
                 this.$router.push("/hive").catch(() => {});
             } catch (err) {
                 console.log(err);

@@ -1,9 +1,9 @@
 import config from '@/lib/config';
+import store from '@/store';
 import axios, { AxiosInstance } from 'axios'
 import Vue, { PluginObject } from "vue";
 
 export default class Api {
-
     async verifyApp() {
         const result = await Vue.$axios.post("api/v1/apps", {
             client_name: "KIA",
@@ -26,10 +26,6 @@ export default class Api {
             }
         });
         return result.data;
-    }
-
-    getToken() {
-        return JSON.parse(localStorage.getItem('token')!)
     }
 
     async getCurrentUser(token: string) {
@@ -55,7 +51,7 @@ export default class Api {
         const result = await Vue.$axios.get("/api/v1/timelines/public",
             {
                 params: { only_media: true, limit, max_id, local: true },
-                headers: { Authorization: "Bearer " + config.token },
+                headers: { Authorization: "Bearer " + store.getters.userToken },
             }
         );
         return result.data;
@@ -67,7 +63,7 @@ export default class Api {
             method: 'get',
             url: `${config.instance}/api/v1/accounts/${userId}/statuses`,
             headers: {
-                Authorization: `Bearer ${config.token}`
+                Authorization: `Bearer ${store.getters.userToken}`
             },
             params: Object.assign({ only_media: true, max_id })
 
@@ -82,7 +78,7 @@ export default class Api {
 
     async deleteToot(tootId: number) {
         const result = await Vue.$axios.delete("/api/v1/statuses/" + tootId, {
-            headers: { Authorization: "Bearer " + config.token },
+            headers: { Authorization: "Bearer " + store.getters.userToken },
         }
         );
 
@@ -91,7 +87,7 @@ export default class Api {
     async uploadMedia(formData: FormData) {
         const result = await Vue.$axios.post("/api/v1/media", formData, {
             headers: {
-                Authorization: "Bearer " + config.token,
+                Authorization: "Bearer " + store.getters.userToken,
                 "Content-Type": "multipart/form-data",
             }
         }
@@ -110,7 +106,7 @@ export default class Api {
                 .map((upload) => upload.id),
         },
             {
-                headers: { Authorization: "Bearer " + config.token },
+                headers: { Authorization: "Bearer " + store.getters.userToken },
             }
         );
 
@@ -135,7 +131,7 @@ export default class Api {
             method: 'post',
             url: `https://toot.wbcard.org/api/v1/statuses/${tootId}/favourite`,
             headers: {
-                'Authorization': `Bearer ${config.token}`
+                'Authorization': `Bearer ${store.getters.userToken}`
             }
         })
         return result;
@@ -147,7 +143,7 @@ export default class Api {
             method: 'post',
             url: `https://toot.wbcard.org/api/v1/statuses/${tootId}/unfavourite`,
             headers: {
-                'Authorization': `Bearer ${config.token}`
+                'Authorization': `Bearer ${store.getters.userToken}`
             }
         })
         return result;
@@ -159,7 +155,7 @@ export default class Api {
             method: 'get',
             url: `${config.instance}/api/v2/search/`,
             headers: {
-                Authorization: `Bearer ${config.token}`
+                Authorization: `Bearer ${store.getters.userToken}`
             },
             params:{ q: searchInput }
 
@@ -174,7 +170,7 @@ export default class Api {
             method: 'get',
             url: `${config.instance}/api/v2/search/`,
             headers: {
-                Authorization: `Bearer ${config.token}`
+                Authorization: `Bearer ${store.getters.userToken}`
             },
             params:{ q: searchInput }
 
@@ -189,7 +185,7 @@ export default class Api {
         const result = await Vue.$axios.get('/api/v2/search',
             {
                 params: Object.assign({ q: searchInput, type: 'hashtags', offset: offset, limit: limit }),
-                headers: { Authorization: "Bearer " + config.token },
+                headers: { Authorization: "Bearer " + store.getters.userToken },
 
             });
         return result.data.hashtags

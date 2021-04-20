@@ -133,7 +133,7 @@ enum ETootLoadingState {
 export default class Rank extends Vue {
     private tootList: any[] = [];
 
-    private limitCount: number = 5;
+    private limitCount: number = 10;
     private loadingState: ETootLoadingState = ETootLoadingState.none;
 
     mounted() {

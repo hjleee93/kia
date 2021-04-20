@@ -46,7 +46,7 @@ enum ETootLoadingState {
 export default class Hive extends Vue {
     private category: string = "Hive";
     private allResult: any[] = [];
-    private limitCount: number = 5;
+    private limitCount: number = 10;
     private loadingState: ETootLoadingState = ETootLoadingState.none;
 
     beforeUpdate() {
