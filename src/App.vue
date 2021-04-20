@@ -7,18 +7,19 @@
 
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
-import config from "./lib/config";
 
 @Component({
     components: {},
 })
 export default class App extends Vue {
-
     async mounted() {
-        // const result = await this.$api.getCurrentUser(config.token);
-        if(config.token !== null){
-
-            this.$store.dispatch("userStatus", config.token);
+        this.$store.commit("userToken", localStorage.getItem("token")!);
+        if (
+            this.$store.getters.userToken !== null &&
+            this.$store.getters.userToken !== undefined
+        ) {
+           await this.$store.dispatch("userStatus", localStorage.getItem("token")!);
+            
         }
     }
 }

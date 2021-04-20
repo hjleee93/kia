@@ -7,15 +7,15 @@ export default {
     },
     getters: {
         userToken(state: any) {
-            return state.token;
+            return state.userToken;
         },
         currentUser(state: any) {
             return state.currentUser;
         }
     },
     mutations: {
-        userToken(state: any, payload: boolean) {
-            state.token = payload;
+        userToken(state: any, payload: boolean) {            
+            state.userToken = payload;
         },
         currentUser(state: any, payload: any) {
             state.currentUser = payload;
@@ -23,8 +23,8 @@ export default {
     },
     actions: {
         //@ts-ignore
-        async userStatus({ commit }, token) {
-            const result = await Vue.$api.getCurrentUser(token);      
+        async userStatus({ commit }) {
+            const result = await Vue.$api.getCurrentUser();  
             commit('currentUser', result)
         }
 

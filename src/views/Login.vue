@@ -1,6 +1,7 @@
 <template>
     <div id="content" class="login">
-        <template v-if="isRegister || isMissingEmail || isLostPwd">
+        
+        <template v-if="goIframe === true">
             <Header />
         </template>
         <!--content(S)-->
@@ -32,7 +33,7 @@
                 <div class="art-field">
                     <!--default-->
 
-                    <input type="text" hidden v-model="instance" />
+                    <input type="text" hidden v-model="baseURL" />
                     <label
                         class="input"
                         :class="[
@@ -102,31 +103,35 @@
                 </template>
 
                 <div class="art-second-btn">
-                    <a @click="isRegister = true" class="btn btn-link">등록하기</a>
+                    <router-link
+                        @click="goIframe = true"
+                        to="/mastodon/auth/sign_up"
+                        class="btn btn-link"
+                    >
+                        등록하기</router-link
+                    >
                 </div>
                 <ul class="art-link-lists">
                     <li>
-                        <a @click="isLostPwd = true" class="btn btn-link"
-                            >비밀번호를 잊어버리셨습니까?</a
+                        <router-link
+                            @click="goIframe = true"
+                            to="/mastodon/auth/password/new"
+                            class="btn btn-link"
                         >
+                            비밀번호를 잊어버리셨습니까?
+                        </router-link>
                     </li>
                     <li>
-                        <a @click="isMissingEmail = true" class="btn btn-link"
-                            >확인 메일을 받지 못하셨습니까?</a
+                        <router-link
+                            @click="goIframe = true"
+                            to="/mastodon/auth/confirmation/new"
+                            class="btn btn-link"
                         >
+                            확인 메일을 받지 못하셨습니까?
+                        </router-link>
                     </li>
                 </ul>
             </div>
-
-            <template v-if="isRegister">
-                <LoginMas :src="'auth/sign_up'" />
-            </template>
-            <template v-if="isMissingEmail">
-                <LoginMas :src="'auth/confirmation/new'" />
-            </template>
-            <template v-if="isLostPwd">
-                <LoginMas :src="'auth/password/new'" />
-            </template>
             <iframe
                 @load="loaded()"
                 class="iframe"
@@ -142,22 +147,19 @@
 import config from "@/lib/config";
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import Header from "@/components/layouts/Header.vue";
-import LoginMas from "@/views/LoginMas.vue";
 
-@Component({ components: { Header, LoginMas } })
+
+@Component({ components: { Header } })
 export default class Login extends Vue {
-    private isRegister: boolean = false;
-    private isMissingEmail: boolean = false;
-    private isLostPwd: boolean = false;
     private baseURL: string = process.env.VUE_APP_BASE_API!;
     private isIframeLoaded: boolean = false;
     private email: string = "";
     private password: string = "";
-    private instance: string = process.env.VUE_APP_BASE_API!;
     private isLoginError: boolean = false;
     private isEmailActive: boolean = false;
     private isPwdActive: boolean = false;
     private emailRegExp = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
+    private goIframe: boolean = false;
 
     handleKeyDown(e: any) {
         if (e.code === "Enter" || e.keyCode === 13) {
@@ -182,11 +184,13 @@ export default class Login extends Vue {
             this.isIframeLoaded = true;
         }
     }
+    
     iframeHandler(e: MessageEvent) {
         if (e.data.url === `${this.baseURL}about`) {
             window.location.href = "/";
         }
     }
+
     async mounted() {
         this.$store.commit("currCategory", "Login");
         window.addEventListener("keydown", this.handleKeyDown);
@@ -198,65 +202,23 @@ export default class Login extends Vue {
     }
 
     login() {
-        let uri = new URL(this.instance);
-        if (this.known() === null || this.known()[uri.host] === null) {
-            console.log("Login successful registerWithInstance");
-            this.registerWithInstance(uri).then(() => {
-                this.attemptLogin(this.email, this.password);
-            });
-        } else {
-            this.attemptLogin(this.email, this.password);
-        }
+        this.attemptLogin(this.email, this.password);
     }
 
-    private store = {
-        in: (key: string, item: string) => {
-            var storable = JSON.stringify(item);
-            localStorage.setItem(key, storable);
-            return storable;
-        },
-        out: (key: string) => {
-            let raw: string = localStorage.getItem(key)!;
-            return raw !== "undefined" ? JSON.parse(raw) : {};
-        },
-    };
-
-    private known = (val = null) => {
-        if (val == null) {
-            return this.store.out("known_instances");
-        } else {
-            return this.store.in("known_instances", val!);
-        }
-    };
-
-    private registerWithInstance = async (uri: any) => {
-        //어플확인용
-        try {
-            const result = await this.$api.verifyApp();
-            var known = this.known() || {};
-            known[uri.host] = {
-                host: uri.origin,
-                client_id: result.data.client_id,
-                client_secret: result.data.client_secret,
-            };
-            this.known(known);
-            console.log("App registration successful");
-        } catch (err) {
-            alert("App registration failed");
-            console.log(err);
-        }
-    };
-
     private attemptLogin = async (email: string, password: string) => {
-        let instance = this.known()[new URL(this.instance).host];
+        const result = await this.$api.verifyApp();
+
+        let instance = {
+            host: new URL(this.baseURL).host,
+            client_id: result.data.client_id,
+            client_secret: result.data.client_secret,
+        };
         try {
             const result = await this.$api.attemptLogin(
                 email,
                 password,
                 instance
             );
-            this.store.in("instance", instance.host);
-            this.store.in("token", result.data.access_token);
 
             (this.$refs
                 .iframe as HTMLIFrameElement)?.contentWindow?.postMessage(
@@ -267,6 +229,7 @@ export default class Login extends Vue {
                 },
                 "*"
             );
+            
             (this.$refs
                 .iframe as HTMLIFrameElement)?.contentWindow?.postMessage(
                 {
@@ -289,8 +252,9 @@ export default class Login extends Vue {
             });
 
             try {
+                localStorage.setItem("token", result.data.access_token);
+                this.$store.commit("userToken", result.data.access_token);
                 await this.updateCurrentUser(result.data.access_token);
-                this.$store.commit('userToken',JSON.parse(localStorage.getItem("token")!))
                 this.$router.push("/hive").catch(() => {});
             } catch (err) {
                 console.log(err);
@@ -325,15 +289,5 @@ export default class Login extends Vue {
     /* display: contents; */
     opacity: 0;
     z-index: -1 !important;
-}
-.reg_iframe {
-    display: none;
-}
-
-.reg_iframe.active {
-    height: 100%;
-    width: 100%;
-    position: relative;
-    display: block;
 }
 </style>

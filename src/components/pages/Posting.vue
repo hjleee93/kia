@@ -91,8 +91,9 @@ export default class Posting extends Vue {
 
     @Watch("$store.state.user.currentUser")
     async getUserId() {
-        if (this.$store.state.user.currentUser === null) {
-            await this.$store.dispatch("userStatus", config.token);
+        
+        if (this.$store.getters.currentUser === null) {
+            await this.$store.dispatch("userStatus", this.$store.getters.userToken);
         }
         return await this.$store.state.user.currentUser.id;
     }

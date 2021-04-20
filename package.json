@@ -17,6 +17,7 @@
     "litepicker": "^2.0.11",
     "litepicker-polyfills-ie11": "^0.0.1",
     "moment": "^2.29.1",
+    "promise-polyfill": "8.2.0",
     "quasar": "^1.0.0",
     "vue": "^2.6.11",
     "vue-axios": "^3.2.4",

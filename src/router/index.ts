@@ -1,3 +1,4 @@
+import store from '@/store'
 import Vue from 'vue'
 import VueRouter, { RouteConfig } from 'vue-router'
 
@@ -74,6 +75,7 @@ const routes: Array<RouteConfig> = [
     },
 
 
+
 ]
 
 const router = new VueRouter({
@@ -83,13 +85,17 @@ const router = new VueRouter({
 
 
 router.beforeEach((to, from, next) => {
-    if (to.path !== '/login' && localStorage.getItem("token") === null) {
+
+    if (to.path.includes('mastodon/') === true && localStorage.getItem("token") === null) {
+
+        next()
+    }
+    else if (to.path !== '/login' && localStorage.getItem("token") === null) {
+
         next('/login');
     }
-    // if (to.path=== '/login' && localStorage.getItem("token") !== null) {
-    //     next('/hive')
-    // }    
     else {
+
         next()
     }
 })

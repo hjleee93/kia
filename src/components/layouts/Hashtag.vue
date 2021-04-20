@@ -11,7 +11,11 @@
         <div class="lists">
             <strong class="tit">해시태그</strong
             ><!--모바일 전용-->
-            <button class="btn-m-hash-close" @click="listsClose" onclick="window.hashDropDown.listsClose()"></button
+            <button
+                class="btn-m-hash-close"
+                @click="listsClose"
+                onclick="window.hashDropDown.listsClose()"
+            ></button
             ><!--모바일 전용-->
             <ul>
                 <!--비선택-->
@@ -34,7 +38,7 @@
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import { dim, gnb, hashDropDown } from "@/scripts/ui_common";
-import tempCategory from '@/scripts/categoryList';
+import tempCategory from "@/scripts/categoryList";
 @Component({ components: {} })
 export default class Hashtag extends Vue {
     @Prop() tag!: string;
@@ -45,21 +49,21 @@ export default class Hashtag extends Vue {
         this.initCate();
     }
 
-     async getCategory() {
+    async getCategory() {
         return tempCategory;
     }
     async initCate() {
-        const categories =await this.getCategory();
+        const categories = await this.getCategory();
 
         this.$store.commit("categories", categories);
 
         if (this.$store.getters.currCategory === "Posting") {
-            
             for (const i in this.$store.getters.categories) {
-                for(const j in this.$store.getters.categories[i].tags){
-                   this.hashtags.push(this.$store.getters.categories[i].tags[j].name); 
+                for (const j in this.$store.getters.categories[i].tags) {
+                    this.hashtags.push(
+                        this.$store.getters.categories[i].tags[j].name
+                    );
                 }
-                
             }
         } else {
             const tags = this.$store.getters.category(this.tag)?.tags;
@@ -68,13 +72,11 @@ export default class Hashtag extends Vue {
                     this.hashtags.push(tags[i].name);
                 }
             }
-            
         }
     }
 
     @Watch("store.state.categories")
     watchC() {
-        console.log("watch");
         this.initCate();
     }
 
@@ -95,8 +97,8 @@ export default class Hashtag extends Vue {
                     mediaTag.push(result[i]);
                 }
             }
-            
-             this.$store.commit("tootCnt", mediaTag.length);
+
+            this.$store.commit("tootCnt", mediaTag.length);
             this.$emit("tagResult", mediaTag);
         } catch (err) {
             console.log(err);

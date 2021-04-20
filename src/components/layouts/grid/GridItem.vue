@@ -97,13 +97,6 @@ export default class GridItem extends Vue {
         }
     }
 
-    goUserDetail(userId: number) {
-        window.location.href = `${this.baseURL}web/accounts/${userId}`;
-    }
-
-    tagLinkEdit() {
-        console.log(this.toot.content);
-    }
 }
 </script>
 
@@ -125,5 +118,12 @@ export default class GridItem extends Vue {
 }
 .sensitive{
     filter: blur(1.5em);
+}
+@media (min-width: 320px) and (max-width: 1023px)
+{
+
+    #header+#container #content .content {
+        padding-bottom: 0px;
+    }
 }
 </style>

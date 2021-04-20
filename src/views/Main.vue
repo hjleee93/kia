@@ -4,7 +4,7 @@
             <div id="wrap">
                 <Header @logout="logOut" />
                 <section id="container">
-                    <router-view ></router-view>
+                    <router-view></router-view>
                 </section>
             </div>
             <MobileAlbum />
@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import { initApp } from "@/scripts/ui_common";
 import Header from "@/components/layouts/Header.vue";
 import MobileAlbum from "@/components/layouts/MobileAlbum.vue";
@@ -23,13 +23,11 @@ import MobileAlbum from "@/components/layouts/MobileAlbum.vue";
 })
 export default class App extends Vue {
     private loggedIn: boolean = localStorage.getItem("token") != null;
-    
+
     async mounted() {
-       
         initApp();
     }
     logOut() {
-        
         this.loggedIn = false;
         this.$router.push("/login").catch(() => {});
     }

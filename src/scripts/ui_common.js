@@ -344,19 +344,24 @@ var Gnb = function Gnb() {
             flagEventScroll = true;
         } else if (flagEventScroll && eventY - eventExecuteY > _t) {
             //위로
+            if(domHeaderFixed !== null && !domSecFixed !== null){
             domHeaderFixed.classList.remove("close");
             domHeaderFixed.classList.add("open");
             domSecFixed.classList.remove("close");
             domSecFixed.classList.add("open");
             flagEventScroll = false;
+            }
         } else if (flagEventScroll && eventY + eventExecuteY < _t) {
             //아래로
-            domHeaderFixed.classList.remove("open");
-            domHeaderFixed.classList.add("close");
-            domSecFixed.classList.remove("open");
-            domSecFixed.classList.add("close");
-            dropDownOpenCheck();
-            flagEventScroll = false;
+            if(domHeaderFixed !== null && !domSecFixed !== null){
+                domHeaderFixed.classList.remove("open");
+                domHeaderFixed.classList.add("close");
+                domSecFixed.classList.remove("open");
+                domSecFixed.classList.add("close");
+                dropDownOpenCheck();
+                flagEventScroll = false;
+            }
+            
         }
 
         t = _t;
@@ -1505,6 +1510,8 @@ var appHeight = function appHeight() {
 var tootDropDown = DropDown(".box-toot-dropdown"); //toot drop down
 var tootDropDown2 = DropDown2(".box-toot-dropdown2"); //toot drop down
 var hashDropDown = DropDown(".box-hash-dropdown"); //hash drop down
+
+window.hashDropDown = hashDropDown;
 
 var search = Search(); //search box
 

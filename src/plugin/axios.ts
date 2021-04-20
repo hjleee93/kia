@@ -23,8 +23,8 @@ _axios.interceptors.request.use(
     function (cfg) {
         // Do something before request is sent
 
-        if (store.getters.token) {
-            cfg.headers.authorization = `Bearer ${store.getters.token}`;
+        if (store.getters.userToken) {
+            cfg.headers.authorization = `Bearer ${store.getters.userToken}`;
         }
 
         return cfg;

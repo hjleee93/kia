@@ -16,11 +16,11 @@
                                 >INS</router-link
                             >
                         </li>
-                        <li class="list-toot" @click="clickedHeader('Posting')">
+                        <li class="list-toot" @click="clickedHeader('Toot')">
                             <router-link
-                                to="/posting"
+                                to="/mastodon/web/statuses/new"
                                 class="btn btn-link"
-                                :class="{ active: isActive('Posting') }"
+                                :class="{ active: isActive('Toot') }"
                                 >TOOT</router-link
                             >
                         </li>
@@ -100,7 +100,16 @@
                 <button class="btn btn-logout" @click="logOut">Logout</button>
             </template>
             <template v-else>
-                <button class="btn btn-logout" @click="toLogin">Login</button>
+                <li class="list-ins mobile-header">
+                    <router-link
+                        to="/login"
+                        class="btn btn-link"
+                        >Login</router-link
+                    >
+                </li>
+                <button class="btn btn-logout" @click="toLogin">
+                    Login
+                </button>
             </template>
         </div>
     </header>
@@ -121,23 +130,28 @@ export default class Header extends Vue {
     logOut() {
         this.$emit("logout");
         localStorage.removeItem("token");
-        window.location.href = "/";
+        this.$store.commit("userToken", null);
+        this.$store.commit("currentUser", null);
+        this.$router.push("/login").catch(() => {});
     }
 
     clickedHeader(category: string) {
         this.$store.commit("currCategory", category);
         this.active = category;
     }
+
     @Watch("$store.getters.currCategory")
     getCategory() {
         this.active = this.$store.getters.currCategory;
     }
+
     toLogin() {
-        window.location.href = "/";
+        this.$router.push('/')
+       
     }
     clickedLogo() {
         if (this.$store.getters.currCategory.toLowerCase() === "login") {
-            window.location.href = "/";
+            this.$router.push('/')
         } else {
             this.$router.push("/").catch(() => {});
         }
@@ -148,5 +162,24 @@ export default class Header extends Vue {
 <style scoped>
 .btn-logo:hover {
     cursor: pointer;
+}
+
+@media (min-width: 320px) and (max-width: 1023px) {
+    #header .mobile-header {
+        display: block;
+        text-align: center;
+        font-size: 12px;
+        line-height: 12px;
+        color: #848e98;
+        transition: color 0.3s;
+        position: relative;
+        text-transform: uppercase;
+        flex: 1;
+    }
+}
+@media (min-width:1024px){
+    #header .mobile-header {
+        display: none;
+    }
 }
 </style>
