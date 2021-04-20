@@ -11,7 +11,7 @@
         <div class="lists">
             <strong class="tit">해시태그</strong
             ><!--모바일 전용-->
-            <button class="btn-m-hash-close" @click="listsClose"></button
+            <button class="btn-m-hash-close" @click="listsClose" onclick="window.hashDropDown.listsClose()"></button
             ><!--모바일 전용-->
             <ul>
                 <!--비선택-->
@@ -21,6 +21,7 @@
                         class="btn btn-dropdown"
                         @click="btnDropdownClick(i)"
                         :ref="i"
+                        onclick="window.hashDropDown.btnDropdownClick(this)"
                     >
                         <span>#{{ i }}</span>
                     </button>
