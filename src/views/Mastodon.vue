@@ -28,17 +28,17 @@ export default class App extends Vue {
         this.path = pathMatch;
 
         window.addEventListener("message", this.onMessage);
-
-        window.addEventListener("message", this.iframeHandler)
     }
 
     beforeDestroy() {
         window.removeEventListener("message", this.onMessage);
-        window.removeEventListener("message", this.iframeHandler)
     }
 
     onMessage(e: MessageEvent) {
         const data = e.data || {};
+          if (e.data.url === `${this.baseURL}about`) {
+            window.location.href = "/";
+        }
         const type = data.type;
         if (type === "loadedPage") {
             const url = new URL(data.url);
@@ -47,12 +47,6 @@ export default class App extends Vue {
                 localStorage.removeItem("token");
                 this.$router.push("/login").catch(() => {});
             }
-        }
-    }
-
-    iframeHandler(e: MessageEvent) {
-        if (e.data.url === `${this.baseURL}about`) {
-            window.location.href = "/";
         }
     }
 }

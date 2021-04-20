@@ -266,6 +266,7 @@ export default class SearchBar extends Vue {
                 //중복검색어 체크용 
                 for (const i in this.searchHistory) {
                     if (this.searchHistory[i] === this.searchInput) {
+                        //@ts-ignore
                         this.searchHistory.splice(i, 1);
                         this.searchHistory.unshift(this.searchInput);
                         localStorage.setItem(
@@ -279,7 +280,7 @@ export default class SearchBar extends Vue {
                        hasDuplicatedKeyword = false;
                     }
                 }
-                
+
                 if(!hasDuplicatedKeyword){
                     //최근 검색어 10개 제한
                     if (this.searchHistory.length === 10) {

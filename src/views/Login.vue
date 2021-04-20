@@ -102,54 +102,36 @@
                 </template>
 
                 <div class="art-second-btn">
-                    <a @click="signUp" class="btn btn-link">등록하기</a>
+                    <a @click="isRegister = true" class="btn btn-link">등록하기</a>
                 </div>
                 <ul class="art-link-lists">
                     <li>
-                        <a @click="findPwd" class="btn btn-link"
+                        <a @click="isLostPwd = true" class="btn btn-link"
                             >비밀번호를 잊어버리셨습니까?</a
                         >
                     </li>
                     <li>
-                        <a @click="missingEmail" class="btn btn-link"
+                        <a @click="isMissingEmail = true" class="btn btn-link"
                             >확인 메일을 받지 못하셨습니까?</a
                         >
                     </li>
                 </ul>
             </div>
+
             <template v-if="isRegister">
-                <iframe
-                    @load="loaded()"
-                    :src="`${baseURL}auth/sign_up`"
-                    ref="iframe"
-                    class="reg_iframe"
-                    :class="isRegister ? 'active' : ''"
-                ></iframe>
+                <LoginMas :src="'auth/sign_up'" />
             </template>
             <template v-if="isMissingEmail">
-                <iframe
-                    @load="loaded()"
-                    :src="`${baseURL}auth/confirmation/new`"
-                    ref="iframe"
-                    class="reg_iframe"
-                    :class="isMissingEmail ? 'active' : ''"
-                ></iframe>
+                <LoginMas :src="'auth/confirmation/new'" />
             </template>
             <template v-if="isLostPwd">
-                <iframe
-                    @load="loaded()"
-                    :src="`${baseURL}auth/password/new`"
-                    ref="iframe"
-                    class="reg_iframe"
-                    :class="isLostPwd ? 'active' : ''"
-                ></iframe>
+                <LoginMas :src="'auth/password/new'" />
             </template>
             <iframe
                 @load="loaded()"
                 class="iframe"
                 ref="iframe"
                 :src="`${baseURL}about`"
-                allowtransparency="true"
             ></iframe>
         </div>
         <!--content(E)-->
@@ -160,7 +142,9 @@
 import config from "@/lib/config";
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import Header from "@/components/layouts/Header.vue";
-@Component({ components: { Header } })
+import LoginMas from "@/views/LoginMas.vue";
+
+@Component({ components: { Header, LoginMas } })
 export default class Login extends Vue {
     private isRegister: boolean = false;
     private isMissingEmail: boolean = false;
@@ -173,21 +157,19 @@ export default class Login extends Vue {
     private isLoginError: boolean = false;
     private isEmailActive: boolean = false;
     private isPwdActive: boolean = false;
-    private clickedLogin: boolean = false;
     private emailRegExp = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
-    private componentKey: number = 0;
 
     handleKeyDown(e: any) {
         if (e.code === "Enter" || e.keyCode === 13) {
             this.login();
         }
     }
-    async loaded() {
+    loaded() {
         if (
             (this.$refs.iframe as HTMLIFrameElement).src !==
-            "https://toot.wbcard.org/about"
+            this.baseURL + "about"
         ) {
-             window.addEventListener("message", this.iframeHandler)
+            window.addEventListener("message", this.iframeHandler);
         }
         if (this.isIframeLoaded === false) {
             (this.$refs
@@ -212,7 +194,7 @@ export default class Login extends Vue {
 
     destroyed() {
         window.removeEventListener("keydown", this.handleKeyDown);
-         window.removeEventListener("message", this.iframeHandler)
+        window.removeEventListener("message", this.iframeHandler);
     }
 
     login() {
@@ -329,19 +311,6 @@ export default class Login extends Vue {
             console.log("Failed to fetch current user");
         }
     }
-
-    findPwd() {
-        this.isLostPwd = true;
-        // window.location.href=`${config.instance}/auth/password/new`
-    }
-    missingEmail() {
-        this.isMissingEmail = true;
-        // window.location.href=`${config.instance}/auth/confirmation/new`
-    }
-    signUp() {
-        this.isRegister = true;
-        // window.location.href=`${config.instance}/auth/sign_up`
-    }
 }
 </script>
 
@@ -356,14 +325,10 @@ export default class Login extends Vue {
     opacity: 0;
     z-index: -1 !important;
 }
-.login,
-.content,
-.line {
-    /* z-index: 999; */
-}
 .reg_iframe {
     display: none;
 }
+
 .reg_iframe.active {
     height: 100%;
     width: 100%;

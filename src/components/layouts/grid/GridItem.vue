@@ -26,6 +26,7 @@
                     </router-link>
                     <div class="box-cont">
                         <template v-if="height > 65">
+                            
                             <p
                                 ref="txtBox"
                                 class="txt content"
@@ -38,12 +39,11 @@
                                 </p></router-link
                             >
                         </template>
-
                         <template v-else>
                             <p
-                                class="txt"
+                                class="txt content"
                                 ref="txtBox"
-                                v-html="toot.content"
+                                v-html="tootContent"
                             ></p>
                         </template>
 
@@ -77,11 +77,13 @@ export default class GridItem extends Vue {
     @Prop() toot!: any;
     private tootContent: string = "";
     private height: number = 0;
+    private baseURL: string = process.env.VUE_APP_BASE_API!;
 
     mounted() {
         if (this.toot.content !== undefined) {
+            
             this.tootContent = this.toot.content.replaceAll(
-                "https://toot.wbcard.org/tags",
+                `${this.baseURL}tags`,
                 "#/mastodon/tags"
             );
         }
@@ -96,7 +98,7 @@ export default class GridItem extends Vue {
     }
 
     goUserDetail(userId: number) {
-        window.location.href = `${config.instance}/web/accounts/${userId}`;
+        window.location.href = `${this.baseURL}web/accounts/${userId}`;
     }
 
     tagLinkEdit() {
