@@ -53,7 +53,7 @@
                 v-for="i in this.tag"
                 :key="i"
                 :to="`mastodon/tags/${i}`"
-                ><span class="tag">#{{ i }}</span></router-link
+                ><span class="tag">#{{ i }} </span></router-link
             >
             <div class="box-like">
                 <i class="icon icon-like"></i>
@@ -82,6 +82,21 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 
+function parseTags( text : string ) {
+    const regexp = /(#[\d|A-Z|a-z|ㄱ-ㅎ|ㅏ-ㅣ|가-힣]*)/;
+    const arr = [];
+    let ma = text.match( regexp ) as RegExpMatchArray;
+    while (ma) {
+        text = text.substr( (ma.index||0) + ma[0].length + 1 );
+        const tag = ma[0].replace('#', '');
+        if( tag !== '' ) {
+            arr.push( tag );
+        }
+        ma = text.match( regexp ) as RegExpMatchArray;
+    }
+    return arr;
+}
+
 @Component({ components: {} })
 export default class TootCard extends Vue {
     @Prop() private toot: any;
@@ -90,7 +105,9 @@ export default class TootCard extends Vue {
 
     mounted() {
         this.matchHeight();
-        this.parsingTag();
+        // this.parsingTag();
+        this.tag = parseTags( this.toot.text );
+        console.log( this.tag );
     }
 
     parsingTag() {
