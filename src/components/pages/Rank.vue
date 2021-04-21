@@ -26,7 +26,7 @@
                                             class="btn btn-tab active"
                                             @click="onClickTab"
                                         >
-                                            <span>인기 툿</span>
+                                            <span style="pointer-events: none">인기 툿</span>
                                         </button>
                                     </li>
                                     <li>
@@ -35,7 +35,7 @@
                                             class="btn btn-tab"
                                             @click="onClickTab"
                                         >
-                                            <span>BEST 사용자</span>
+                                            <span style="pointer-events: none">BEST 사용자</span>
                                         </button>
                                     </li>
                                     <li>
@@ -44,7 +44,7 @@
                                             class="btn btn-tab"
                                             @click="onClickTab"
                                         >
-                                            <span>BEST 해시태그</span>
+                                            <span style="pointer-events: none">BEST 해시태그</span>
                                         </button>
                                     </li>
                                 </ul>
