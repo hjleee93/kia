@@ -1,7 +1,7 @@
-import Vue, {PluginObject} from 'vue';
-import axios, {AxiosInstance} from "axios";
+import Vue, { PluginObject } from 'vue';
+import axios, { AxiosInstance } from "axios";
 import store from './../store';
-
+import 'es6-promise/auto'
 declare module 'vue/types/vue' {
     interface Vue {
         $axios: AxiosInstance,

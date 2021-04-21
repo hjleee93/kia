@@ -64,12 +64,8 @@ export default class GridItem extends Vue {
   mounted() {
     if (this.toot.content !== undefined) {
       this.tootContent = this.toot.content.replaceAll(
-        `${this.baseURL}tags`,
-        "#/mastodon/tags"
-      );
-      this.tootContent = this.tootContent.substring(
-        3,
-        this.tootContent.length - 4
+        `${this.baseURL}`,
+        "#/mastodon/"
       );
     }
     this.matchHeight();
