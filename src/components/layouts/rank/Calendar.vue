@@ -79,6 +79,7 @@
 import { Component, Prop, Vue } from "vue-property-decorator";
 import litepicker from "litepicker";
 import { dim, gnb, calendar, tab } from "@/scripts/ui_common";
+import { bus } from "@/main";
 
 @Component({ components: {} })
 export default class Calendar extends Vue {
@@ -192,10 +193,25 @@ export default class Calendar extends Vue {
         //캘린더 날짜
         this.startDate = calendar.getDate().start;
         this.endDate = calendar.getDate().end;
-        console.log(this.startDate, this.endDate);
+
+        bus.$emit("gte", this.getFormatDate(this.startDate));
+        this.$emit("gte", this.getFormatDate(this.startDate));
+        bus.$emit("lte", this.getFormatDate(this.endDate));
+        this.$emit("lte", this.getFormatDate(this.endDate));
     }
     calendarReset() {
         calendar.calendarReset();
+    }
+
+    getFormatDate(date: Date) {
+        let year = date.getFullYear();
+        let month = 1 + date.getMonth();
+        //@ts-ignore
+        month = month >= 10 ? month : "0" + month;
+        let day = date.getDate();
+        //@ts-ignore
+        day = day >= 10 ? day : "0" + day;
+        return year + "-" + month + "-" + day;
     }
 }
 </script>

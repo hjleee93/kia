@@ -192,6 +192,10 @@ export default class Login extends Vue {
     }
 
     async mounted() {
+        
+        if(localStorage.getItem('token')!==null){
+            localStorage.removeItem('token')
+        }
         this.$store.commit("currCategory", "Login");
         window.addEventListener("keydown", this.handleKeyDown);
     }

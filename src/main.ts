@@ -9,9 +9,7 @@ import axios from 'axios';
 import './plugin/axios';
 import './api/api';
 
-import VueCookies from 'vue-cookies'
-Vue.use(VueCookies)
-
+export const bus = new Vue();
 
 // import './quasar'
 import './scripts/ui_common.js'

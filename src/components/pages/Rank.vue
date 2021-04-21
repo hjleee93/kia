@@ -1,32 +1,5 @@
 <template>
     <div class="root">
-        <div>
-            <!-- <form @submit.prevent="send" @keydown.ctrl.enter.prevent="send">
-        <textarea placeholder="Toot something!" v-model="message"></textarea>
-        <div class="previews" v-if="uploads.length > 0">
-          <div v-for="image in uploads">
-            <img :src="image.preview_url" />
-            <button @click="unUpload(image)">Delete</button>
-          </div>
-        </div>
-        <div>
-          <label
-            title="Upload files"
-            class="fileSelect"
-            for="fileUploader"
-          /><button @click="send">Toot!</button>
-          <input
-            type="file"
-            multiple
-            id="fileUploader"
-            name="fileUploader"
-            @change="onSelectFile"
-            :disabled="uploads.length > 3"
-          />
-        </div>
-      </form> -->
-        </div>
-
         <div id="content" class="rank">
             <!--content(S)-->
             <div class="content">
@@ -77,7 +50,7 @@
                                 </ul>
                             </div>
                         </div>
-                        <Calendar />
+                        <Calendar @gte="getGte" @lte="getLte" />
                     </div>
                 </div>
                 <!--컨텐츠 영역-->
@@ -113,7 +86,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 
 import BestUser from "../layouts/rank/BestUser.vue";
 import Calendar from "../layouts/rank/Calendar.vue";
@@ -121,7 +94,7 @@ import BestHashtag from "../layouts/rank/BestHastag.vue";
 import { calendar, dim, gnb, tab } from "@/scripts/ui_common";
 
 import TootCard from "@/components/layouts/toot/TootCard.vue";
-
+import { bus } from "@/main";
 enum ETootLoadingState {
     none,
     loading,
@@ -132,15 +105,30 @@ enum ETootLoadingState {
 @Component({ components: { Calendar, BestUser, BestHashtag, TootCard } })
 export default class Rank extends Vue {
     private tootList: any[] = [];
-
     private limitCount: number = 10;
     private loadingState: ETootLoadingState = ETootLoadingState.none;
+    private gte!: string;
+    private lte: string = this.getFormatDate(new Date());
+    private offset = 20;
+    private limit = 20;
 
-    mounted() {
+    async mounted() {
         gnb.init();
-        this.loadToot();
+        this.$store.commit("currCategory", "Rank");
+        let today = new Date();
+        today.setDate(today.getDate() - 30);
+        this.gte = this.getFormatDate(today);
+        const result = await this.$api.getBestToot(
+            this.gte,
+            this.lte,
+            this.limit
+        );
+        this.tootList = result;
     }
-
+    beforeDestroy() {
+        bus.$off("gte");
+        bus.$off("lte");
+    }
     handleScroll(el: any) {
         if (
             el.target.offsetHeight + el.target.scrollTop >=
@@ -153,36 +141,50 @@ export default class Rank extends Vue {
         tab.click(event.target);
     }
 
+    @Watch("gte")
+    @Watch("lte")
     async loadToot() {
-        
-        if (
-            this.loadingState === ETootLoadingState.none ||
-            this.loadingState === ETootLoadingState.complete
-        ) {
-            let max_id = undefined;
-            if (this.tootList.length) {
-                max_id = this.tootList[this.tootList.length - 1].id;
-            }
-            this.loadingState = ETootLoadingState.loading;
+        try {
+            const result = await this.$api.getBestToot(
+                this.gte,
+                this.lte,
+                this.limit,
+                this.offset
+            );
 
-            const result = await this.$api.getToots(max_id, 15);
-
-            if (result.length < this.limitCount) {
-                this.loadingState = ETootLoadingState.end;
+            console.log("watch", this.gte, this.lte, result);
+            if (result.length < 10) {
+                this.offset += result.length;
             } else {
-                this.$nextTick(() => {
-                    this.$nextTick(() => {
-                        const el = document.documentElement;
-                        if (el.scrollHeight <= el.clientHeight) {
-                            this.loadingState = ETootLoadingState.complete;
-                        } else {
-                            this.loadingState = ETootLoadingState.complete;
-                        }
-                    });
-                });
+                this.offset += this.limit;
             }
             this.tootList.push(...result);
+        } catch (err) {
+            console.log(err);
         }
+    }
+
+    getFormatDate(date: Date) {
+        let year = date.getFullYear();
+        let month = 1 + date.getMonth();
+        //@ts-ignore
+        month = month >= 10 ? month : "0" + month;
+        let day = date.getDate();
+        //@ts-ignore
+        day = day >= 10 ? day : "0" + day;
+        return year + "-" + month + "-" + day;
+    }
+    getLte(e: any) {
+        this.offset = 0;
+        this.limit = 20;
+        this.tootList = [];
+        this.lte = e;
+    }
+    getGte(e: any) {
+        this.offset = 0;
+        this.limit = 20;
+        this.tootList = [];
+        this.gte = e;
     }
 }
 </script>

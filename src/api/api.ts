@@ -3,7 +3,7 @@ import axios, { AxiosInstance } from 'axios'
 import Vue, { PluginObject } from "vue";
 
 export default class Api {
-    
+
     async verifyApp() {
         const result = await Vue.$axios.post("api/v1/apps", {
             client_name: "KIA",
@@ -51,9 +51,9 @@ export default class Api {
 
     async getMediaTootsOnly(max_id?: number, limit?: number, option?: {}) {
         const result = await Vue.$axios({
-            method:'get',
-            url:'/api/v1/timelines/public',
-            params:{ only_media: true, limit, max_id, local: true }
+            method: 'get',
+            url: '/api/v1/timelines/public',
+            params: { only_media: true, limit, max_id, local: true }
 
         })
         return result.data;
@@ -71,8 +71,8 @@ export default class Api {
     }
     async deleteToot(tootId: number) {
         const result = await Vue.$axios({
-            method:'delete',
-            url:`/api/v1/statuses/${tootId}`
+            method: 'delete',
+            url: `/api/v1/statuses/${tootId}`
         })
 
         return result;
@@ -134,13 +134,54 @@ export default class Api {
         const result = await Vue.$axios
             ({
                 method: 'get',
-                url: '/api/v2/search/',
-                params: { q: searchInput, type: 'hashtags', offset: offset, limit: limit },
+                url: '/tags',
+                baseURL: 'http://apitoot.wbcard.org',
+                params: { limit: limit, offset: offset, tag: searchInput },
             })
 
-        return result.data.hashtags
+
+        return result.data
     }
 
+    async getBestHashtags(gte: string, lte: string, limit?: number, offset?: number) {
+
+        const result = await Vue.$axios
+            ({
+                method: 'get',
+                url: '/ranking/tags',
+                baseURL: 'http://apitoot.wbcard.org',
+                params: { gte: gte, lte: lte, limit: limit, offset: offset },
+            })
+        return result.data
+    }
+
+    async getBestUser(gte: string, lte: string, limit?: number, offset?: number) {
+
+        const result = await Vue.$axios
+            ({
+                method: 'get',
+                url: '/ranking/user',
+                baseURL: 'http://apitoot.wbcard.org',
+                params: { gte: gte, lte: lte, limit: limit, offset: offset },
+            })
+
+
+        return result.data
+    }
+
+    async getBestToot(gte: string, lte: string, limit?: number, offset?: number) {
+
+        const result = await Vue.$axios
+            ({
+                method: 'get',
+                url: '/ranking/toot',
+                baseURL: 'http://apitoot.wbcard.org',
+                params: { gte: gte, lte: lte, limit: limit, offset: offset },
+            })
+        console.log(result)
+
+        return result.data
+    }
 
 }
 

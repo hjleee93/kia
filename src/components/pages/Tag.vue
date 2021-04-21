@@ -166,6 +166,7 @@ export default class Tag extends Vue {
             this.offset = 0;
         }
         this.isSearch = true;
+
         const el = document.documentElement;
 
         try {

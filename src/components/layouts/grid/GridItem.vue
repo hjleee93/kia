@@ -5,7 +5,6 @@
                 <a href="#" class="btn btn-link">
                     <router-link :to="'/mastodon/web/statuses/' + toot.id">
                         <div class="box-img">
-                            
                             <template
                                 v-if="
                                     toot.media_attachments[0].type === 'video'
@@ -15,20 +14,18 @@
                             </template>
                             <template v-else>
                                 <img
-                                :class="toot.sensitive ? 'sensitive' : ''"
+                                    :class="toot.sensitive ? 'sensitive' : ''"
                                     :src="toot.media_attachments[0].preview_url"
                                     alt=""
                                     style="width: 100%"
                                 />
-                            
-                    </template>
+                            </template>
                         </div>
                     </router-link>
                     <div class="box-cont">
-                        <template v-if="height > 65">
-                            
+                        <template v-if="height > 40">
                             <p
-                                ref="txtBox"
+                                ref="txtBox1"
                                 class="txt content"
                                 v-html="tootContent"
                             ></p>
@@ -75,13 +72,13 @@ import Like from "./Like.vue";
 @Component({ components: { Like } })
 export default class GridItem extends Vue {
     @Prop() toot!: any;
+    
     private tootContent: string = "";
     private height: number = 0;
     private baseURL: string = process.env.VUE_APP_BASE_API!;
 
     mounted() {
         if (this.toot.content !== undefined) {
-            
             this.tootContent = this.toot.content.replaceAll(
                 `${this.baseURL}tags`,
                 "#/mastodon/tags"
@@ -91,12 +88,15 @@ export default class GridItem extends Vue {
     }
 
     matchHeight() {
+        //@ts-ignore
         if (this.$refs.txtBox !== undefined) {
             //@ts-ignore
             this.height = this.$refs.txtBox.clientHeight;
+            console.log(this.height)
+            
+           
         }
     }
-
 }
 </script>
 
@@ -116,13 +116,11 @@ export default class GridItem extends Vue {
 .txt.more {
     float: right;
 }
-.sensitive{
+.sensitive {
     filter: blur(1.5em);
 }
-@media (min-width: 320px) and (max-width: 1023px)
-{
-
-    #header+#container #content .content {
+@media (min-width: 320px) and (max-width: 1023px) {
+    #header + #container #content .content {
         padding-bottom: 0px;
     }
 }

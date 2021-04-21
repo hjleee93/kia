@@ -14,53 +14,43 @@
                         <span class="toot">486 툿</span>
                       </li>
                       -->
-                <li v-for="userinfo in userList" :key="userinfo.userNumber">
-                    <template v-if="userinfo.userNumber === 1">
-                        <span class="number gold">{{
-                            userinfo.userNumber
-                        }}</span>
+
+                <li v-for="(userinfo, idx) in userList" :key="idx">
+                    <template v-if="idx === 0">
+                        <span class="number gold">{{ idx + 1 }}</span>
                     </template>
-                    <template v-else-if="userinfo.userNumber === 2">
-                        <span class="number silver">{{
-                            userinfo.userNumber
-                        }}</span>
+                    <template v-else-if="idx === 1">
+                        <span class="number silver">{{ idx + 1 }}</span>
                     </template>
-                    <template v-else-if="userinfo.userNumber === 3">
-                        <span class="number bronze">{{
-                            userinfo.userNumber
-                        }}</span>
+                    <template v-else-if="idx === 2">
+                        <span class="number bronze">{{ idx + 1 }}</span>
                     </template>
 
                     <template v-else>
-                        <span class="number">{{ userinfo.userNumber }}</span>
+                        <span class="number">{{ idx + 1 }}</span>
                     </template>
 
-                    <template v-if="userinfo.userImg !== ''">
+                    <template
+                        v-if="idx + 1 === 1 || idx + 1 === 2 || idx + 1 === 3"
+                    >
                         <i class="icon icon-user"
-                            ><img :src="userinfo.userImg" alt=""
+                            ><img :src="userinfo.account.avatar" alt=""
                         /></i>
                     </template>
-                    <span class="username">{{ userinfo.userName }}</span>
+                    <span class="username">{{ userinfo.account.acct }}</span>
                     <template
-                        v-if="
-                            userinfo.userNumber === 1 ||
-                            userinfo.userNumber === 2 ||
-                            userinfo.userNumber === 3
-                        "
+                        v-if="idx + 1 === 1 || idx + 1 === 2 || idx + 1 === 3"
                     >
                         <span class="m-toot"
-                            >작성한 툿 :
-                            {{ userinfo.tootCnt.toLocaleString() }}</span
+                            >작성한 툿 : {{ userinfo.count }}</span
                         ><!--mobile 전용-->
                     </template>
                     <template v-else>
-                        <span class="m-toot"
-                            >{{ userinfo.tootCnt.toLocaleString() }} 툿</span
+                        <span class="m-toot">{{ userinfo.count }} 툿</span
                         ><!--mobile 전용-->
                     </template>
 
-                    <span class="toot"
-                        >{{ userinfo.tootCnt.toLocaleString() }} 툿</span
+                    <span class="toot">{{ userinfo.count }} 툿</span
                     ><!--desktop 전용-->
                 </li>
             </ol>
@@ -71,77 +61,52 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
+import { bus } from "@/main";
 
 @Component({ components: {} })
 export default class BestUser extends Vue {
     private userList: any[] = [];
+    private gte!: string;
+    private lte: string = this.getFormatDate(new Date());
+
     async mounted() {
+        let today = new Date();
+        today.setDate(today.getDate() - 30);
+        this.gte = this.getFormatDate(today);
+        const result = await this.$api.getBestUser(this.gte, this.lte, 10);
+        this.userList = result;
+
         this.getBestUsers();
     }
+      beforeDestroy() {
+        bus.$off("gte");
+        bus.$off("lte");
+    }
     async getBestUsers() {
-        let result: any[] = [
-            {
-                userNumber: 1,
-                userName: "user1",
-                userImg: "images/@temp/@temp_rank2.jpg",
-                tootCnt: 486,
-            },
-            {
-                userNumber: 2,
-                userName: "user name 2",
-                userImg: "images/@temp/@temp_rank2.jpg",
-                tootCnt: 486,
-            },
-            {
-                userNumber: 3,
-                userName: "user name 3",
-                userImg: "images/@temp/@temp_rank2.jpg",
-                tootCnt: 486,
-            },
-            {
-                userNumber: 4,
-                userName: "user name 4",
-                userImg: "",
-                tootCnt: 1990,
-            },
-            {
-                userNumber: 5,
-                userName: "user name 5",
-                userImg: "",
-                tootCnt: 0,
-            },
-            {
-                userNumber: 6,
-                userName: "user name 6",
-                userImg: "",
-                tootCnt: 0,
-            },
-            {
-                userNumber: 7,
-                userName: "user name 7",
-                userImg: "",
-                tootCnt: 0,
-            },
-            {
-                userNumber: 8,
-                userName: "user name 8",
-                userImg: "",
-                tootCnt: 0,
-            },
-            {
-                userNumber: 9,
-                userName: "user name 9",
-                userImg: "",
-                tootCnt: 0,
-            },
-            {
-                userNumber: 10,
-                userName: "user name 10",
-                userImg: "",
-                tootCnt: 0,
-            },
-        ];
-        this.userList = result;
+        bus.$on("gte", (gte: string) => {
+            this.gte = gte;
+            bus.$on("lte", async (lte: string) => {
+                this.lte = lte;
+
+                const result = await this.$api.getBestUser(
+                    this.gte,
+                    this.lte,
+                    10
+                );
+                this.userList = result;
+            });
+        });
+    }
+
+    getFormatDate(date: Date) {
+        let year = date.getFullYear();
+        let month = 1 + date.getMonth();
+        //@ts-ignore
+        month = month >= 10 ? month : "0" + month;
+        let day = date.getDate();
+        //@ts-ignore
+        day = day >= 10 ? day : "0" + day;
+        return year + "-" + month + "-" + day;
     }
 }
 </script>
