@@ -11,7 +11,7 @@
                     </i>
                 </a>
                 <div class="box-txt">
-                    <strong class="username"> 유저이름 </strong>
+                    <strong class="username"> {{ toot.account.username }} </strong>
                     <span class="date"
                         >{{ toot.created_at.split("-")[1] }}월
                         {{
@@ -61,7 +61,7 @@
                     toot.stat.favourites_count
                 }}</strong>
             </div>
-            <!-- <div v-if="toot.media_attachments && toot.media_attachments.length" class="box-img">
+            <div v-if="toot.media_attachments && toot.media_attachments.length" class="box-img">
                 <img
                     v-if="toot.media_attachments[0].type === 'image'"
                     :src="toot.media_attachments[0].preview_url"
@@ -73,7 +73,7 @@
                 >
 
                 </video>
-            </div> -->
+            </div>
         </div>
     </div>
 </template>
