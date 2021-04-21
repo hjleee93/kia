@@ -144,7 +144,7 @@ if (!Array.prototype.find) {
 
 
 var Gnb = function Gnb() {
-    
+
     var t = 0; //현재 scroll값
 
     var dir = 0; //-1 => 스크롤 위 1 => 스크롤 아래
@@ -171,7 +171,7 @@ var Gnb = function Gnb() {
         domWrapFixed = document.querySelector(".wrap-fixed");
         domSecFixed = domWrapFixed && domWrapFixed.querySelector(".sec-fixed");
         domBoxLayer = domWrapFixed && domWrapFixed.querySelector(".box-layer");
-
+        console.log(domSecFixed)
         if (domWrapFixed) {
             domWrapFixed.style.height = "".concat(getSecFixedRect().height, "px");
         }
@@ -182,20 +182,20 @@ var Gnb = function Gnb() {
 
     window.addEventListener("resize", function () {
         var _flag = false; //PC
+        if (domSecFixed !== null) {
+            if (device === "mo" && isDesktop()) {
+                var _t = document.querySelector("html").scrollTop; //gnb
 
-        if (device === "mo" && isDesktop()) {
-            var _t = document.querySelector("html").scrollTop; //gnb
+                domSecFixed.style.top = "".concat(Math.max(44 - _t, 0), "px");
+                _flag = true;
+            } //MOBILE
+            else if (device === "pc" && isMobile()) {
+                //gnb
+                domSecFixed.style.top = 0;
+                _flag = true;
+            } //Common
 
-            domSecFixed.style.top = "".concat(Math.max(44 - _t, 0), "px");
-            _flag = true;
-        } //MOBILE
-        else if (device === "pc" && isMobile()) {
-            //gnb
-            domSecFixed.style.top = 0;
-            _flag = true;
-        } //Common
-
-
+        }
         if (_flag) {
             var _search$getDom = search.getDom(),
                 searchWrap = _search$getDom.wrap;
@@ -297,8 +297,10 @@ var Gnb = function Gnb() {
         if (search.info.hasOwnProperty("flag")) {
             if (!search.info.flag) return false;
         }
+        if (document.querySelector(".content") !== null) {
 
-        var height = document.querySelector(".content").offsetHeight - 20;
+            var height = document.querySelector(".content").offsetHeight - 20;
+        }
         var endPointT = Math.max(height - window.innerHeight, 0);
 
         var _t = Math.floor(document.querySelector("html").scrollTop);
@@ -314,22 +316,25 @@ var Gnb = function Gnb() {
 
         if (isDesktop()) {
             // domSecFixed.style.top = `${Math.max(44 - _t, 0)}px`;
-            domSecFixed.style.top = "44px";
-
-            if (_t <= 44 + (getSecFixedRect().height || 0)) {
-                domHeaderFixed.classList.remove("close");
-                domHeaderFixed.classList.add("open");
-                domSecFixed.classList.remove("close");
-                domSecFixed.classList.add("open");
-                return false;
+            if (domSecFixed !== null) {
+                domSecFixed.style.top = "44px";
             }
-        } else if (isMobile()) {
-            if (_t < getSecFixedRect().height || 0) {
-                domHeaderFixed.classList.remove("close");
-                domHeaderFixed.classList.add("open");
-                domSecFixed.classList.remove("close");
-                domSecFixed.classList.add("open");
-                return false;
+            if (domHeaderFixed !== null && domSecFixed !== null) {
+                if (_t <= 44 + (getSecFixedRect().height || 0)) {
+                    domHeaderFixed.classList.remove("close");
+                    domHeaderFixed.classList.add("open");
+                    domSecFixed.classList.remove("close");
+                    domSecFixed.classList.add("open");
+                    return false;
+                }
+            } else if (isMobile()) {
+                if (_t < getSecFixedRect().height || 0) {
+                    domHeaderFixed.classList.remove("close");
+                    domHeaderFixed.classList.add("open");
+                    domSecFixed.classList.remove("close");
+                    domSecFixed.classList.add("open");
+                    return false;
+                }
             }
         }
         /*MOBILE 위 아래 튕김 현상*/
@@ -344,16 +349,16 @@ var Gnb = function Gnb() {
             flagEventScroll = true;
         } else if (flagEventScroll && eventY - eventExecuteY > _t) {
             //위로
-            if(domHeaderFixed !== null && !domSecFixed !== null){
-            domHeaderFixed.classList.remove("close");
-            domHeaderFixed.classList.add("open");
-            domSecFixed.classList.remove("close");
-            domSecFixed.classList.add("open");
-            flagEventScroll = false;
+            if (domHeaderFixed !== null && !domSecFixed !== null) {
+                domHeaderFixed.classList.remove("close");
+                domHeaderFixed.classList.add("open");
+                domSecFixed.classList.remove("close");
+                domSecFixed.classList.add("open");
+                flagEventScroll = false;
             }
         } else if (flagEventScroll && eventY + eventExecuteY < _t) {
             //아래로
-            if(domHeaderFixed !== null && !domSecFixed !== null){
+            if (domHeaderFixed !== null && !domSecFixed !== null) {
                 domHeaderFixed.classList.remove("open");
                 domHeaderFixed.classList.add("close");
                 domSecFixed.classList.remove("open");
@@ -361,7 +366,7 @@ var Gnb = function Gnb() {
                 dropDownOpenCheck();
                 flagEventScroll = false;
             }
-            
+
         }
 
         t = _t;
@@ -387,7 +392,7 @@ var Gnb = function Gnb() {
 
 
 var getDevice = function getDevice() {
-    return window.outerWidth  >= 1024 ? "pc" : "mo";
+    return window.outerWidth >= 1024 ? "pc" : "mo";
 };
 
 var isDesktop = function isDesktop() {
@@ -726,7 +731,8 @@ var DropDown2 = function DropDown2(wrap) {
         var lists = document.querySelector("#boxHashDropdownList .lists2").cloneNode(true);
 
         if (wrap === ".box-hash-dropdown") {
-            document.querySelector("#boxHashDropdownList").remove();        }
+            document.querySelector("#boxHashDropdownList").remove();
+        }
 
         domWrap.append(lists);
         domWrap.querySelector(".lists2").style.display = "none";
@@ -863,9 +869,9 @@ var Search = function Search() {
     };
 
     var listsOpen = function listsOpen() {
-        
+
         //검색 한 번 하고 다시 검색하는 경우
-        if(domSearchHistory !== null){       
+        if (domSearchHistory !== null) {
             if (domWrap && domSearchHistory.style.display !== "block") {
                 var val = domInp.value;
                 info.flag = false;
@@ -887,7 +893,7 @@ var Search = function Search() {
                     info.flag = true;
                 }, 300);
             }
-        }else{
+        } else {
             dim.open()
         }
     };
@@ -928,11 +934,11 @@ var Search = function Search() {
     var historyListsClose = function historyListsClose() {
         if (domWrap) {
             //최근검색어 클릭한 경우 
-            if(document.querySelector(".search-history-lists") !== null){            
+            if (document.querySelector(".search-history-lists") !== null) {
                 document.querySelector(".search-history-lists").removeEventListener("scroll", domInpBlur);
                 domSearchHistory.style.display = "none";
                 dim.close();
-            }else{
+            } else {
                 document.querySelector(".sec-category").style.display = "none";
                 document.querySelector(".wrap-fixed").style.height = "".concat(getSecFixedRect().height || 0, "px");
                 setTimeout(function () {
@@ -958,7 +964,7 @@ var Search = function Search() {
 
     var inpFocus = function inpFocus() {
         init();
-        console.log("domWrap",domWrap)
+        console.log("domWrap", domWrap)
         if (domWrap) {
             listsOpen();
         }
@@ -1321,7 +1327,7 @@ var LayerPop = function LayerPop() {
     var domWrapDepth2 = null;
     var openCallback = null;
 
-    var init = function init( callback ) {
+    var init = function init(callback) {
         domWrap = document.querySelector("#layer");
         domWrapDepth2 = domWrap.querySelector(".layer-depth2");
         openCallback = callback;
@@ -1451,7 +1457,7 @@ function Isotope2() {
 
         document.querySelector(
             ".sec-grid")
-    .style.display = "none";
+            .style.display = "none";
 
         setTimeout(function () {
             document.querySelector(
