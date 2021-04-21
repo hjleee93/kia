@@ -61,9 +61,11 @@ export default class App extends Vue {
             switch (url.pathname) {
                 case "/about":
                     this.$router.push("/").catch(() => {});
+                    break;
                 case "/auth/sign_in":
                     localStorage.removeItem("token");
                     this.$router.push("/login").catch(() => {});
+                    break;
             }
         }
     }
