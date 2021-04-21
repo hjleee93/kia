@@ -28,9 +28,9 @@
                         v-html="toot.text"
                     ></p>
 
-                    <p >
+                    <p  class="txt more" >
                         <router-link :to="'/mastodon/web/statuses/' + toot.id" >
-                            <span class="txt more">더보기</span></router-link
+                            <span class="txt more" >더보기</span></router-link
                         >
                     </p>
                 </template>
@@ -49,12 +49,14 @@
                 <!--          </a>-->
                 <!--        </p>-->
             </div>
+            <p class="hash-lists">
             <router-link
+            
                 v-for="i in this.tag"
                 :key="i"
                 :to="`mastodon/tags/${i}`"
                 ><span class="tag">#{{ i }}</span></router-link
-            >
+            ></p>
             <div class="box-like">
                 <i class="icon icon-like"></i>
                 <strong class="like-num">{{
@@ -139,10 +141,23 @@ export default class TootCard extends Vue {
 }
 .txt.more {
     font-size: 12px;
+    text-align: right;
     color: #838d97;
 }
 .tag {
     font-size: 12px;
     color: #838d97;
 }
+@media (min-width: 1024px){
+.hash-lists {
+    margin-top: 6px;
+}
+}
+
+@media (min-width: 320px) and (max-width: 1023px){
+.hash-lists {
+    margin-top: 8px;
+}
+}
+
 </style>
