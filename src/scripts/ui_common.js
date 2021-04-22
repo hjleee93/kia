@@ -1143,7 +1143,6 @@ var Tab = function Tab() {
         if (self.classList.contains("active")) {
             return false;
         }
-
         domBtnLists.find(function (btn) {
             return btn.classList.contains("active") && btn.classList.remove("active");
         });

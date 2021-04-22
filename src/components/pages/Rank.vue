@@ -26,7 +26,7 @@
                       class="btn btn-tab active"
                       @click="onClickTab"
                     >
-                      <span>인기 툿</span>
+                      인기 툿
                     </button>
                   </li>
                   <li>
@@ -35,7 +35,7 @@
                       class="btn btn-tab"
                       @click="onClickTab"
                     >
-                      <span>BEST 사용자</span>
+                      BEST 사용자
                     </button>
                   </li>
                   <li>
@@ -44,7 +44,7 @@
                       class="btn btn-tab"
                       @click="onClickTab"
                     >
-                      <span>BEST 해시태그</span>
+                      BEST 해시태그
                     </button>
                   </li>
                 </ul>
@@ -130,6 +130,7 @@ export default class Rank extends Vue {
     }
   }
   onClickTab(event: Event) {
+    console.log(event.target);
     tab.click(event.target);
   }
 
