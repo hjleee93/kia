@@ -7,7 +7,10 @@ module.exports = {
   },
   transpileDependencies: [
     'quasar'
-  ],  
+  ],
+  configureWebpack: {
+    entry: ["babel-polyfill", "./src/main.ts"]
+  },
   publicPath: './',
   productionSourceMap: false
 }

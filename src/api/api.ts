@@ -178,7 +178,6 @@ export default class Api {
                 baseURL: 'http://apitoot.wbcard.org',
                 params: { gte: gte, lte: lte, limit: limit, offset: offset },
             })
-        console.log(result)
 
         return result.data
     }

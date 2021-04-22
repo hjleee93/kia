@@ -8,6 +8,9 @@ import './scripts/masonry-horizontal.js';
 import axios from 'axios';
 import './plugin/axios';
 import './api/api';
+import 'promise-polyfill/src/polyfill';
+import 'es6-promise/auto'
+import 'babel-polyfill'
 
 export const bus = new Vue();
 
