@@ -146,7 +146,7 @@ export default class Api {
     }
 
     async searchMedia(username?: string, max_id?: string, limit?: number, tag?: string, text?: string, order?: string, postring?: boolean) {
-        console.log('searchMedia', limit)
+
         const result = await Vue.$axios
             ({
                 method: 'get',
@@ -155,12 +155,10 @@ export default class Api {
                 params: { limit: limit, max_id: max_id, tag: tag, username: username },
             })
 
-        console.log('result', result)
 
         return result.data
     }
     async searchMediaContents(text?: string, max_id?: string, limit?: number, tag?: string, order?: string, posting?: boolean) {
-        console.log('searchMedia', limit)
         const result = await Vue.$axios
             ({
                 method: 'get',
@@ -169,7 +167,6 @@ export default class Api {
                 params: { limit: limit, max_id: max_id, tag: tag, text: text },
             })
 
-        console.log('result', result)
 
         return result.data
     }
@@ -183,7 +180,6 @@ export default class Api {
                 params: { limit: limit, max_id: max_id, tag: tag },
             })
 
-        console.log('result', result)
 
         return result.data
     }

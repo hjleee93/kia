@@ -27,7 +27,7 @@ export default class App extends Vue {
                 this.$router.push('/login').catch(() => {});
             }
         } catch (err) {
-            console.log("???",err);
+            console.log(err);
         }
     }
 }

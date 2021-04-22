@@ -142,7 +142,6 @@ export default class Rank extends Vue {
         this.limit,
         this.offset
       );
-      console.log(result);
       if (result.length < 10) {
         this.offset += result.length;
       } else {
@@ -166,7 +165,6 @@ export default class Rank extends Vue {
     return year + "-" + month + "-" + day;
   }
   getLte(e: any) {
-    console.log("1", e);
     this.offset = 0;
     this.limit = 20;
     this.tootList = [];

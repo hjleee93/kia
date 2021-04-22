@@ -309,7 +309,6 @@ export default class SearchBar extends Vue {
                     result = await this.$api.searchMedia(this.searchInput);
                 } else if (this.searchType === "contents") {
                     this.$store.commit("searchType", this.searchType);
-                    console.log("내용검색");
                     result = await this.$api.searchMediaContents(this.searchInput);
                     
                 }

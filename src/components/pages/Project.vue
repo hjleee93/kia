@@ -130,7 +130,7 @@ export default class Project extends Vue {
     }
 
     sortOrder(value: string) {
-        console.log("value", value);
+        // console.log("value", value);
     }
 }
 </script>

@@ -73,7 +73,6 @@ export default class Hive extends Vue {
             // if (this.$store.getters.searchType === "user") {
                 const result = await this.$store.getters.searchResult;
                 this.allResult = result;
-                console.log(' this.allResult', this.allResult)
         //     } else {
         //         const result = await this.$api.getMediaTootsOnly();
         //         this.allResult = result;
@@ -135,7 +134,6 @@ export default class Hive extends Vue {
                         const el = document.documentElement;
                         if (el.scrollHeight <= el.clientHeight) {
                             this.loadingState = ETootLoadingState.complete;
-                            console.log("???", result.length, this.limitCount);
                             this.loadToot();
                         } else {
                             this.loadingState = ETootLoadingState.complete;

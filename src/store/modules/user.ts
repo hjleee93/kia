@@ -34,7 +34,6 @@ export default {
         },
         //@ts-ignore
         logout({ commit }) {
-            console.log('로그아웃')
             localStorage.removeItem("token");
             commit('userToken', null)
             commit("currentUser", null);

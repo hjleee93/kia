@@ -82,7 +82,6 @@ export default class Grid extends Vue {
     @Watch("allResult")
     changeResult() {
         
-           console.log('this.allResul',this.allResult)
             this.allToots = this.allResult;
             
         

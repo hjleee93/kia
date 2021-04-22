@@ -220,11 +220,20 @@ export default class Login extends Vue {
             this.$store.commit("userToken", result.data.access_token);
             await this.updateCurrentUser(result.data.access_token);
 
+            await new Promise<void>((resolve) => {
+                const onMessage = (e: MessageEvent) => {
+                    const data = e.data || {};
+                    if (data.type === "loadedPage") {
+                        window.removeEventListener("message", onMessage);
+                        resolve();
+                    }
+                };
+                window.addEventListener("message", onMessage);
+            });
             if (
                 (this.$refs.iframe as HTMLIFrameElement).src ===
                 this.baseURL + "about"
             ) {
-                console.log("1");
                 (this.$refs
                     .iframe as HTMLIFrameElement)?.contentWindow?.postMessage(
                     {
@@ -237,9 +246,8 @@ export default class Login extends Vue {
                 this.$router.push("/hive").catch(() => {});
             } else if (
                 (this.$refs.iframe as HTMLIFrameElement).src ===
-                this.baseURL + "auth/sign_in"
+                this.baseURL + "login"
             ) {
-                console.log("2");
                 (this.$refs
                     .iframe as HTMLIFrameElement)?.contentWindow?.postMessage(
                     {
@@ -249,18 +257,9 @@ export default class Login extends Vue {
                     },
                     "*"
                 );
-                this.$router.push("/hive").catch(() => {});
+                 this.$router.push("/hive").catch(() => {});
             }
-            await new Promise<void>((resolve) => {
-                const onMessage = (e: MessageEvent) => {
-                    const data = e.data || {};
-                    if (data.type === "loadedPage") {
-                        window.removeEventListener("message", onMessage);
-                        resolve();
-                    }
-                };
-                window.addEventListener("message", onMessage);
-            });
+           
         } catch (err) {
             console.log(err);
             this.error();

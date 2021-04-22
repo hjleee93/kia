@@ -135,7 +135,7 @@ export default class Exhibition extends Vue {
     }
 
     sortOrder(value: string) {
-        console.log("value", value);
+    //     console.log("value", value);
     }
 }
 </script>
