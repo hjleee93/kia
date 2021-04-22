@@ -892,9 +892,8 @@ var Search = function Search() {
                     info.flag = true;
                 }, 300);
             }
-        } else {
-            dim.open()
         }
+
     };
 
     var listsClose = function listsClose() {
