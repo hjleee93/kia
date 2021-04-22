@@ -49,8 +49,6 @@ export default class Grid extends Vue {
   @Prop() tagSearch!: any;
   @Prop() allResult!: any;
 
-  private end = 20;
-  private start = 0;
   private active: boolean = false;
   private idx: number = 20;
   private device: string = "";
@@ -127,15 +125,14 @@ export default class Grid extends Vue {
     };
   }
 
-  // @Watch("$store.getters.searchResult")
-  // searchResult() {
-  //     this.init();
-  //     this.allToots = this.$store.getters.searchResult;
-  //     console.log('finalS')
-  // }
-  // init() {
-  //     this.allToots = [];
-  // }
+  @Watch("$store.getters.searchResult")
+  searchResult() {
+    this.init();
+    this.allToots = this.$store.getters.searchResult;
+  }
+  init() {
+    this.allToots = [];
+  }
 }
 </script>
 

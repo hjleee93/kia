@@ -4,7 +4,7 @@ export default {
         tootCnt: 0,
         searchType: undefined,
         searchInput: undefined,
-
+        sortOrder: 'recent',
     },
     getters: {
         searchResult(state: any) {
@@ -17,9 +17,12 @@ export default {
         searchType(state: any) {
             return state.searchType;
         },
-        
+
         searchInput(state: any) {
             return state.searchInput;
+        },
+        sortOrder(state: any) {
+            return state.sortOrder;
         },
 
     },
@@ -36,6 +39,17 @@ export default {
         searchInput(state: any, payload: any) {
             state.searchInput = payload;
         },
+        sortOrder(state: any, payload: any) {
+            state.sortOrder = payload;
+        },
+
     },
-    actions: {},
+    actions: {
+        //@ts-ignore
+        resetSearchInfo({ commit }) {
+            commit('searchInput', '')
+            commit('searchType', 'contents')
+            commit('sortOrder', 'recent')
+        }
+    },
 }

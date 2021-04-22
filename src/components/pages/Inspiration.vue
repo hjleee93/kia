@@ -58,30 +58,23 @@ export default class Inspiration extends Vue {
   }
 
   mounted() {
+    this.$store.dispatch("resetSearchInfo");
     this.$store.commit("currCategory", "Inspiration");
     this.loadToot();
     window.addEventListener("scroll", this.scrollHandler);
   }
-
+  beforeCreate() {
+    this.$store.commit("searchInput", "");
+  }
   beforeDestroy() {
     window.removeEventListener("scroll", this.scrollHandler);
   }
-  @Watch("$store.getters.searchResult")
-  async getGridItem() {
-    //미디어 태그 분류
-    let mediaTag: any[] = [];
-    try {
-      const result = await this.$api.searchMediaTag(this.category);
 
-      for (const i in result.data) {
-        if (result.data[i].media_attachments.length > 0) {
-          mediaTag.push(result.data[i]);
-        }
-      }
-      this.tagSearch = mediaTag;
-    } catch (err) {
-      console.log(err);
-    }
+  @Watch("$store.getters.searchInput")
+  init() {
+    console.log("-------------------------");
+    this.loadingState = ETootLoadingState.none;
+    this.tagSearch = [];
   }
 
   scrollHandler() {
@@ -93,7 +86,17 @@ export default class Inspiration extends Vue {
     }
   }
 
+  @Watch("$store.getters.searchInput")
   async loadToot() {
+    let searchType = "contents";
+    let searchInput = "";
+    if (this.$store.getters.searchType !== undefined) {
+      searchType = this.$store.getters.searchType;
+    }
+
+    if (this.$store.getters.searchInput !== undefined) {
+      searchInput = this.$store.getters.searchInput;
+    }
     let result: any[] = [];
     let tag = this.$store.getters.currCategory.toLowerCase();
     if (
@@ -107,15 +110,53 @@ export default class Inspiration extends Vue {
       }
       this.loadingState = ETootLoadingState.loading;
 
-      if (this.recentOrder === true) {
-        result = await this.$api.searchMediaTag(tag, max_id, this.limitCount);
-      } else if (this.recentOrder === false) {
-        result = await this.$api.searchMediaTag(
-          tag,
-          max_id,
-          this.limitCount,
-          "f"
-        );
+      if (searchType === "user") {
+        if (this.recentOrder === true) {
+          result = await this.$api.searchMediaTag(
+            tag,
+            max_id,
+            this.limitCount,
+            "",
+            "",
+            searchInput
+          );
+          console.log("user", result);
+        } else {
+          result = await this.$api.searchMediaTag(
+            tag,
+            max_id,
+            this.limitCount,
+            "f",
+            "",
+            searchInput
+          );
+        }
+      } else if (searchType === "contents") {
+        console.log("here1", this.tagSearch);
+        if (this.recentOrder === true) {
+          if (searchInput.length === 0) {
+            result = await this.$api.searchMediaTag(
+              tag,
+              max_id,
+              this.limitCount
+            );
+          } else {
+            result = await this.$api.searchMediaTag(
+              tag,
+              max_id,
+              this.limitCount,
+              "f",
+              searchInput
+            );
+          }
+        } else {
+          result = await this.$api.searchMediaTag(
+            tag,
+            max_id,
+            this.limitCount,
+            "f"
+          );
+        }
       }
 
       if (result.length < this.limitCount) {
@@ -126,6 +167,7 @@ export default class Inspiration extends Vue {
             const el = document.documentElement;
             if (el.scrollHeight <= el.clientHeight) {
               this.loadingState = ETootLoadingState.complete;
+
               this.loadToot();
             } else {
               this.loadingState = ETootLoadingState.complete;
@@ -138,9 +180,9 @@ export default class Inspiration extends Vue {
     }
   }
 
+  @Watch("$store.getters.sortOrder")
   sortOrder(value: string) {
     if (value === "popular") {
-      console.log(value);
       this.recentOrder = false;
       this.init();
       this.loadToot();
@@ -149,11 +191,6 @@ export default class Inspiration extends Vue {
       this.init();
       this.loadToot();
     }
-  }
-
-  init() {
-    this.loadingState = ETootLoadingState.none;
-    this.tagSearch = [];
   }
 }
 </script>

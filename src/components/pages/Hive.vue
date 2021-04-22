@@ -57,30 +57,24 @@ export default class Hive extends Vue {
   }
 
   async mounted() {
+    console.log(this.$store.getters.searchInput);
     this.$store.commit("currCategory", "Hive");
     this.loadToot();
 
     window.addEventListener("scroll", this.scrollHandler);
   }
-
+  beforeCreate() {
+    this.$store.commit("searchInput", "");
+  }
   beforeDestroy() {
     window.removeEventListener("scroll", this.scrollHandler);
   }
 
-  @Watch("$store.getters.searchResult")
-  async getGridItem() {
-    // try {
-    // if (this.$store.getters.searchType === "user") {
-    const result = await this.$store.getters.searchResult;
-    this.allResult = result;
-    //     } else {
-    //         const result = await this.$api.getMediaTootsOnly();
-    //         this.allResult = result;
-    //         console.log(' this.allResult', this.allResult)
-    //     }
-    // } catch (err) {
-    //     console.log(err);
-    // }
+  @Watch("$store.getters.searchType")
+  @Watch("$store.getters.searchInput")
+  init() {
+    this.loadingState = ETootLoadingState.none;
+    this.allResult = [];
   }
 
   scrollHandler() {
@@ -92,7 +86,20 @@ export default class Hive extends Vue {
     }
   }
 
+  @Watch("$store.getters.searchType")
+  @Watch("$store.getters.searchInput")
   async loadToot() {
+    let searchType = "contents";
+    let searchInput = "";
+    if (this.$store.getters.searchType !== undefined) {
+      searchType = this.$store.getters.searchType;
+    }
+
+    if (this.$store.getters.searchInput !== undefined) {
+      searchInput = this.$store.getters.searchInput;
+    }
+    console.log(this.allResult, searchType);
+
     let result: any[] = [];
     if (
       this.loadingState === ETootLoadingState.none ||
@@ -105,13 +112,46 @@ export default class Hive extends Vue {
       }
       this.loadingState = ETootLoadingState.loading;
 
-      if (this.recentOrder === true) {
-        result = await this.$api.getMediaTootsOnly(max_id, this.limitCount);
-      } else if (this.recentOrder === false) {
-        result = await this.$api.orderMedia("f", max_id, this.limitCount);
+      if (searchType === "user") {
+        if (this.recentOrder === true) {
+          console.log("recentOrder");
+          result = await this.$api.searchMedia(
+            searchInput,
+            max_id,
+            this.limitCount
+          );
+        } else {
+          console.log("recentOrderx");
+          result = await this.$api.searchMedia(
+            searchInput,
+            max_id,
+            this.limitCount,
+            "",
+            "f"
+          );
+        }
+      } else if (searchType === "contents") {
+        console.log("here");
+        if (this.recentOrder === true) {
+          if (searchInput.length === 0) {
+            result = await this.$api.getMediaTootsOnly(max_id, this.limitCount);
+          } else {
+            result = await this.$api.searchMediaContents(
+              searchInput,
+              max_id,
+              this.limitCount
+            );
+          }
+        } else {
+          result = await this.$api.searchMediaContents(
+            searchInput,
+            max_id,
+            this.limitCount,
+            "f"
+          );
+        }
       }
 
-      //   console.log(result.length, this.limitCount);
       if (result.length < this.limitCount) {
         this.loadingState = ETootLoadingState.end;
       } else {
@@ -132,7 +172,9 @@ export default class Hive extends Vue {
     }
   }
 
+  @Watch("$store.getters.sortOrder")
   async sortOrder(value: string) {
+    console.log(value);
     if (value === "popular") {
       this.recentOrder = false;
       this.init();
@@ -142,11 +184,6 @@ export default class Hive extends Vue {
       this.init();
       this.loadToot();
     }
-  }
-
-  init() {
-    this.loadingState = ETootLoadingState.none;
-    this.allResult = [];
   }
 }
 </script>

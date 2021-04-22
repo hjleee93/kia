@@ -158,20 +158,20 @@ export default class Api {
 
         return result.data
     }
-    async orderMedia(order?: string, max_id?: string, limit?: number, tag?: string, posting?: boolean) {
+    async orderMedia(order?: string, max_id?: string, limit?: number, posting?: boolean, tag?: string) {
 
         const result = await Vue.$axios
             ({
                 method: 'get',
                 url: '/search/media',
                 baseURL: 'http://apitoot.wbcard.org',
-                params: { order: order, limit: limit, max_id: max_id, tag: tag },
+                params: { order: order, limit: limit, max_id: max_id, tag: tag, posting: posting },
             })
 
 
         return result.data
     }
-    async searchMediaContents(text?: string, max_id?: string, limit?: number, tag?: string, order?: string, posting?: boolean) {
+    async searchMediaContents(text?: string, max_id?: string, limit?: number, order?: string, tag?: string, posting?: boolean) {
         const result = await Vue.$axios
             ({
                 method: 'get',
@@ -184,13 +184,13 @@ export default class Api {
         return result.data
     }
 
-    async searchMediaTag(tag?: string, max_id?: string, limit?: number, order?: string, posting?: boolean) {
+    async searchMediaTag(tag?: string, max_id?: string, limit?: number, order?: string, text?: string, username?: string, posting?: boolean) {
         const result = await Vue.$axios
             ({
                 method: 'get',
                 url: '/search/media',
                 baseURL: 'http://apitoot.wbcard.org',
-                params: { limit: limit, max_id: max_id, tag: tag, order: order, posting: posting },
+                params: { limit: limit, max_id: max_id, tag: tag, order: order, text: text, username: username, posting: posting },
             })
 
 

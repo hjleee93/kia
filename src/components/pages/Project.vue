@@ -17,7 +17,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import Category from "@/components/layouts/Category.vue";
 import Grid from "../layouts/grid/Grid.vue";
 import BoxGridTop from "../layouts/grid/BoxGridTop.vue";
@@ -62,26 +62,17 @@ export default class Project extends Vue {
     this.loadToot();
     window.addEventListener("scroll", this.scrollHandler);
   }
+  beforeCreate() {
+    this.$store.commit("searchInput", "");
+  }
 
   beforeDestroy() {
     window.removeEventListener("scroll", this.scrollHandler);
   }
-
-  async getGridItem() {
-    //미디어 태그 분류
-    let mediaTag: any[] = [];
-    try {
-      const result = await this.$api.getTagToots(this.category);
-
-      for (const i in result.data) {
-        if (result.data[i].media_attachments.length > 0) {
-          mediaTag.push(result.data[i]);
-        }
-      }
-      this.tagSearch = mediaTag;
-    } catch (err) {
-      console.log(err);
-    }
+  @Watch("$store.getters.searchInput")
+  init() {
+    this.loadingState = ETootLoadingState.none;
+    this.tagSearch = [];
   }
 
   scrollHandler() {
@@ -93,7 +84,17 @@ export default class Project extends Vue {
     }
   }
 
+  @Watch("$store.getters.searchInput")
   async loadToot() {
+    let searchType = "contents";
+    let searchInput = "";
+    if (this.$store.getters.searchType !== undefined) {
+      searchType = this.$store.getters.searchType;
+    }
+
+    if (this.$store.getters.searchInput !== undefined) {
+      searchInput = this.$store.getters.searchInput;
+    }
     let result: any[] = [];
     let tag = this.$store.getters.currCategory.toLowerCase();
     if (
@@ -107,15 +108,53 @@ export default class Project extends Vue {
       }
       this.loadingState = ETootLoadingState.loading;
 
-      if (this.recentOrder === true) {
-        result = await this.$api.searchMediaTag(tag, max_id, this.limitCount);
-      } else if (this.recentOrder === false) {
-        result = await this.$api.searchMediaTag(
-          tag,
-          max_id,
-          this.limitCount,
-          "f"
-        );
+      if (searchType === "user") {
+        if (this.recentOrder === true) {
+          result = await this.$api.searchMediaTag(
+            tag,
+            max_id,
+            this.limitCount,
+            "",
+            "",
+            searchInput
+          );
+          console.log("user", result);
+        } else {
+          result = await this.$api.searchMediaTag(
+            tag,
+            max_id,
+            this.limitCount,
+            "f",
+            "",
+            searchInput
+          );
+        }
+      } else if (searchType === "contents") {
+        console.log("here");
+        if (this.recentOrder === true) {
+          if (searchInput.length === 0) {
+            result = await this.$api.searchMediaTag(
+              tag,
+              max_id,
+              this.limitCount
+            );
+          } else {
+            result = await this.$api.searchMediaTag(
+              tag,
+              max_id,
+              this.limitCount,
+              "f",
+              searchInput
+            );
+          }
+        } else {
+          result = await this.$api.searchMediaTag(
+            tag,
+            max_id,
+            this.limitCount,
+            "f"
+          );
+        }
       }
 
       if (result.length < this.limitCount) {
@@ -138,7 +177,7 @@ export default class Project extends Vue {
       this.$store.commit("tootCnt", this.tagSearch.length);
     }
   }
-
+  @Watch("$store.getters.sortOrder")
   sortOrder(value: string) {
     if (value === "popular") {
       console.log(value);
@@ -150,11 +189,6 @@ export default class Project extends Vue {
       this.init();
       this.loadToot();
     }
-  }
-
-  init() {
-    this.loadingState = ETootLoadingState.none;
-    this.tagSearch = [];
   }
 }
 </script>
