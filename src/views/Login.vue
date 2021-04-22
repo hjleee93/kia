@@ -1,5 +1,6 @@
 <template>
     <div id="content" class="login">
+        
         <template v-if="goIframe === true">
             <Header />
         </template>
@@ -146,6 +147,7 @@
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import Header from "@/components/layouts/Header.vue";
 
+
 @Component({ components: { Header } })
 export default class Login extends Vue {
     private baseURL: string = process.env.VUE_APP_BASE_API!;
@@ -181,7 +183,7 @@ export default class Login extends Vue {
             this.isIframeLoaded = true;
         }
     }
-
+    
     iframeHandler(e: MessageEvent) {
         if (e.data.url === `${this.baseURL}about`) {
             window.location.href = "/";
@@ -204,6 +206,7 @@ export default class Login extends Vue {
     }
 
     private attemptLogin = async (email: string, password: string) => {
+
         const result = await this.$api.verifyApp();
 
         let instance = {
@@ -217,8 +220,26 @@ export default class Login extends Vue {
                 password,
                 instance
             );
-            this.$store.commit("userToken", result.data.access_token);
-            await this.updateCurrentUser(result.data.access_token);
+
+            (this.$refs
+                .iframe as HTMLIFrameElement)?.contentWindow?.postMessage(
+                {
+                    type: "login",
+                    email,
+                    password,
+                },
+                "*"
+            );
+            
+            (this.$refs
+                .iframe as HTMLIFrameElement)?.contentWindow?.postMessage(
+                {
+                    type: "login2",
+                    email,
+                    password,
+                },
+                "*"
+            );
 
             await new Promise<void>((resolve) => {
                 const onMessage = (e: MessageEvent) => {
@@ -230,43 +251,20 @@ export default class Login extends Vue {
                 };
                 window.addEventListener("message", onMessage);
             });
-            if (
-                (this.$refs.iframe as HTMLIFrameElement).src ===
-                this.baseURL + "about"
-            ) {
-                (this.$refs
-                    .iframe as HTMLIFrameElement)?.contentWindow?.postMessage(
-                    {
-                        type: "login",
-                        email,
-                        password,
-                    },
-                    "*"
-                );
+
+            try {                
+                this.$store.commit('userToken', result.data.access_token);                
+                await this.updateCurrentUser(result.data.access_token);
                 this.$router.push("/hive").catch(() => {});
-            } else if (
-                (this.$refs.iframe as HTMLIFrameElement).src ===
-                this.baseURL + "login"
-            ) {
-                (this.$refs
-                    .iframe as HTMLIFrameElement)?.contentWindow?.postMessage(
-                    {
-                        type: "login2",
-                        email,
-                        password,
-                    },
-                    "*"
-                );
-                 this.$router.push("/hive").catch(() => {});
+            } catch (err) {
+                console.log(err);
+                this.error();
             }
-           
         } catch (err) {
             console.log(err);
             this.error();
         }
     };
-
-    updateUser() {}
     error() {
         this.isLoginError = true;
     }
