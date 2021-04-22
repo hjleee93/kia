@@ -51,13 +51,13 @@
       >
         <img
           v-if="toot.media_attachments[0].type === 'image'"
-          :class="toot.media_attachments[0].sensitive ? 'sensitive' : ''"
+          :class="toot.sensitive ? 'sensitive' : ''"
           :src="toot.media_attachments[0].preview_url"
           alt=""
         />
         <video
           v-else-if="toot.media_attachments[0].type === 'video'"
-          :class="toot.media_attachments[0].sensitive ? 'sensitive' : ''"
+          :class="toot.sensitive ? 'sensitive' : ''"
           :src="toot.media_attachments[0].url"
           controls
         ></video>
@@ -111,6 +111,10 @@ export default class TootCard extends Vue {
   video {
     width: 100%;
   }
+}
+
+.sensitive {
+  filter: blur(1.5em);
 }
 
 .mention.hashtag {
