@@ -3,10 +3,10 @@
         <div class="content">
             <div class="wrap-fixed">
                 <div class="sec-fixed">
-                    <SearchBar/>
-                    <Category  @tagResult="tagResult" />
+                    <SearchBar />
+                    <Category @tagResult="tagResult" />
                     <div class="sec-grid-top">
-                        <BoxGridTop  @sortOrder="sortOrder"/>
+                        <BoxGridTop @sortOrder="sortOrder" />
                     </div>
                     <div class="dim"></div>
                 </div>
@@ -17,7 +17,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import Category from "@/components/layouts/Category.vue";
 import Grid from "@/components/layouts/grid/Grid.vue";
 import BoxGridTop from "@/components/layouts/grid/BoxGridTop.vue";
@@ -29,7 +29,6 @@ import {
     tootDropDown,
     getDevice,
 } from "@/scripts/ui_common";
-import config from "@/lib/config";
 
 enum ETootLoadingState {
     none,
@@ -58,7 +57,7 @@ export default class Inspiration extends Vue {
     }
 
     mounted() {
-        this.$store.commit('currCategory', 'Inspiration')
+        this.$store.commit("currCategory", "Inspiration");
         this.loadToot();
         window.addEventListener("scroll", this.scrollHandler);
     }
@@ -66,12 +65,12 @@ export default class Inspiration extends Vue {
     beforeDestroy() {
         window.removeEventListener("scroll", this.scrollHandler);
     }
-
-    async getGridItem(howMany = config.statusLimit) {
+    @Watch("$store.getters.searchResult")
+    async getGridItem() {
         //미디어 태그 분류
         let mediaTag: any[] = [];
         try {
-            const result = await this.$api.getTagToots(this.category);
+            const result = await this.$api.searchMediaTag(this.category);
 
             for (const i in result.data) {
                 if (result.data[i].media_attachments.length > 0) {
@@ -104,10 +103,10 @@ export default class Inspiration extends Vue {
             }
             this.loadingState = ETootLoadingState.loading;
 
-            const result = await this.$api.getTagToots(
+            const result = await this.$api.searchMediaTag(
                 this.category,
                 max_id,
-                this.limitCount
+                10
             );
 
             if (result.length < this.limitCount) {
@@ -126,12 +125,12 @@ export default class Inspiration extends Vue {
                 });
             }
             this.tagSearch.push(...result);
-              this.$store.commit("tootCnt", this.tagSearch.length);
+            this.$store.commit("tootCnt", this.tagSearch.length);
         }
     }
 
-      sortOrder(value: string){
-        console.log("value",value)
+    sortOrder(value: string) {
+        console.log("value", value);
     }
 }
 </script>

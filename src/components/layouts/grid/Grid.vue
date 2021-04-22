@@ -6,13 +6,7 @@
                 <p class="txt">검색 결과가 없습니다.</p>
             </div>
         </template>
-        <!--        <div class="grid">-->
-        <!--            <GridItem-->
-        <!--                v-for="toot in tootList.slice(start, end)"-->
-        <!--                :toot="toot"-->
-        <!--                :key="toot.id"-->
-        <!--            />-->
-        <!--        </div>-->
+
         <template v-if="allToots !== null">
             <isotope
                 v-if="device === 'pc'"
@@ -56,7 +50,6 @@ import GridItem from "./GridItem.vue";
 //@ts-ignore
 import isotope from "vueisotope";
 import { getDevice } from "@/scripts/ui_common";
-import config from "@/lib/config";
 
 @Component({ components: { GridItem, isotope } })
 export default class Grid extends Vue {
@@ -69,7 +62,7 @@ export default class Grid extends Vue {
     private active: boolean = false;
     private idx: number = 20;
     private device: string = "";
-    // // api
+    // api
     private allToots: any[] = [];
     private foundUser: any[] = [];
 
@@ -84,70 +77,34 @@ export default class Grid extends Vue {
     changeTag() {
         this.allToots = this.tagSearch;
     }
+
+    
     @Watch("allResult")
     changeResult() {
-        this.allToots = this.allResult;
-
+        
+           console.log('this.allResul',this.allResult)
+            this.allToots = this.allResult;
+            
+        
         //@ts-ignore
-        imagesLoaded(document.querySelector(".grid"), () => {
-            setTimeout(() => {
-                if (this.$refs.isotope !== undefined) {
-                    //@ts-ignore
-                    this.$refs.isotope.layout();
-                }
-            }, 100);
-        });
-        //  setTimeout(() => {
-        //     //@ts-ignore
-        //     this.$refs.isotope.layout();
-        // }, 100);
-        // this.$nextTick(()=>{
-        //      this.$nextTick(()=>{
-        //          this.$nextTick(()=>{
-        //              console.log(this.allToots.length)
-
-        //         //@ts-ignore
-        //         this.$refs.isotope.layout();
-        //          });
-
-        //      });
-        // });
+            imagesLoaded(document.querySelector(".grid"), () => {
+                setTimeout(() => {
+                    if (this.$refs.isotope !== undefined) {
+                        //@ts-ignore
+                        this.$refs.isotope.layout();
+                    }
+                }, 1000);
+            });
     }
 
     mounted() {
-        // this.changeResult();
-        // this.getGridItem(10);
-        // console.log(this.changeResult);
-        // this.$watch(
-        //   "result",
-        //   (result) => {
-        //     if (result.length > 0) {
-        //       this.tootList = result;
-        //     }
-        //     console.log("?", result);
-        //   },
-        //   { immediate: true }
-        // );
-
-        // isotope.init();
-
+     
         this.device = getDevice();
-        // console.log(this.device)
-        // setTimeout(() => {
-        //     //@ts-ignore
-        //     this.$refs.isotope.layout();
-        // }, 1000);
-        // window.addEventListener("resize", this.onResize, false)
         window.onresize = this.onResize;
     }
 
     beforeDestroy() {
         window.removeEventListener("onresize", this.onResize, false);
-    }
-
-    moreItem() {
-        this.end += 20;
-        // isotope.init();
     }
 
     onResize() {
@@ -183,10 +140,15 @@ export default class Grid extends Vue {
         };
     }
 
-    @Watch("$store.getters.searchResult")
-    searchResult() {
-        this.allToots = this.$store.getters.searchResult;
-    }
+    // @Watch("$store.getters.searchResult")
+    // searchResult() {
+    //     this.init();
+    //     this.allToots = this.$store.getters.searchResult;
+    //     console.log('finalS')
+    // }
+    // init() {
+    //     this.allToots = [];
+    // }
 }
 </script>
 

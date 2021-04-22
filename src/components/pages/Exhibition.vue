@@ -33,7 +33,6 @@ import {
     tootDropDown,
     getDevice,
 } from "@/scripts/ui_common";
-import config from "@/lib/config";
 
 enum ETootLoadingState {
     none,
@@ -72,7 +71,7 @@ export default class Exhibition extends Vue {
         window.removeEventListener("scroll", this.scrollHandler);
     }
 
-    async getGridItem(howMany = config.statusLimit) {
+    async getGridItem() {
         //미디어 태그 분류
         let mediaTag: any[] = [];
         try {

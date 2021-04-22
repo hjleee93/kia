@@ -263,7 +263,7 @@ export default class SearchBar extends Vue {
             }
             //스토리지에 있는 경우
             else {
-                //중복검색어 체크용 
+                //중복검색어 체크용
                 for (const i in this.searchHistory) {
                     if (this.searchHistory[i] === this.searchInput) {
                         //@ts-ignore
@@ -275,40 +275,43 @@ export default class SearchBar extends Vue {
                         );
                         hasDuplicatedKeyword = true;
                         break;
-                    } 
-                    else {
-                       hasDuplicatedKeyword = false;
+                    } else {
+                        hasDuplicatedKeyword = false;
                     }
                 }
 
-                if(!hasDuplicatedKeyword){
+                if (!hasDuplicatedKeyword) {
                     //최근 검색어 10개 제한
                     if (this.searchHistory.length === 10) {
-                            this.searchHistory.pop();
-                            localStorage.removeItem("RecentKeyword");
-                            localStorage.setItem(
-                                "RecentKeyword",
-                                JSON.stringify(this.searchHistory)
-                            );
-                        }
-                        this.searchHistory = JSON.parse(
-                            localStorage.getItem("RecentKeyword")!
-                        );
-                        this.searchHistory.unshift(this.searchInput);
+                        this.searchHistory.pop();
+                        localStorage.removeItem("RecentKeyword");
                         localStorage.setItem(
                             "RecentKeyword",
                             JSON.stringify(this.searchHistory)
                         );
+                    }
+                    this.searchHistory = JSON.parse(
+                        localStorage.getItem("RecentKeyword")!
+                    );
+                    this.searchHistory.unshift(this.searchInput);
+                    localStorage.setItem(
+                        "RecentKeyword",
+                        JSON.stringify(this.searchHistory)
+                    );
                 }
             }
             try {
+                let temp = [];
                 //검색 페이지 별로 분류
                 if (this.searchType === "user") {
-                    console.log("유저검색");
-                    result = await this.$api.searchUser(this.searchInput);
+                    this.$store.commit("searchType", this.searchType);
+                    this.$store.commit("searchInput", this.searchInput);
+                    result = await this.$api.searchMedia(this.searchInput);
                 } else if (this.searchType === "contents") {
+                    this.$store.commit("searchType", this.searchType);
                     console.log("내용검색");
-                    result = await this.$api.searchToot(this.searchInput);
+                    result = await this.$api.searchMediaContents(this.searchInput);
+                    
                 }
 
                 //검색결과 없는 경우

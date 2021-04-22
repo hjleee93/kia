@@ -171,7 +171,6 @@ var Gnb = function Gnb() {
         domWrapFixed = document.querySelector(".wrap-fixed");
         domSecFixed = domWrapFixed && domWrapFixed.querySelector(".sec-fixed");
         domBoxLayer = domWrapFixed && domWrapFixed.querySelector(".box-layer");
-        console.log(domSecFixed)
         if (domWrapFixed) {
             domWrapFixed.style.height = "".concat(getSecFixedRect().height, "px");
         }
@@ -964,7 +963,6 @@ var Search = function Search() {
 
     var inpFocus = function inpFocus() {
         init();
-        console.log("domWrap", domWrap)
         if (domWrap) {
             listsOpen();
         }

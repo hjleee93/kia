@@ -13,13 +13,21 @@ import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 })
 export default class App extends Vue {
     async mounted() {
-        this.$store.commit("userToken", localStorage.getItem("token")!);
-        if (
-            this.$store.getters.userToken !== null &&
-            this.$store.getters.userToken !== undefined
-        ) {
-           await this.$store.dispatch("userStatus", localStorage.getItem("token")!);
+        try {
             
+            if (
+                this.$store.getters.userToken !== 'null' &&
+                this.$store.getters.userToken !== null
+            ) {
+                await this.$store.dispatch(
+                    "userStatus",
+                    this.$store.getters.userToken
+                );
+            }else{
+                this.$router.push('/login').catch(() => {});
+            }
+        } catch (err) {
+            console.log("???",err);
         }
     }
 }

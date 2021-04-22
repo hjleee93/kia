@@ -6,9 +6,7 @@
                     <SearchBar />
                     <Category />
                     <div class="sec-grid-top">
-                        <BoxGridTop
-                            @sortOrder="sortOrder"
-                        />
+                        <BoxGridTop @sortOrder="sortOrder" />
                     </div>
                     <div class="dim"></div>
                 </div>
@@ -48,6 +46,7 @@ export default class Hive extends Vue {
     private allResult: any[] = [];
     private limitCount: number = 10;
     private loadingState: ETootLoadingState = ETootLoadingState.none;
+    private recentOrder: boolean = true;
 
     beforeUpdate() {
         tootDropDown.init();
@@ -64,18 +63,25 @@ export default class Hive extends Vue {
         window.addEventListener("scroll", this.scrollHandler);
     }
 
- 
     beforeDestroy() {
         window.removeEventListener("scroll", this.scrollHandler);
     }
+
+    @Watch("$store.getters.searchResult")
     async getGridItem() {
-        try {
-            const result = await this.$api.getMediaTootsOnly();
-            this.allResult = result;
-           
-        } catch (err) {
-            console.log(err);
-        }
+        // try {
+            // if (this.$store.getters.searchType === "user") {
+                const result = await this.$store.getters.searchResult;
+                this.allResult = result;
+                console.log(' this.allResult', this.allResult)
+        //     } else {
+        //         const result = await this.$api.getMediaTootsOnly();
+        //         this.allResult = result;
+        //         console.log(' this.allResult', this.allResult)
+        //     }
+        // } catch (err) {
+        //     console.log(err);
+        // }
     }
 
     scrollHandler() {
@@ -88,20 +94,38 @@ export default class Hive extends Vue {
     }
 
     async loadToot() {
+        let result: any[] = [];
         if (
             this.loadingState === ETootLoadingState.none ||
             this.loadingState === ETootLoadingState.complete
         ) {
             let max_id = undefined;
+
             if (this.allResult.length) {
                 max_id = this.allResult[this.allResult.length - 1].id;
             }
             this.loadingState = ETootLoadingState.loading;
-
-            const result = await this.$api.getMediaTootsOnly(
-                max_id,
-                this.limitCount
-            );
+            if (this.$store.getters.searchType === "user") {
+                result = await this.$api.searchMedia(
+                    this.$store.getters.searchInput,
+                    max_id,
+                    30
+                );
+                //this.recentOrder
+            } else if (this.$store.getters.searchType === "contents") {
+                result = await this.$api.getMediaTootsOnly(
+                    max_id,
+                    this.limitCount
+                );
+            } else if (this.recentOrder === true) {
+                // console.log('recent')
+                result = await this.$api.getMediaTootsOnly(
+                    max_id,
+                    this.limitCount
+                );
+            } else if (this.recentOrder === false) {
+                result = await this.$api.searchMedia("", max_id, 10);
+            }
 
             if (result.length < this.limitCount) {
                 this.loadingState = ETootLoadingState.end;
@@ -111,6 +135,7 @@ export default class Hive extends Vue {
                         const el = document.documentElement;
                         if (el.scrollHeight <= el.clientHeight) {
                             this.loadingState = ETootLoadingState.complete;
+                            console.log("???", result.length, this.limitCount);
                             this.loadToot();
                         } else {
                             this.loadingState = ETootLoadingState.complete;
@@ -119,12 +144,37 @@ export default class Hive extends Vue {
                 });
             }
             this.allResult.push(...result);
-             this.$store.commit("tootCnt", this.allResult.length);
+            this.$store.commit("tootCnt", this.allResult.length);
         }
     }
 
-    sortOrder(value: string) {
-        console.log("value", value);
+    async sortOrder(value: string) {
+        if (value === "popular") {            
+            this.recentOrder = false;
+            this.init();
+            this.loadToot();
+            // try {
+            //     const result = await this.$api.searchMedia();
+            //     this.allResult = result;
+            // } catch (err) {
+            //     console.log(err);
+            // }
+        } else if (value === "recent") {
+            this.recentOrder = true;
+            this.init();
+            this.loadToot();
+            // try {
+            //     const result = await this.$api.getMediaTootsOnly();
+            //     this.allResult = result;
+            // } catch (err) {
+            //     console.log(err);
+            // }
+        }
+    }
+
+    init() {
+        this.loadingState = ETootLoadingState.none;
+        this.allResult = [];
     }
 }
 </script>

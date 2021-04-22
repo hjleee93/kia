@@ -86,11 +86,10 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
 
-    if (to.path.includes('mastodon/') === true && localStorage.getItem("token") === null) {
-
+    if (to.path.includes('mastodon/') === true && store.getters.userToken === null) {
         next()
     }
-    else if (to.path !== '/login' && localStorage.getItem("token") === null) {
+    else if (to.path !== '/login' && store.getters.userToken === null) {
 
         next('/login');
     }

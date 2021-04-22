@@ -1,6 +1,5 @@
 <template>
     <div id="content" class="login">
-        
         <template v-if="goIframe === true">
             <Header />
         </template>
@@ -144,10 +143,8 @@
 </template>
 
 <script lang="ts">
-import config from "@/lib/config";
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import Header from "@/components/layouts/Header.vue";
-
 
 @Component({ components: { Header } })
 export default class Login extends Vue {
@@ -184,7 +181,7 @@ export default class Login extends Vue {
             this.isIframeLoaded = true;
         }
     }
-    
+
     iframeHandler(e: MessageEvent) {
         if (e.data.url === `${this.baseURL}about`) {
             window.location.href = "/";
@@ -192,10 +189,7 @@ export default class Login extends Vue {
     }
 
     async mounted() {
-        
-        if(localStorage.getItem('token')!==null){
-            localStorage.removeItem('token')
-        }
+        this.$store.dispatch("logout");
         this.$store.commit("currCategory", "Login");
         window.addEventListener("keydown", this.handleKeyDown);
     }
@@ -223,27 +217,40 @@ export default class Login extends Vue {
                 password,
                 instance
             );
+            this.$store.commit("userToken", result.data.access_token);
+            await this.updateCurrentUser(result.data.access_token);
 
-            (this.$refs
-                .iframe as HTMLIFrameElement)?.contentWindow?.postMessage(
-                {
-                    type: "login",
-                    email,
-                    password,
-                },
-                "*"
-            );
-            
-            (this.$refs
-                .iframe as HTMLIFrameElement)?.contentWindow?.postMessage(
-                {
-                    type: "login2",
-                    email,
-                    password,
-                },
-                "*"
-            );
-
+            if (
+                (this.$refs.iframe as HTMLIFrameElement).src ===
+                this.baseURL + "about"
+            ) {
+                console.log("1");
+                (this.$refs
+                    .iframe as HTMLIFrameElement)?.contentWindow?.postMessage(
+                    {
+                        type: "login",
+                        email,
+                        password,
+                    },
+                    "*"
+                );
+                this.$router.push("/hive").catch(() => {});
+            } else if (
+                (this.$refs.iframe as HTMLIFrameElement).src ===
+                this.baseURL + "auth/sign_in"
+            ) {
+                console.log("2");
+                (this.$refs
+                    .iframe as HTMLIFrameElement)?.contentWindow?.postMessage(
+                    {
+                        type: "login2",
+                        email,
+                        password,
+                    },
+                    "*"
+                );
+                this.$router.push("/hive").catch(() => {});
+            }
             await new Promise<void>((resolve) => {
                 const onMessage = (e: MessageEvent) => {
                     const data = e.data || {};
@@ -254,21 +261,13 @@ export default class Login extends Vue {
                 };
                 window.addEventListener("message", onMessage);
             });
-
-            try {
-                localStorage.setItem("token", result.data.access_token);
-                this.$store.commit("userToken", result.data.access_token);
-                await this.updateCurrentUser(result.data.access_token);
-                this.$router.push("/hive").catch(() => {});
-            } catch (err) {
-                console.log(err);
-                this.error();
-            }
         } catch (err) {
             console.log(err);
             this.error();
         }
     };
+
+    updateUser() {}
     error() {
         this.isLoginError = true;
     }

@@ -2,7 +2,7 @@ import Vue from "vue";
 
 export default {
     state: {
-        userToken: null,
+        userToken: localStorage.getItem('token'),
         currentUser: null,
     },
     getters: {
@@ -14,7 +14,10 @@ export default {
         }
     },
     mutations: {
-        userToken(state: any, payload: boolean) {            
+        userToken(state: any, payload: boolean) {
+
+            // localStorage.setItem('token', state.userToken)
+
             state.userToken = payload;
         },
         currentUser(state: any, payload: any) {
@@ -23,10 +26,20 @@ export default {
     },
     actions: {
         //@ts-ignore
-        async userStatus({ commit }) {
-            const result = await Vue.$api.getCurrentUser();  
+        async userStatus({ commit }, token) {
+            localStorage.setItem('token', token)
+            const result = await Vue.$api.getCurrentUser();            
             commit('currentUser', result)
+
+        },
+        //@ts-ignore
+        logout({ commit }) {
+            console.log('로그아웃')
+            localStorage.removeItem("token");
+            commit('userToken', null)
+            commit("currentUser", null);
         }
+
 
     },
 }

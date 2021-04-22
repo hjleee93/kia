@@ -2,7 +2,7 @@
     <div id="app">
         <div>
             <div id="wrap">
-                <Header @logout="logOut" />
+                <Header />
                 <section id="container">
                     <router-view></router-view>
                 </section>
@@ -21,15 +21,10 @@ import MobileAlbum from "@/components/layouts/MobileAlbum.vue";
 @Component({
     components: { Header, MobileAlbum },
 })
-export default class App extends Vue {
-    private loggedIn: boolean = localStorage.getItem("token") != null;
+export default class App extends Vue {   
 
     async mounted() {
         initApp();
-    }
-    logOut() {
-        this.loggedIn = false;
-        this.$router.push("/login").catch(() => {});
     }
 }
 </script>

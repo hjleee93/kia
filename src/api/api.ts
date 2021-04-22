@@ -78,6 +78,8 @@ export default class Api {
         return result;
     }
     async attemptLogin(email: string, password: string, instance: { client_id: any; client_secret: any; }) {
+
+
         const result = await Vue.$axios.post("/oauth/token", {
             client_id: instance.client_id,
             client_secret: instance.client_secret,
@@ -139,6 +141,49 @@ export default class Api {
                 params: { limit: limit, offset: offset, tag: searchInput },
             })
 
+
+        return result.data
+    }
+
+    async searchMedia(username?: string, max_id?: string, limit?: number, tag?: string, text?: string, order?: string, postring?: boolean) {
+        console.log('searchMedia', limit)
+        const result = await Vue.$axios
+            ({
+                method: 'get',
+                url: '/search/media',
+                baseURL: 'http://apitoot.wbcard.org',
+                params: { limit: limit, max_id: max_id, tag: tag, username: username },
+            })
+
+        console.log('result', result)
+
+        return result.data
+    }
+    async searchMediaContents(text?: string, max_id?: string, limit?: number, tag?: string, order?: string, posting?: boolean) {
+        console.log('searchMedia', limit)
+        const result = await Vue.$axios
+            ({
+                method: 'get',
+                url: '/search/media',
+                baseURL: 'http://apitoot.wbcard.org',
+                params: { limit: limit, max_id: max_id, tag: tag, text: text },
+            })
+
+        console.log('result', result)
+
+        return result.data
+    }
+
+    async searchMediaTag(tag?: string, max_id?: string, limit?: number, order?: string, posting?: boolean) {
+        const result = await Vue.$axios
+            ({
+                method: 'get',
+                url: '/search/media',
+                baseURL: 'http://apitoot.wbcard.org',
+                params: { limit: limit, max_id: max_id, tag: tag },
+            })
+
+        console.log('result', result)
 
         return result.data
     }

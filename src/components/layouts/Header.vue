@@ -91,8 +91,8 @@
         <li class="list-ins mobile-header">
           <router-link to="/login" class="btn btn-link">Login</router-link>
         </li>
-        <button class="btn btn-logout" @click="toLogin">
-          Login
+        <button class="btn btn-logout">
+        <router-link to="/login" class="btn btn-link">Login</router-link>
         </button>
       </template>
     </div>
@@ -105,17 +105,13 @@ import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 @Component({})
 export default class Header extends Vue {
   private active: string = this.$store.getters.currCategory;
-  private loggedIn: boolean = localStorage.getItem("token") != null;
 
   isActive(value: string) {
     return this.active === value;
   }
 
   logOut() {
-    this.$emit("logout");
-    localStorage.removeItem("token");
-    this.$store.commit("userToken", null);
-    this.$store.commit("currentUser", null);
+    this.$store.dispatch("logout");
     this.$router.push("/login").catch(() => {});
   }
 
@@ -127,10 +123,6 @@ export default class Header extends Vue {
   @Watch("$store.getters.currCategory")
   getCategory() {
     this.active = this.$store.getters.currCategory;
-  }
-
-  toLogin() {
-    this.$router.push("/");
   }
   clickedLogo() {
     if (this.$store.getters.currCategory !== null) {

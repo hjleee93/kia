@@ -33,7 +33,6 @@ import {
     tootDropDown,
     getDevice,
 } from "@/scripts/ui_common";
-import config from "@/lib/config";
 
 enum ETootLoadingState {
     none,
@@ -133,38 +132,72 @@ export default class Posting extends Vue {
     }
 
     async sortOrder(value?: string) {
-        if (
-            this.loadingState === ETootLoadingState.none ||
-            this.loadingState === ETootLoadingState.complete
-        ) {
-            let max_id = undefined;
-            if (this.recentResult.length) {
-                max_id = this.recentResult[this.recentResult.length - 1].id;
-            }
-            this.loadingState = ETootLoadingState.loading;
 
-            const result = await this.$api.getMediaTootsOnly(
-                max_id,
-                this.limitCount
-            );
+        // if (value === "popular") {
+        //     let lte = this.getFormatDate(new Date());
+        //     let today = new Date();
+        //     let gte = "";
+        //     today.setDate(today.getDate() - 365);
+        //     gte = this.getFormatDate(today);
 
-            if (result.length < this.limitCount) {
-                this.loadingState = ETootLoadingState.end;
-            } else {
-                this.$nextTick(() => {
-                    this.$nextTick(() => {
-                        const el = document.documentElement;
-                        if (el.scrollHeight <= el.clientHeight) {
-                            this.loadingState = ETootLoadingState.complete;
-                            this.sortOrder();
-                        } else {
-                            this.loadingState = ETootLoadingState.complete;
-                        }
-                    });
-                });
-            }
-            this.recentResult.push(...result);
-        }
+        //     try {
+        //         const result = await this.$api.getMyToots(this.userId);
+        //         this.allResult = result;
+        //     } catch (err) {
+        //         console.log(err);
+        //     }
+        // } else if (value === "recent") {
+        //     try {
+        //         const result = await this.$api.getMyToots(this.userId, max_id);
+        //         this.allResult = result;
+        //     } catch (err) {
+        //         console.log(err);
+        //     }
+        // }
+        
+        // if (
+        //     this.loadingState === ETootLoadingState.none ||
+        //     this.loadingState === ETootLoadingState.complete
+        // ) {
+        //     let max_id = undefined;
+        //     if (this.recentResult.length) {
+        //         max_id = this.recentResult[this.recentResult.length - 1].id;
+        //     }
+        //     this.loadingState = ETootLoadingState.loading;
+
+        //     const result = await this.$api.getMediaTootsOnly(
+        //         max_id,
+        //         this.limitCount
+        //     );
+
+        //     if (result.length < this.limitCount) {
+        //         this.loadingState = ETootLoadingState.end;
+        //     } else {
+        //         this.$nextTick(() => {
+        //             this.$nextTick(() => {
+        //                 const el = document.documentElement;
+        //                 if (el.scrollHeight <= el.clientHeight) {
+        //                     this.loadingState = ETootLoadingState.complete;
+        //                     this.sortOrder();
+        //                 } else {
+        //                     this.loadingState = ETootLoadingState.complete;
+        //                 }
+        //             });
+        //         });
+        //     }
+        //     this.recentResult.push(...result);
+        // }
+    }
+
+    getFormatDate(date: Date) {
+        let year = date.getFullYear();
+        let month = 1 + date.getMonth();
+        //@ts-ignore
+        month = month >= 10 ? month : "0" + month;
+        let day = date.getDate();
+        //@ts-ignore
+        day = day >= 10 ? day : "0" + day;
+        return year + "-" + month + "-" + day;
     }
 }
 </script>
