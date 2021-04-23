@@ -162,7 +162,7 @@ export default class Inspiration extends Vue {
         }
       }
 
-      if (result.length < this.limitCount) {
+       if (result.length === 0) {
         this.loadingState = ETootLoadingState.end;
       } else {
         this.$nextTick(() => {

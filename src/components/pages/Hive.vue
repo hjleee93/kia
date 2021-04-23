@@ -159,9 +159,9 @@ export default class Hive extends Vue {
         }
       }
 
-      if (result.length < this.limitCount) {
-        this.loadingState = ETootLoadingState.end;
-      } else {
+      if (result.length === 0) {
+                this.loadingState = ETootLoadingState.end;
+            }else {
         this.$nextTick(() => {
           this.$nextTick(() => {
             const el = document.documentElement;
