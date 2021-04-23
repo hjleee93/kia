@@ -14,6 +14,7 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 export default class Like extends Vue {
     @Prop() toot!: any;
     private isActive: boolean = false;
+    
     async mounted() {
         if (this.toot.favourited === true) {
             this.isActive = true;
@@ -32,8 +33,7 @@ export default class Like extends Vue {
             try {
                 this.isActive = !this.isActive;
                 const result = await this.$api.sendFavourite(
-                    this.toot.id,
-                    this.$store.getters.userToken
+                    this.toot.id
                 );
             } catch (err) {
                 console.log(err);

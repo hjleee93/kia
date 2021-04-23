@@ -15,9 +15,6 @@ export default {
     },
     mutations: {
         userToken(state: any, payload: boolean) {
-
-            // localStorage.setItem('token', state.userToken)
-
             state.userToken = payload;
         },
         currentUser(state: any, payload: any) {
@@ -26,14 +23,21 @@ export default {
     },
     actions: {
         //@ts-ignore
-        async userStatus({ commit }, token) {
-            localStorage.setItem('token', token)
-            const result = await Vue.$api.getCurrentUser();            
-            commit('currentUser', result)
+        async userStatus({ commit, dispatch }, token) {
+            let result: any;
+            try {
+                result = await Vue.$api.getCurrentUser();
+                localStorage.setItem('token', token)
+                commit('currentUser', result)
+            } catch (err) {
+                await dispatch('logout')
+            }
+
 
         },
         //@ts-ignore
         logout({ commit }) {
+            console.log('logout')
             localStorage.removeItem("token");
             commit('userToken', null)
             commit("currentUser", null);

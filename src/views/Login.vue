@@ -100,6 +100,13 @@
                         </p>
                     </div>
                 </template>
+                <template v-if="isAppVerfiedError === true">
+                    <div class="art-msg">
+                        <p class="msg msg-error">
+                            죄송합니다. 잠시후에 다시 시도해주세요.
+                        </p>
+                    </div>
+                </template>
 
                 <div class="art-second-btn">
                     <router-link
@@ -153,6 +160,7 @@ export default class Login extends Vue {
     private email: string = "";
     private password: string = "";
     private isLoginError: boolean = false;
+    private isAppVerfiedError: boolean = false;
     private isEmailActive: boolean = false;
     private isPwdActive: boolean = false;
     private emailRegExp = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
@@ -203,74 +211,110 @@ export default class Login extends Vue {
         this.attemptLogin(this.email, this.password);
     }
 
-    private attemptLogin = async (email: string, password: string) => {
-        const result = await this.$api.verifyApp();
+    private attemptLogin = async (
+        email: string,
+        password: string
+    ): Promise<void> => {
+        this.isLoginError = false;
+        this.isAppVerfiedError = false;
+        let result = await this.$api.verifyApp();
 
-        let instance = {
-            host: new URL(this.baseURL).host,
-            client_id: result.data.client_id,
-            client_secret: result.data.client_secret,
-        };
-        try {
-            const result = await this.$api.attemptLogin(
-                email,
-                password,
-                instance
-            );
-
-            (this.$refs
-                .iframe as HTMLIFrameElement)?.contentWindow?.postMessage(
-                {
-                    type: "login",
-                    email,
-                    password,
-                },
-                "*"
-            );
-
-            (this.$refs
-                .iframe as HTMLIFrameElement)?.contentWindow?.postMessage(
-                {
-                    type: "login2",
-                    email,
-                    password,
-                },
-                "*"
-            );
-
-            await new Promise<void>((resolve) => {
-                const onMessage = (e: MessageEvent) => {
-                    const data = e.data || {};
-                    if (data.type === "loadedPage") {
-                        window.removeEventListener("message", onMessage);
-                        resolve();
-                    }
-                };
-                window.addEventListener("message", onMessage);
-            });
-
+        if (result !== undefined) {
+            let instance = {
+                host: new URL(this.baseURL).host,
+                client_id: result.data.client_id,
+                client_secret: result.data.client_secret,
+            };
             try {
-                this.$store.commit("userToken", result.data.access_token);
-                await this.updateCurrentUser(result.data.access_token);
-                this.$router.push("/hive").catch(() => {});
+                const result = await this.$api.attemptLogin(
+                    email,
+                    password,
+                    instance
+                );
+                if (result !== undefined) {
+                    (this.$refs
+                        .iframe as HTMLIFrameElement)?.contentWindow?.postMessage(
+                        {
+                            type: "login",
+                            email,
+                            password,
+                        },
+                        "*"
+                    );
+
+                    (this.$refs
+                        .iframe as HTMLIFrameElement)?.contentWindow?.postMessage(
+                        {
+                            type: "login2",
+                            email,
+                            password,
+                        },
+                        "*"
+                    );
+
+                    await new Promise<void>((resolve) => {
+                        const onMessage = (e: MessageEvent) => {
+                            const data = e.data || {};
+                            if (data.type === "loadedPage") {
+                                window.removeEventListener(
+                                    "message",
+                                    onMessage
+                                );
+                                resolve();
+                            }
+                        };
+                        window.addEventListener("message", onMessage);
+                    });
+                    try {
+                        if (
+                            result.data.access_token !== undefined ||
+                            result.data.access_token !== null
+                        ) {
+                            //token이 존재하는 경우
+                            this.$store.commit(
+                                "userToken",
+                                result.data.access_token
+                            );
+
+                            try {
+                                await this.updateCurrentUser(
+                                    result.data.access_token
+                                );
+                                this.$router.push("/hive").catch(() => {});
+                            } catch (err) {
+                                this.appError();
+                            }
+                        } else {
+                            this.appError();
+                        }
+                    } catch (err) {
+                        this.loginError();
+                    }
+                } else {
+                    this.loginError();
+                }
             } catch (err) {
-                console.log(err);
-                this.error();
+                this.loginError();
             }
-        } catch (err) {
-            console.log(err);
-            this.error();
+        } else {
+            this.appError();
         }
     };
-    error() {
+
+    loginError() {
         this.isLoginError = true;
+        this.$store.dispatch("logout");
+    }
+    appError() {
+        this.isAppVerfiedError = true;
+        this.$store.dispatch("logout");
     }
 
     async updateCurrentUser(token: string) {
         try {
             await this.$store.dispatch("userStatus", token);
         } catch (err) {
-            console.log("Failed to fetch current user");
+            this.appError();
         }
     }
 }

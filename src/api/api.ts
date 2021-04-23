@@ -3,44 +3,75 @@ import axios, { AxiosInstance } from 'axios'
 import Vue, { PluginObject } from "vue";
 
 export default class Api {
+    private baseApiUrl = process.env.VUE_APP_API_URL;
+
 
     async verifyApp() {
-        const result = await Vue.$axios.post("api/v1/apps", {
+        let result: any;
+
+        await Vue.$axios.post("api/v1/apps", {
             client_name: "KIA",
             redirect_uris: "urn:ietf:wg:oauth:2.0:oob",
             scopes: ["read", "write", "follow"].join(" ")
+        }).then(response => {
+            if (response.status >= 200 && response.status < 300) {
+                result = response;
+            } else {
+                throw new Error("Error");
+            }
+        }).catch(err => {
+            store.dispatch('logout')
+
         });
+
         return result;
     }
 
-    async login() {
-        const result = await Vue.$axios.get('oauth/token')
-    }
+    async attemptLogin(email: string, password: string, instance: { client_id: any; client_secret: any; }) {
+        let result: any;
 
-    async getToots(max_id?: number, limit: number = 100) {
-        const result = await Vue.$axios({
-            method: 'get',
-            url: 'api/v1/timelines/public',
-            params: {
-                limit,
-                max_id,
-                local: true,
+        await Vue.$axios.post("/oauth/token", {
+            client_id: instance.client_id,
+            client_secret: instance.client_secret,
+            grant_type: "password",
+            username: email,
+            password: password,
+            scope: ["read", "write", "follow"].join(" "),
+        }).then(response => {
+            if (response.status >= 200 && response.status < 300) {
+                result = response;
+            } else {
+                throw new Error("Error");
             }
-        })
+        }).catch(err => {
+            store.dispatch('logout')
 
-        return result.data;
+        });
+        return result
+
     }
+
 
     async getCurrentUser() {
-
-        const response = await Vue.$axios({
+        let result: any;
+        await Vue.$axios({
             method: 'get',
             url: '/api/v1/accounts/verify_credentials'
-        })
-        return response.data
+        }).then(response => {
+            if (response.status >= 200 && response.status < 300) {
+                result = response;
+            } else {
+                throw new Error("Error");
+            }
+        }).catch(err => {
+            store.dispatch('logout')
+
+        });
+
+        return result.data
     }
 
-    async getTagToots(category: string, max_id?: number, limit?: number, option?: {}) {
+    async getTagToots(category: string, max_id?: number, limit?: number) {
         const result = await Vue.$axios({
             method: 'get',
             url: `/api/v1/timelines/tag/${category}`,
@@ -49,7 +80,7 @@ export default class Api {
         return result.data;
     }
 
-    async getMediaTootsOnly(max_id?: number, limit?: number, option?: {}) {
+    async getMediaTootsOnly(max_id?: number, limit?: number) {
         const result = await Vue.$axios({
             method: 'get',
             url: '/api/v1/timelines/public',
@@ -69,29 +100,8 @@ export default class Api {
         return result.data
 
     }
-    async deleteToot(tootId: number) {
-        const result = await Vue.$axios({
-            method: 'delete',
-            url: `/api/v1/statuses/${tootId}`
-        })
 
-        return result;
-    }
-    async attemptLogin(email: string, password: string, instance: { client_id: any; client_secret: any; }) {
-
-
-        const result = await Vue.$axios.post("/oauth/token", {
-            client_id: instance.client_id,
-            client_secret: instance.client_secret,
-            grant_type: "password",
-            username: email,
-            password: password,
-            scope: ["read", "write", "follow"].join(" "),
-        })
-
-        return result;
-    }
-    async sendFavourite(tootId: number, token: any) {
+    async sendFavourite(tootId: number) {
 
         const result = await Vue.$axios({
             method: 'post',
@@ -109,35 +119,14 @@ export default class Api {
         return result;
     }
 
-
-    async searchToot(searchInput: string) {
-        const result = await Vue.$axios({
-            method: 'get',
-            url: '/api/v2/search/',
-            params: { q: searchInput }
-        })
-
-        return result.data.statuses
-    }
-
-    async searchUser(searchInput: string) {
-        const result = await Vue.$axios({
-            method: 'get',
-            url: '/api/v2/search/',
-            params: { q: searchInput }
-        })
-        return result.data.accounts
-    }
-
-
-
     async searchHashtag(searchInput: string, offset?: number, limit?: number) {
+
 
         const result = await Vue.$axios
             ({
                 method: 'get',
                 url: '/tags',
-                baseURL: 'https://apitoot.wbcard.org',
+                baseURL: this.baseApiUrl,
                 params: { limit: limit, offset: offset, tag: searchInput },
             })
 
@@ -145,14 +134,14 @@ export default class Api {
         return result.data
     }
 
-    async searchMedia(username?: string, max_id?: string, limit?: number, tag?: string, text?: string, order?: string, posting?: boolean) {
+    async searchAllMedia(username?: string, max_id?: string, limit?: number, tag?: string, text?: string, order?: string) {
 
         const result = await Vue.$axios
             ({
                 method: 'get',
                 url: '/search/media',
-                baseURL: 'https://apitoot.wbcard.org',
-                params: { limit: limit, max_id: max_id, tag: tag, username: username },
+                baseURL: this.baseApiUrl,
+                params: { limit: limit, max_id: max_id, tag: tag, username: username, text: text, order: order, account_id: store.getters.currentUser.id },
             })
 
 
@@ -165,33 +154,8 @@ export default class Api {
             ({
                 method: 'get',
                 url: '/search/media',
-                baseURL: 'https://apitoot.wbcard.org',
-                params: { limit: limit, max_id: max_id, tag: tag, username: username, posting:true,text:text, order:order  },
-            })
-
-
-        return result.data
-    }
-    async orderMedia(order?: string, max_id?: string, limit?: number, posting?: boolean, tag?: string) {
-
-        const result = await Vue.$axios
-            ({
-                method: 'get',
-                url: '/search/media',
-                baseURL: 'https://apitoot.wbcard.org',
-                params: { order: order, limit: limit, max_id: max_id, tag: tag, posting: posting },
-            })
-
-
-        return result.data
-    }
-    async searchMediaContents(text?: string, max_id?: string, limit?: number, order?: string, tag?: string, posting?: boolean) {
-        const result = await Vue.$axios
-            ({
-                method: 'get',
-                url: '/search/media',
-                baseURL: 'https://apitoot.wbcard.org',
-                params: { limit: limit, max_id: max_id, tag: tag, text: text, order: order, posting: posting },
+                baseURL: this.baseApiUrl,
+                params: { limit: limit, max_id: max_id, tag: tag, username: username, posting: true, text: text, order: order, account_id: store.getters.currentUser.id },
             })
 
 
@@ -203,8 +167,8 @@ export default class Api {
             ({
                 method: 'get',
                 url: '/search/media',
-                baseURL: 'https://apitoot.wbcard.org',
-                params: { limit: limit, max_id: max_id, tag: tag, order: order, text: text, username: username, posting: posting },
+                baseURL: this.baseApiUrl,
+                params: { limit: limit, max_id: max_id, tag: tag, order: order, text: text, username: username, posting: posting, account_id: store.getters.currentUser.id },
             })
 
 
@@ -217,7 +181,7 @@ export default class Api {
             ({
                 method: 'get',
                 url: '/ranking/tags',
-                baseURL: 'https://apitoot.wbcard.org',
+                baseURL: this.baseApiUrl,
                 params: { gte: gte, lte: lte, limit: limit, offset: offset },
             })
         return result.data
@@ -229,7 +193,7 @@ export default class Api {
             ({
                 method: 'get',
                 url: '/ranking/user',
-                baseURL: 'https://apitoot.wbcard.org',
+                baseURL: this.baseApiUrl,
                 params: { gte: gte, lte: lte, limit: limit, offset: offset },
             })
 
@@ -243,7 +207,7 @@ export default class Api {
             ({
                 method: 'get',
                 url: '/ranking/toot',
-                baseURL: 'https://apitoot.wbcard.org',
+                baseURL: this.baseApiUrl,
                 params: { gte: gte, lte: lte, limit: limit, offset: offset },
             })
 

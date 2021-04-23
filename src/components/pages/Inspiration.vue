@@ -43,7 +43,7 @@ enum ETootLoadingState {
 export default class Inspiration extends Vue {
   private category: string = "Inspiration";
   private tagSearch: any[] = [];
-  private limitCount: number = 10;
+  private limitCount: number = 100;
   private loadingState: ETootLoadingState = ETootLoadingState.none;
   private recentOrder: boolean = true;
   private tag: string = '';

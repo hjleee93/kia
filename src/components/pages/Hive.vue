@@ -44,7 +44,7 @@ enum ETootLoadingState {
 export default class Hive extends Vue {
   private category: string = "Hive";
   private allResult: any[] = [];
-  private limitCount: number = 10;
+  private limitCount: number = 100;
   private loadingState: ETootLoadingState = ETootLoadingState.none;
   private recentOrder: boolean = true;
 
@@ -116,14 +116,14 @@ export default class Hive extends Vue {
       if (searchType === "user") {
         if (this.recentOrder === true) {
           console.log("recentOrder user, recent");
-          result = await this.$api.searchMedia(
+          result = await this.$api.searchAllMedia(
             searchInput,
             max_id,
             this.limitCount
           );
         } else {
           console.log("recentOrderx user");
-          result = await this.$api.searchMedia(
+          result = await this.$api.searchAllMedia(
             searchInput,
             max_id,
             this.limitCount,
@@ -137,17 +137,21 @@ export default class Hive extends Vue {
           if (searchInput.length === 0) {
             result = await this.$api.getMediaTootsOnly(max_id, this.limitCount);
           } else {
-            result = await this.$api.searchMediaContents(
-              searchInput,
+            result = await this.$api.searchAllMedia(
+              '',
               max_id,
-              this.limitCount
+              this.limitCount,
+              '',
+              searchInput,
             );
           }
         } else {
-          result = await this.$api.searchMediaContents(
-            searchInput,
-            max_id,
-            this.limitCount,
+          result = await this.$api.searchAllMedia(
+            '',
+              max_id,
+              this.limitCount,
+              '',
+              searchInput,
             "f"
           );
         }

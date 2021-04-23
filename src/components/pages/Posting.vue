@@ -49,7 +49,7 @@ export default class Posting extends Vue {
     private allResult: any[] = [];
     private recentResult: any[] = [];
     private userInfo: number = -1;
-    private limitCount: number = 10;
+    private limitCount: number = 100;
     private loadingState: ETootLoadingState = ETootLoadingState.none;
     private recentOrder: boolean = true;
 
@@ -206,7 +206,7 @@ export default class Posting extends Vue {
         this.init();
         this.loadToot();
     }
-    
+
     @Watch("$store.getters.hashtag")
     watchHashtag(val: string) {
         this.category = val;
