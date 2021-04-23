@@ -135,13 +135,13 @@ export default class Api {
     }
 
     async searchAllMedia(username?: string, max_id?: string, limit?: number, tag?: string, text?: string, order?: string) {
-
+        await this.getCurrentUser()
         const result = await Vue.$axios
             ({
                 method: 'get',
                 url: '/search/media',
                 baseURL: this.baseApiUrl,
-                params: { limit: limit, max_id: max_id, tag: tag, username: username, text: text, order: order, account_id: store.getters.currentUser.id },
+                params: { limit: limit, max_id: max_id, tag: tag, username: username, text: text, order: order, account_id: await store.getters.currentUser.id },
             })
 
 
@@ -149,13 +149,13 @@ export default class Api {
     }
 
     async searchMyToot(username?: string, max_id?: string, limit?: number, tag?: string, text?: string, order?: string) {
-
+        await this.getCurrentUser()
         const result = await Vue.$axios
             ({
                 method: 'get',
                 url: '/search/media',
                 baseURL: this.baseApiUrl,
-                params: { limit: limit, max_id: max_id, tag: tag, username: username, posting: true, text: text, order: order, account_id: store.getters.currentUser.id },
+                params: { limit: limit, max_id: max_id, tag: tag, username: username, posting: true, text: text, order: order, account_id: await store.getters.currentUser.id },
             })
 
 
@@ -163,12 +163,13 @@ export default class Api {
     }
 
     async searchMediaTag(tag?: string, max_id?: string, limit?: number, order?: string, text?: string, username?: string, posting?: boolean) {
+        await this.getCurrentUser()
         const result = await Vue.$axios
             ({
                 method: 'get',
                 url: '/search/media',
                 baseURL: this.baseApiUrl,
-                params: { limit: limit, max_id: max_id, tag: tag, order: order, text: text, username: username, posting: posting, account_id: store.getters.currentUser.id },
+                params: { limit: limit, max_id: max_id, tag: tag, order: order, text: text, username: username, posting: posting, account_id: await store.getters.currentUser.id },
             })
 
 
@@ -202,13 +203,13 @@ export default class Api {
     }
 
     async getBestToot(gte: string, lte: string, limit?: number, offset?: number) {
-
+        await this.getCurrentUser()
         const result = await Vue.$axios
             ({
                 method: 'get',
                 url: '/ranking/toot',
                 baseURL: this.baseApiUrl,
-                params: { gte: gte, lte: lte, limit: limit, offset: offset, account_id: store.getters.currentUser.id },
+                params: { gte: gte, lte: lte, limit: limit, offset: offset, account_id: await store.getters.currentUser.id },
             })
 
         return result.data
