@@ -67,9 +67,10 @@ export default class Exhibition extends Vue {
     window.addEventListener("scroll", this.scrollHandler);
   }
   beforeCreate() {
-    this.$store.commit("searchInput", "");
+   this.$store.commit("searchInput", "");
     this.$store.commit("searchType", "contents");
     this.$store.commit("hashtag", "");
+    this.$store.commit("sortOrder", "recent");
   }
   beforeDestroy() {
     window.removeEventListener("scroll", this.scrollHandler);

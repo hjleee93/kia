@@ -88,23 +88,7 @@ export default class Hashtag extends Vue {
         let mediaTag: any[] = [];
         //@ts-ignore
         hashDropDown.btnDropdownClick(this.$refs[arg][0]);
-
-        // try {
-        //     const result = await this.$api.getTagToots(arg);
-
-        //     for (const i in result) {
-        //         if (result[i].media_attachments.length > 0) {
-        //             mediaTag.push(result[i]);
-        //         }
-        //     }
         this.$store.commit("hashtag", arg);
-        // console.log(arg)
-
-        //     this.$store.commit("tootCnt", mediaTag.length);
-        //     this.$emit("tagResult", mediaTag);
-        // } catch (err) {
-        //     console.log(err);
-        // }
     }
     listsClose() {
         hashDropDown.listsClose();

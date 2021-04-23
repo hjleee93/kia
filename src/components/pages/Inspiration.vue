@@ -69,6 +69,7 @@ export default class Inspiration extends Vue {
     this.$store.commit("searchInput", "");
     this.$store.commit("searchType", "contents");
     this.$store.commit("hashtag", "");
+    this.$store.commit("sortOrder", "recent");
   }
   beforeDestroy() {
     window.removeEventListener("scroll", this.scrollHandler);

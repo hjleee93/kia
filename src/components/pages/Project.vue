@@ -65,9 +65,10 @@ private tag: string = '';
     window.addEventListener("scroll", this.scrollHandler);
   }
   beforeCreate() {
-    this.$store.commit("searchInput", "");
+   this.$store.commit("searchInput", "");
     this.$store.commit("searchType", "contents");
     this.$store.commit("hashtag", "");
+    this.$store.commit("sortOrder", "recent");
   }
 
   beforeDestroy() {

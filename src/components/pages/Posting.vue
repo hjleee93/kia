@@ -78,6 +78,8 @@ export default class Posting extends Vue {
     beforeCreate() {
         this.$store.commit("searchInput", "");
         this.$store.commit("searchType", "contents");
+        this.$store.commit("hashtag", "");
+        this.$store.commit("sortOrder", "recent");
     }
 
     beforeDestroy() {
