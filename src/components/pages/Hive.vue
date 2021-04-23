@@ -109,6 +109,8 @@ export default class Hive extends Vue {
             }
             this.loadingState = ETootLoadingState.loading;
 
+            let param = {};
+
             if (searchType === "user") {
                 if (this.recentOrder === true) {
                     result = await this.$api.searchAllMedia(
@@ -143,7 +145,6 @@ export default class Hive extends Vue {
                         );
                     }
                 } else {
-                    console.log("here", max_id);
 
                     result = await this.$api.searchAllMedia(
                         "",
@@ -180,7 +181,6 @@ export default class Hive extends Vue {
     @Watch("$store.getters.sortOrder")
     async sortOrder(value: string) {
         if (value === "popular") {
-            console.log("popular");
             this.recentOrder = false;
             this.init();
             this.loadToot();

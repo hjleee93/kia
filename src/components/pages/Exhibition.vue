@@ -126,7 +126,6 @@ export default class Exhibition extends Vue {
                         "",
                         searchInput
                     );
-                    console.log("user", result);
                 } else {
                     result = await this.$api.searchMediaTag(
                         this.tag,
@@ -138,7 +137,6 @@ export default class Exhibition extends Vue {
                     );
                 }
             } else if (searchType === "contents") {
-                console.log("here");
                 if (this.recentOrder === true) {
                     if (searchInput.length === 0) {
                         result = await this.$api.searchMediaTag(
