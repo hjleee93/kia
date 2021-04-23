@@ -144,7 +144,7 @@ export default class Exhibition extends Vue {
             );
           } else {
             result = await this.$api.searchMediaTag(
-              tag,
+              this.tag,
               max_id,
               this.limitCount,
               "f",
