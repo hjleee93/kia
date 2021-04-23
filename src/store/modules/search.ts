@@ -5,6 +5,7 @@ export default {
         searchType: undefined,
         searchInput: undefined,
         sortOrder: 'recent',
+        hashtag: undefined,
     },
     getters: {
         searchResult(state: any) {
@@ -24,6 +25,10 @@ export default {
         sortOrder(state: any) {
             return state.sortOrder;
         },
+        hashtag(state: any) {
+            return state.hashtag;
+        },
+        
 
     },
     mutations: {
@@ -41,6 +46,9 @@ export default {
         },
         sortOrder(state: any, payload: any) {
             state.sortOrder = payload;
+        },
+        hashtag(state: any, payload: any) {
+            state.hashtag = payload;
         },
 
     },

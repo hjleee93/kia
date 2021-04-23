@@ -137,7 +137,7 @@ export default class Api {
             ({
                 method: 'get',
                 url: '/tags',
-                baseURL: 'http://apitoot.wbcard.org',
+                baseURL: 'https://apitoot.wbcard.org',
                 params: { limit: limit, offset: offset, tag: searchInput },
             })
 
@@ -151,8 +151,22 @@ export default class Api {
             ({
                 method: 'get',
                 url: '/search/media',
-                baseURL: 'http://apitoot.wbcard.org',
+                baseURL: 'https://apitoot.wbcard.org',
                 params: { limit: limit, max_id: max_id, tag: tag, username: username },
+            })
+
+
+        return result.data
+    }
+
+    async searchMyToot(username?: string, max_id?: string, limit?: number, tag?: string, text?: string, order?: string) {
+
+        const result = await Vue.$axios
+            ({
+                method: 'get',
+                url: '/search/media',
+                baseURL: 'https://apitoot.wbcard.org',
+                params: { limit: limit, max_id: max_id, tag: tag, username: username, posting:true,text:text, order:order  },
             })
 
 
@@ -164,7 +178,7 @@ export default class Api {
             ({
                 method: 'get',
                 url: '/search/media',
-                baseURL: 'http://apitoot.wbcard.org',
+                baseURL: 'https://apitoot.wbcard.org',
                 params: { order: order, limit: limit, max_id: max_id, tag: tag, posting: posting },
             })
 
@@ -176,7 +190,7 @@ export default class Api {
             ({
                 method: 'get',
                 url: '/search/media',
-                baseURL: 'http://apitoot.wbcard.org',
+                baseURL: 'https://apitoot.wbcard.org',
                 params: { limit: limit, max_id: max_id, tag: tag, text: text, order: order, posting: posting },
             })
 
@@ -189,7 +203,7 @@ export default class Api {
             ({
                 method: 'get',
                 url: '/search/media',
-                baseURL: 'http://apitoot.wbcard.org',
+                baseURL: 'https://apitoot.wbcard.org',
                 params: { limit: limit, max_id: max_id, tag: tag, order: order, text: text, username: username, posting: posting },
             })
 
@@ -203,7 +217,7 @@ export default class Api {
             ({
                 method: 'get',
                 url: '/ranking/tags',
-                baseURL: 'http://apitoot.wbcard.org',
+                baseURL: 'https://apitoot.wbcard.org',
                 params: { gte: gte, lte: lte, limit: limit, offset: offset },
             })
         return result.data
@@ -215,7 +229,7 @@ export default class Api {
             ({
                 method: 'get',
                 url: '/ranking/user',
-                baseURL: 'http://apitoot.wbcard.org',
+                baseURL: 'https://apitoot.wbcard.org',
                 params: { gte: gte, lte: lte, limit: limit, offset: offset },
             })
 
@@ -229,7 +243,7 @@ export default class Api {
             ({
                 method: 'get',
                 url: '/ranking/toot',
-                baseURL: 'http://apitoot.wbcard.org',
+                baseURL: 'https://apitoot.wbcard.org',
                 params: { gte: gte, lte: lte, limit: limit, offset: offset },
             })
 

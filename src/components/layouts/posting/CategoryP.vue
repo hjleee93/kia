@@ -79,6 +79,7 @@ export default class CategoryP extends Vue {
     }
     clickedCategory(category: string) {
         this.active = category;
+        this.$emit('category', category)
     }
 
     @Watch("$store.getters.currCategory")

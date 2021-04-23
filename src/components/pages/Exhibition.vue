@@ -46,7 +46,9 @@ export default class Exhibition extends Vue {
   private tootCnt: number = -1;
   private limitCount: number = 10;
   private loadingState: ETootLoadingState = ETootLoadingState.none;
-  private recentOrder: boolean = true;
+  private recentOrder: boolean = true;  
+  private tag: string = '';
+
   beforeUpdate() {
     tootDropDown.init();
     hashDropDown.init();
@@ -60,11 +62,14 @@ export default class Exhibition extends Vue {
 
   mounted() {
     this.$store.commit("currCategory", "Exhibition");
+    this.tag = this.$store.getters.currCategory.toLowerCase();
     this.loadToot();
     window.addEventListener("scroll", this.scrollHandler);
   }
   beforeCreate() {
     this.$store.commit("searchInput", "");
+    this.$store.commit("searchType", "contents");
+    this.$store.commit("hashtag", "");
   }
   beforeDestroy() {
     window.removeEventListener("scroll", this.scrollHandler);
@@ -96,7 +101,6 @@ export default class Exhibition extends Vue {
       searchInput = this.$store.getters.searchInput;
     }
     let result: any[] = [];
-    let tag = this.$store.getters.currCategory.toLowerCase();
     if (
       this.loadingState === ETootLoadingState.none ||
       this.loadingState === ETootLoadingState.complete
@@ -111,7 +115,7 @@ export default class Exhibition extends Vue {
       if (searchType === "user") {
         if (this.recentOrder === true) {
           result = await this.$api.searchMediaTag(
-            tag,
+            this.tag,
             max_id,
             this.limitCount,
             "",
@@ -121,7 +125,7 @@ export default class Exhibition extends Vue {
           console.log("user", result);
         } else {
           result = await this.$api.searchMediaTag(
-            tag,
+            this.tag,
             max_id,
             this.limitCount,
             "f",
@@ -134,7 +138,7 @@ export default class Exhibition extends Vue {
         if (this.recentOrder === true) {
           if (searchInput.length === 0) {
             result = await this.$api.searchMediaTag(
-              tag,
+              this.tag,
               max_id,
               this.limitCount
             );
@@ -149,7 +153,7 @@ export default class Exhibition extends Vue {
           }
         } else {
           result = await this.$api.searchMediaTag(
-            tag,
+            this.tag,
             max_id,
             this.limitCount,
             "f"
@@ -189,6 +193,14 @@ export default class Exhibition extends Vue {
       this.loadToot();
     }
   }
+  
+   @Watch("$store.getters.hashtag")
+    watchHashtag(val: string) {
+      console.log("??", val)
+        this.tag = val;
+        this.init();
+        this.loadToot();
+    }
 }
 </script>
 

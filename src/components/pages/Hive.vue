@@ -65,6 +65,7 @@ export default class Hive extends Vue {
   }
   beforeCreate() {
     this.$store.commit("searchInput", "");
+    this.$store.commit("searchType", "contents");
   }
   beforeDestroy() {
     window.removeEventListener("scroll", this.scrollHandler);
@@ -86,9 +87,10 @@ export default class Hive extends Vue {
     }
   }
 
-  @Watch("$store.getters.searchType")
-  @Watch("$store.getters.searchInput")
+
+  @Watch("$store.getters.searchInput"|| "$store.getters.searchType")  
   async loadToot() {
+    
     let searchType = "contents";
     let searchInput = "";
     if (this.$store.getters.searchType !== undefined) {
@@ -98,7 +100,6 @@ export default class Hive extends Vue {
     if (this.$store.getters.searchInput !== undefined) {
       searchInput = this.$store.getters.searchInput;
     }
-    console.log(this.allResult, searchType);
 
     let result: any[] = [];
     if (
@@ -114,14 +115,14 @@ export default class Hive extends Vue {
 
       if (searchType === "user") {
         if (this.recentOrder === true) {
-          console.log("recentOrder");
+          console.log("recentOrder user, recent");
           result = await this.$api.searchMedia(
             searchInput,
             max_id,
             this.limitCount
           );
         } else {
-          console.log("recentOrderx");
+          console.log("recentOrderx user");
           result = await this.$api.searchMedia(
             searchInput,
             max_id,
@@ -174,7 +175,7 @@ export default class Hive extends Vue {
 
   @Watch("$store.getters.sortOrder")
   async sortOrder(value: string) {
-    console.log(value);
+    
     if (value === "popular") {
       this.recentOrder = false;
       this.init();
