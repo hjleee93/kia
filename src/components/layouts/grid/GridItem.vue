@@ -11,6 +11,12 @@
                                 "
                             >
                                 <i class="icon icon-play"></i>
+                                <img
+                                    :class="mediaToot.sensitive ? 'sensitive' : ''"
+                                    :src="mediaToot.media_attachments[0].preview_url"
+                                    alt=""
+                                    style="width: 100%"
+                                />
                             </template>
                             <template v-else>
                                 <img

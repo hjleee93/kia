@@ -208,7 +208,7 @@ export default class Api {
                 method: 'get',
                 url: '/ranking/toot',
                 baseURL: this.baseApiUrl,
-                params: { gte: gte, lte: lte, limit: limit, offset: offset },
+                params: { gte: gte, lte: lte, limit: limit, offset: offset, account_id: store.getters.currentUser.id },
             })
 
         return result.data
