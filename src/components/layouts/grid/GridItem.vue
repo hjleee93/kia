@@ -12,6 +12,7 @@
                             >
                                 <i class="icon icon-play"></i>
                                 <img
+                                    class="grid-img"
                                     :class="mediaToot.sensitive ? 'sensitive' : ''"
                                     :src="mediaToot.media_attachments[0].preview_url"
                                     alt=""
@@ -20,6 +21,7 @@
                             </template>
                             <template v-else>
                                 <img
+                                class="grid-img"
                                     :class="mediaToot.sensitive ? 'sensitive' : ''"
                                     :src="mediaToot.media_attachments[0].preview_url"
                                     alt=""
@@ -137,6 +139,9 @@ export default class GridItem extends Vue {
 }
 .sensitive {
     filter: blur(1.5em);
+}
+.grid-img{
+    max-height: 500px;
 }
 @media (min-width: 320px) and (max-width: 1023px) {
     #header + #container #content .content {
