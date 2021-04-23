@@ -90,8 +90,9 @@ export default class Api {
         return result.data;
     }
 
-    async getMyToots(userId: number, max_id?: number,) {
-
+    async getMyToots(max_id?: number,) {
+        await this.getCurrentUser()
+        let userId =  store.getters.currentUser.id
         const result = await Vue.$axios({
             method: 'get',
             url: `/api/v1/accounts/${userId}/statuses`,

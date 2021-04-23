@@ -185,7 +185,7 @@ export default class Posting extends Vue {
                 });
             }
             this.allResult.push(...result);
-
+this.$store.commit("searchResult", this.allResult);
             this.$store.commit("tootCnt", this.allResult.length);
         }
     }

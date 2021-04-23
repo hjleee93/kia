@@ -1,6 +1,6 @@
 export default {
     state: {
-        searchResult: undefined,
+        searchResult: [],
         tootCnt: 0,
         searchType: undefined,
         searchInput: undefined,
@@ -58,6 +58,7 @@ export default {
             commit('searchInput', '')
             commit('searchType', 'contents')
             commit('sortOrder', 'recent')
+            commit('hashtag', '')
         }
     },
 }

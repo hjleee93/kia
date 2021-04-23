@@ -164,7 +164,7 @@ export default class SearchBar extends Vue {
   private category: string = "";
   private isAllToot!: Boolean;
 
-  private limitCount: number = 100;
+  private limitCount: number = 10;
   private tagSearch: any[] = [];
   private recentOrder: boolean = true;
   private searchType: string = "contents";

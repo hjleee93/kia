@@ -91,14 +91,37 @@ export default class AlbumShow extends Vue {
     private imgArr: string[] = [];
 
     async mounted() {
-        this.getImgLists();
+        // this.getImgLists();
         albumPop.init(this.openCallback);
+        console.log('searchResult', await this.$store.getters.searchResult)
+    }
+    beforeCreate() {
+        this.$store.dispatch("resetSearchInfo");
     }
 
     beforeDestroy() {
         albumPop.destroy();
     }
 
+    @Watch('$store.getters.searchResult')
+    watchResult(){
+        let result = this.$store.getters.searchResult;
+        this.imgArr = [];
+        
+        for (let i = 0; i < result.length; i++) {
+                if (result[i].media_attachments.length > 0) {
+                    if (result[i].media_attachments[0].type === "image") {
+                        if(!result[i].sensitive){
+                            this.imgArr.push(result[i].media_attachments[0].url);
+
+                        }
+                    }
+                }
+            }
+          this.init();
+          
+
+    }
     openCallback() {
         this.isOpen = true;
         this.init();
@@ -173,37 +196,6 @@ export default class AlbumShow extends Vue {
             },
             transitionDuration: 0,
         };
-    }
-    @Watch("$store.state.user.currentUser")
-    @Watch("$store.getters.currCategory")
-    async getImgLists() {
-        let result: any = "";
-        this.imgArr = [];
-        this.category = this.$store.getters.currCategory;
-
-        try {
-            if (this.category === "Hive") {
-                result = await this.$api.getMediaTootsOnly();
-            } else if (this.category === "Posting") {
-                if (this.$store.state.user.currentUser !== null) {
-                    result = await this.$api.getMyToots(
-                        this.$store.state.user.currentUser.id
-                    );
-                }
-            } else {
-                result = await this.$api.getTagToots(this.category);
-            }
-
-            for (let i = 0; i < result.length; i++) {
-                if (result[i].media_attachments.length > 0) {
-                    if (result[i].media_attachments[0].type === "image") {
-                        this.imgArr.push(result[i].media_attachments[0].url);
-                    }
-                }
-            }
-        } catch (err) {
-            console.log(err);
-        }
     }
 }
 </script>

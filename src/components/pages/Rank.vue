@@ -104,7 +104,7 @@ enum ETootLoadingState {
 @Component({ components: { Calendar, BestUser, BestHashtag, TootCard } })
 export default class Rank extends Vue {
   private tootList: any[] = [];
-  private limitCount: number = 10;
+  private limitCount: number = 30;
   private loadingState: ETootLoadingState = ETootLoadingState.none;
   private gte!: string;
   private lte: string = this.getFormatDate(new Date());
@@ -143,10 +143,11 @@ export default class Rank extends Vue {
         this.limit,
         this.offset
       );
-      if (result.length < 10) {
-        this.offset += result.length;
+      if (result.length === 0 ) {
+        // this.offset += result.length;
       } else {
         this.offset += this.limit;
+        this.loadToot()
       }
       this.isWatch = false;
       this.tootList.push(...result);
