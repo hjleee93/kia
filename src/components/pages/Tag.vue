@@ -4,7 +4,6 @@
         <div class="content">
             <div class="wrap-fixed">
                 <div class="sec-fixed">
-                    <!-- <SearchHashtag :hashtag="hashtag" @tags="getTags" /> -->
                     <div class="sec-search">
                         <div class="box-layer">
                             <div class="box-search-form">
@@ -123,6 +122,7 @@ export default class Tag extends Vue {
         this.$store.commit("currCategory", "Tag");
         window.addEventListener("scroll", this.scrollHandler);
         window.addEventListener("keydown", this.handleKeyDown);
+        
     }
 
     beforeDestroy() {

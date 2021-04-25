@@ -92,7 +92,7 @@ export default class Api {
 
     async getMyToots(max_id?: number,) {
         await this.getCurrentUser()
-        let userId =  store.getters.currentUser.id
+        let userId = store.getters.currentUser.id
         const result = await Vue.$axios({
             method: 'get',
             url: `/api/v1/accounts/${userId}/statuses`,
@@ -135,47 +135,18 @@ export default class Api {
         return result.data
     }
 
-    async searchAllMedia(username?: string, max_id?: string, limit?: number, tag?: string, text?: string, order?: string) {
+    async showToot(param: object) {
         await this.getCurrentUser()
         const result = await Vue.$axios
             ({
                 method: 'get',
                 url: '/search/media',
                 baseURL: this.baseApiUrl,
-                params: { limit: limit, max_id: max_id, tag: tag, username: username, text: text, order: order, account_id: await store.getters.currentUser.id },
+                params: Object.assign(param),
             })
-
-
         return result.data
     }
 
-    async searchMyToot(username?: string, max_id?: string, limit?: number, tag?: string, text?: string, order?: string) {
-        await this.getCurrentUser()
-        const result = await Vue.$axios
-            ({
-                method: 'get',
-                url: '/search/media',
-                baseURL: this.baseApiUrl,
-                params: { limit: limit, max_id: max_id, tag: tag, username: username, posting: true, text: text, order: order, account_id: await store.getters.currentUser.id },
-            })
-
-
-        return result.data
-    }
-
-    async searchMediaTag(tag?: string, max_id?: string, limit?: number, order?: string, text?: string, username?: string, posting?: boolean) {
-        await this.getCurrentUser()
-        const result = await Vue.$axios
-            ({
-                method: 'get',
-                url: '/search/media',
-                baseURL: this.baseApiUrl,
-                params: { limit: limit, max_id: max_id, tag: tag, order: order, text: text, username: username, posting: posting, account_id: await store.getters.currentUser.id },
-            })
-
-
-        return result.data
-    }
 
     async getBestHashtags(gte: string, lte: string, limit?: number, offset?: number) {
 

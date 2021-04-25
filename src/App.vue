@@ -14,7 +14,6 @@ import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 export default class App extends Vue {
   async mounted() {
     try {
-      console.log(this.$store.getters.userToken);
       if (
         this.$store.getters.userToken !== "null" &&
         this.$store.getters.userToken !== null

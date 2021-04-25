@@ -236,11 +236,14 @@ export default class SearchBar extends Vue {
   listsOpen() {
     search.listsOpen();
   }
+
   inpFocus(arg: string) {
     this.isDone = false;
     search.inpFocus(this.$refs[arg]);
   }
+
   searchToot() {
+    this.$store.dispatch("tootReset");
     if (this.searchInput.length !== 0) {
       this.$store.commit("searchInput", this.searchInput);
       this.$store.commit("searchType", this.searchType);
@@ -251,13 +254,13 @@ export default class SearchBar extends Vue {
   deleteHistory(idx: number) {
     this.searchHistory = this.Search.deleteSearchHistory(idx);
   }
+
   clickedRctKeyword(keyword: string) {
     this.searchInput = keyword;
   }
 
   deleteResult() {
-    this.$store.commit("searchInput", "");
-    this.$store.commit("searchType", "contents");
+    this.$store.dispatch("resetSearchInfo");
     this.isDone = false;
   }
 }

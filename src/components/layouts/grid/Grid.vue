@@ -1,7 +1,7 @@
 <template>
   <div class="sec-grid">
     <!--검색 결과가 없는경우-->
-    <template v-if="allToots === null || allToots.length === 0">
+    <template v-if="allResult === null || allResult.length === 0">
       <div class="no-data">
         <p class="txt">검색 결과가 없습니다.</p>
       </div>
@@ -15,9 +15,13 @@
         class="grid"
         tabindex="11"
         :options="optionPc()"
-        :list="allToots"
+        :list="allResult"
       >
-        <GridItem v-for="(toot, index) in allToots" :toot="toot" :key="index" />
+        <GridItem
+          v-for="(toot, index) in allResult"
+          :toot="toot"
+          :key="index"
+        />
       </isotope>
       <isotope
         v-else-if="device === 'mo'"
@@ -26,9 +30,13 @@
         class="grid"
         tabindex="100"
         :options="optionsMo()"
-        :list="allToots"
+        :list="allResult"
       >
-        <GridItem v-for="(toot, index) in allToots" :toot="toot" :key="index" />
+        <GridItem
+          v-for="(toot, index) in allResult"
+          :toot="toot"
+          :key="index"
+        />
       </isotope>
     </template>
   </div>
@@ -63,15 +71,13 @@ export default class Grid extends Vue {
       this.$refs.isotope.layout();
     }, 100);
   }
-  // @Watch("tagSearch")
-  // changeTag() {
-  //     this.allToots = this.tagSearch;
-  // }
+  @Watch("tagSearch")
+  changeTag() {
+    this.allToots = this.tagSearch;
+  }
 
-  @Watch("allResult")
+  @Watch("$store.getters.searchResult")
   changeResult() {
-    this.allToots = this.allResult;
-
     //@ts-ignore
     imagesLoaded(document.querySelector(".grid"), () => {
       setTimeout(() => {
@@ -79,7 +85,7 @@ export default class Grid extends Vue {
           //@ts-ignore
           this.$refs.isotope.layout();
         }
-      }, 1000);
+      }, 100);
     });
   }
 
@@ -112,7 +118,7 @@ export default class Grid extends Vue {
 
       horizontal: true,
       horizontalOrder: true,
-      // transitionDuration: 0,
+      transitionDuration: 200,
     };
   }
 
@@ -125,13 +131,9 @@ export default class Grid extends Vue {
     };
   }
 
-  @Watch("$store.getters.searchResult")
-  searchResult() {
-    this.init();
-    this.allToots = this.$store.getters.searchResult;
-  }
-  init() {
+  async init() {
     this.allToots = [];
+    await this.$store.dispatch("tootReset");
   }
 }
 </script>

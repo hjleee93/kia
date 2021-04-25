@@ -1,3 +1,5 @@
+import Vue from "vue";
+import store from "..";
 export default {
     state: {
         searchResult: [],
@@ -6,6 +8,7 @@ export default {
         searchInput: undefined,
         sortOrder: 'recent',
         hashtag: undefined,
+        searchParam: {}
     },
     getters: {
         searchResult(state: any) {
@@ -28,7 +31,7 @@ export default {
         hashtag(state: any) {
             return state.hashtag;
         },
-        
+
 
     },
     mutations: {
@@ -41,6 +44,7 @@ export default {
         searchType(state: any, payload: any) {
             state.searchType = payload;
         },
+
         searchInput(state: any, payload: any) {
             state.searchInput = payload;
         },
@@ -59,6 +63,26 @@ export default {
             commit('searchType', 'contents')
             commit('sortOrder', 'recent')
             commit('hashtag', '')
+        },
+
+
+        //@ts-ignore
+        async showToot({ commit, dispatch }, searchParam) {
+            let result: any;
+            try {
+                //@ts-ignore
+                result = await Vue.$api.showToot(searchParam);
+                commit('searchResult', result)
+
+            } catch (err) {
+                dispatch('tootReset')
+                console.log(err)
+                //TODO: error handling
+            }
+        },
+        //@ts-ignore
+        async tootReset({ commit }) {
+            await commit('searchResult', [])
         }
-    },
+    }
 }
