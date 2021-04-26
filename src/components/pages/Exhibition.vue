@@ -26,6 +26,7 @@ import Category from "@/components/layouts/Category.vue";
 import Grid from "@/components/layouts/grid/Grid.vue";
 import BoxGridTop from "@/components/layouts/grid/BoxGridTop.vue";
 import SearchBar from "@/components/layouts/SearchBar.vue";
+import Toot from "@/scripts/toot";
 import {
     dim,
     gnb,
@@ -34,24 +35,18 @@ import {
     getDevice,
 } from "@/scripts/ui_common";
 
-enum ETootLoadingState {
-    none,
-    loading,
-    complete,
-    end,
-}
 @Component({
     components: { SearchBar, Category, Grid, BoxGridTop },
 })
 export default class Exhibition extends Vue {
+   private Toot: Toot = new Toot();
     private category: string = "Exhibition";
     private tagSearch: any[] = [];
     private tootCnt: number = -1;
     private limitCount: number = 20;
-    private loadingState: ETootLoadingState = ETootLoadingState.none;
     private recentOrder: string = "";
     private tag: string = "";
-    private offset = 0;
+    private el: any;
 
     beforeUpdate() {
         tootDropDown.init();
@@ -79,83 +74,35 @@ export default class Exhibition extends Vue {
 
     @Watch("$store.getters.searchInput")
     init() {
-        this.loadingState = ETootLoadingState.none;
         this.tagSearch = [];
         this.$store.dispatch("tootReset");
     }
 
     scrollHandler() {
-        let el = document.documentElement;
+        this.el = document.documentElement;
 
-        if (el.scrollTop === 0) {
-        } else if (el.scrollTop + el.clientHeight >= el.scrollHeight - 150) {
+        if (this.el.scrollTop === 0) {
+        } else if (this.el.scrollTop + this.el.clientHeight >= this.el.scrollHeight - 150) {
             this.loadToot();
         }
     }
     @Watch("$store.getters.searchInput")
     async loadToot() {
-        let searchType = this.$store.getters.searchType;
-        let searchInput = this.$store.getters.searchInput;
-        if (
-            this.loadingState === ETootLoadingState.none ||
-            this.loadingState === ETootLoadingState.complete
-        ) {
-            let max_id = undefined;
-
-            if (this.tagSearch.length) {
-                max_id = this.tagSearch[this.tagSearch.length - 1].id;
+      await this.Toot.loadToot(
+            this.el,
+            this.tagSearch,
+            this.tag,
+            (allResult: any[]) => {
+                console.log("allResult", this.tagSearch);
+                this.tagSearch.push(...allResult);
             }
-            this.loadingState = ETootLoadingState.loading;
-
-            let userId = await this.$store.getters.currentUser.id;
-
-            let param = {
-                account_id: userId,
-                posting: false,
-                limit: this.limitCount,
-                max_id: this.recentOrder === "f" ? "" : max_id,
-                offset: this.recentOrder === "f" ? this.offset : "",
-                tag: this.tag,
-                username: searchType === "contents" ? "" : searchInput,
-                text: searchType === "contents" ? searchInput : "",
-                order: this.recentOrder,
-            };
-
-            await this.$store.dispatch("showToot", param);
-
-            if (this.$store.getters.searchResult.length === 0) {
-                this.loadingState = ETootLoadingState.end;
-            } else {
-                setTimeout(() => {
-                    this.$nextTick(() => {
-                        this.$nextTick(() => {
-                            const el = document.documentElement;
-                            if (el.scrollHeight <= el.clientHeight) {
-                                this.loadingState = ETootLoadingState.complete;
-                                this.loadToot();
-                            } else {
-                                this.loadingState = ETootLoadingState.complete;
-                            }
-                        });
-                    });
-                }, 300);
-            }
-            this.offset += this.limitCount;
-            this.tagSearch.push(...this.$store.getters.searchResult);
-             this.$store.commit("albumResult", this.tagSearch);
-            this.$store.commit("tootCnt", this.tagSearch.length);
-        }
+        );
     }
-    @Watch("$store.getters.sortOrder")
-    sortOrder(value: string) {
-        if (value === "popular") {
-            this.offset = 0;
-            this.recentOrder = "f";
-        } else if (value === "recent") {
-            this.recentOrder = "";
-        }
+     @Watch("$store.getters.sortOrder")
+    async sortOrder() {
         this.init();
-        this.loadToot();
+        this.recentOrder = this.Toot.sortOrder();
+        await this.loadToot();
     }
 
     @Watch("$store.getters.hashtag")

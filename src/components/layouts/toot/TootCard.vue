@@ -212,14 +212,14 @@ export default class TootCard extends Vue {
 .txt.more {
   font-size: 12px;
   text-align: right;
-  color: #838d97;
+  color: #fff;
 }
 .txt.more:hover {
   cursor: pointer;
 }
 .tag {
   font-size: 12px;
-  color: #838d97;
+  color: #fff;
 }
 @media (min-width: 1024px) {
   .hash-lists {

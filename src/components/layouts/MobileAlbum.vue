@@ -94,6 +94,7 @@ export default class AlbumShow extends Vue {
         this.stopInterval();
         albumPop.init(this.openCallback);
     }
+
     beforeCreate() {
         this.$store.dispatch("resetSearchInfo");
     }
@@ -150,6 +151,10 @@ export default class AlbumShow extends Vue {
                 url: imageList[i],
             });
 
+            if( this.autoScroll ) {
+              this.stopInterval();
+            }
+
             this.autoScroll = setInterval(() => {
                 if (this.$refs.scroll !== undefined) {
                     this.$refs.scroll.scrollLeft += 10;
@@ -158,11 +163,10 @@ export default class AlbumShow extends Vue {
                             this.$refs.scroll.clientWidth ===
                         this.$refs.scroll.scrollLeft
                     ) {
-                        console.log("?");
                         this.stopInterval();
                     }
                 }
-            }, 1000);
+            }, 1000/60);
         }
     }
 

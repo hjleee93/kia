@@ -1,5 +1,5 @@
 <template>
-    <div class="grid-item" >
+    <div class="grid-item">
         <template v-if="mediaToot.media_attachments !== undefined">
             <template v-if="mediaToot.media_attachments[0] !== undefined">
                 <a href="#" class="btn btn-link">
@@ -7,23 +7,34 @@
                         <div class="box-img">
                             <template
                                 v-if="
-                                    mediaToot.media_attachments[0].type === 'video'
+                                    mediaToot.media_attachments[0].type ===
+                                    'video'
                                 "
                             >
                                 <i class="icon icon-play"></i>
                                 <img
                                     class="grid-img"
-                                    :class="mediaToot.sensitive ? 'sensitive' : ''"
-                                    :src="mediaToot.media_attachments[0].preview_url"
+                                    :class="
+                                        mediaToot.sensitive ? 'sensitive' : ''
+                                    "
+                                    :src="
+                                        mediaToot.media_attachments[0]
+                                            .preview_url
+                                    "
                                     alt=""
                                     style="width: 100%"
                                 />
                             </template>
                             <template v-else>
                                 <img
-                                class="grid-img"
-                                    :class="mediaToot.sensitive ? 'sensitive' : ''"
-                                    :src="mediaToot.media_attachments[0].preview_url"
+                                    class="grid-img"
+                                    :class="
+                                        mediaToot.sensitive ? 'sensitive' : ''
+                                    "
+                                    :src="
+                                        mediaToot.media_attachments[0]
+                                            .preview_url
+                                    "
                                     alt=""
                                     style="width: 100%"
                                 />
@@ -55,7 +66,9 @@
                         </template>
 
                         <router-link
-                            :to="'/mastodon/web/accounts/' + mediaToot.account.id"
+                            :to="
+                                '/mastodon/web/accounts/' + mediaToot.account.id
+                            "
                         >
                             <span class="nic-name">{{
                                 mediaToot.account.username
@@ -87,7 +100,6 @@ export default class GridItem extends Vue {
     private baseURL: string = process.env.VUE_APP_BASE_API!;
 
     mounted() {
-       
         if (this.mediaToot.content !== undefined) {
             this.tootContent = this.mediaToot.content.replaceAll(
                 `${this.baseURL}`,
@@ -97,10 +109,10 @@ export default class GridItem extends Vue {
         this.matchHeight();
     }
 
-    @Watch('toot')
-    watchResult(){
-      this.mediaToot = this.toot
-      if (this.mediaToot.content !== undefined) {
+    @Watch("toot")
+    watchResult() {
+        this.mediaToot = this.toot;
+        if (this.mediaToot.content !== undefined) {
             this.tootContent = this.mediaToot.content.replaceAll(
                 `${this.baseURL}`,
                 "#/mastodon/"
@@ -140,8 +152,14 @@ export default class GridItem extends Vue {
 .sensitive {
     filter: blur(1.5em);
 }
-.grid-img{
+.grid-img {
     max-height: 500px;
+}
+.mention .hashtag {
+    font-size: 14px;
+    line-height: 19px;
+    letter-spacing: -0.4px;
+    color: white;
 }
 @media (min-width: 320px) and (max-width: 1023px) {
     #header + #container #content .content {
