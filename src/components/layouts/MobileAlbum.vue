@@ -23,7 +23,7 @@
                         <span>닫기</span>
                     </button>
                 </div>
-                <div class="layer-content">
+                <div class="layer-content" ref="scroll">
                     <div class="grid-wrap">
                         <isotope class="grid" :options="options()" :list="list">
                             <div
@@ -87,16 +87,20 @@ export default class AlbumShow extends Vue {
     list: any[] = [];
     detailStc: string = "";
     category: string = "";
-
+    autoScroll!: any;
     private imgArr: string[] = [];
 
     async mounted() {
+        this.stopInterval();
         albumPop.init(this.openCallback);
     }
     beforeCreate() {
         this.$store.dispatch("resetSearchInfo");
     }
 
+    stopInterval() {
+        clearInterval(this.autoScroll);
+    }
     beforeDestroy() {
         albumPop.destroy();
     }
@@ -113,7 +117,6 @@ export default class AlbumShow extends Vue {
         this.isOpen = true;
         this.init();
     }
-
     async init() {
         const heightRatio = 1.0681818182;
 
@@ -146,6 +149,20 @@ export default class AlbumShow extends Vue {
                 width: img.width,
                 url: imageList[i],
             });
+
+            this.autoScroll = setInterval(() => {
+                if (this.$refs.scroll !== undefined) {
+                    this.$refs.scroll.scrollLeft += 10;
+                    if (
+                        this.$refs.scroll.scrollWidth -
+                            this.$refs.scroll.clientWidth ===
+                        this.$refs.scroll.scrollLeft
+                    ) {
+                        console.log("?");
+                        this.stopInterval();
+                    }
+                }
+            }, 1000);
         }
     }
 
