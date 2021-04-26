@@ -74,6 +74,21 @@
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 
+function parseTags( text : string ) {
+    const regexp = /(#[\d|A-Z|a-z|ㄱ-ㅎ|ㅏ-ㅣ|가-힣]*)/;
+    const arr = [];
+    let ma = text.match( regexp ) as RegExpMatchArray;
+    while (ma) {
+        text = text.substr( (ma.index||0) + ma[0].length + 1 );
+        const tag = ma[0].replace('#', '');
+        if( tag !== '' ) {
+            arr.push( tag );
+        }
+        ma = text.match( regexp ) as RegExpMatchArray;
+    }
+    return arr;
+}
+
 @Component({ components: {} })
 export default class TootCard extends Vue {
   @Prop() private toot: any;
