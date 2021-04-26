@@ -37,12 +37,12 @@
                         class="input"
                         :class="[
                             isEmailActive ? 'active' : '',
-                            isLoginError ? 'error' : '',
                         ]"
                     >
                         <input
                             @focus="isEmailActive = true"
                             @blur="isEmailActive = false"
+                            @keyup="isLoginError = false"
                             type="text"
                             placeholder="이메일"
                             v-model="email"
@@ -59,12 +59,15 @@
                         class="input"
                         :class="[
                             isPwdActive ? 'active' : '',
-                            isLoginError ? 'error' : '',
+                            password.length < 8 && password.length > 0
+                                ? 'error'
+                                : '',
                         ]"
                     >
                         <input
                             @focus="isPwdActive = true"
                             @blur="isPwdActive = false"
+                            @keyup="isLoginError = false"
                             type="password"
                             placeholder="비밀번호"
                             v-model="password"
@@ -76,11 +79,13 @@
                     <!--default-->
                     <button
                         class="btn btn-login"
+                        :class="[email.match(emailRegExp) !== null &&
+                            password.length && isLoginError>= 8 ? 'active' : '']"
                         @click="login"
                         :disabled="
-                            this.email.match(emailRegExp) === null || !password
-                        "
-                    >
+                            (email.match(emailRegExp) === null && email.length >=0)  ||
+                            (password.length < 8 &&password.length>=0) ||
+                            isLoginError">
                         로그인
                     </button>
 
@@ -280,7 +285,9 @@ export default class Login extends Vue {
                                 await this.updateCurrentUser(
                                     result.data.access_token
                                 );
-                                this.$router.push("/hive").catch(() => {});
+                                this.$router
+                                    .push("/mastodon/web/timelines/public")
+                                    .catch(() => {});
                             } catch (err) {
                                 this.appError();
                             }
@@ -321,10 +328,6 @@ export default class Login extends Vue {
 </script>
 
 <style scoped>
-.btn.btn-login:active {
-    background-color: #fff !important;
-    color: #000 !important;
-}
 
 .iframe {
     /* display: contents; */
