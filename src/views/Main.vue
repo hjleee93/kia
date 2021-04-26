@@ -21,10 +21,10 @@ import MobileAlbum from "@/components/layouts/MobileAlbum.vue";
 @Component({
     components: { Header, MobileAlbum },
 })
-export default class App extends Vue {   
-
+export default class App extends Vue {  
     async mounted() {
         initApp();
+        
     }
 }
 </script>

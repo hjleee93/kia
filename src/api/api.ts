@@ -67,7 +67,6 @@ export default class Api {
             store.dispatch('logout')
 
         });
-
         return result.data
     }
 

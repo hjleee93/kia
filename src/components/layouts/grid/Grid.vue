@@ -118,7 +118,7 @@ export default class Grid extends Vue {
 
       horizontal: true,
       horizontalOrder: true,
-      transitionDuration: 200,
+      transitionDuration: 300,
     };
   }
 

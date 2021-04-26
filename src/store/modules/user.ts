@@ -15,6 +15,7 @@ export default {
     },
     mutations: {
         userToken(state: any, payload: boolean) {
+            console.log('user', payload)
             state.userToken = payload;
         },
         currentUser(state: any, payload: any) {
@@ -27,10 +28,10 @@ export default {
             let result: any;
             try {
                 result = await Vue.$api.getCurrentUser();
-                localStorage.setItem('token', token)
-                commit('currentUser', result)
+                localStorage.setItem('token', token)               
+                commit('currentUser',  result)
             } catch (err) {
-                await dispatch('logout')
+                dispatch('logout')
             }
 
 

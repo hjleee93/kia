@@ -3,6 +3,7 @@ import store from "..";
 export default {
     state: {
         searchResult: [],
+
         tootCnt: 0,
         searchType: undefined,
         searchInput: undefined,
@@ -14,6 +15,7 @@ export default {
         searchResult(state: any) {
             return state.searchResult;
         },
+
         tootCnt(state: any) {
             return state.tootCnt;
         },
@@ -38,6 +40,7 @@ export default {
         searchResult(state: any, payload: any) {
             state.searchResult = payload;
         },
+
         tootCnt(state: any, payload: any) {
             state.tootCnt = payload;
         },
