@@ -165,12 +165,10 @@ import {
     tootDropDown,
     tootDropDown2,
 } from "@/scripts/ui_common";
-import Toot from "@/scripts/toot";
 
 @Component({ components: {} })
 export default class SearchBar extends Vue {
     private search: Search = new Search();
-    // private toot: Toot = new Toot();
 
     @Prop() sortOrder!: string;
     private searchInput: string = "";
@@ -257,7 +255,7 @@ export default class SearchBar extends Vue {
         this.isDone = true;
         this.$store.dispatch("tootReset");
         if (this.searchInput.length !== 0) {
-            this.$store.commit("searchInput", this.searchInput);
+            this.$store.commit("searchInput", this.searchInput.trim());
             this.$store.commit("searchType", this.searchType);
             this.search.saveSearchHistory(this.searchInput);
 

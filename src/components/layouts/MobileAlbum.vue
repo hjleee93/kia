@@ -162,9 +162,7 @@ export default class AlbumShow extends Vue {
                     this.$refs.scroll.scrollLeft += 2;
                     if (
                         //@ts-ignore
-                        this.$refs.scroll.scrollWidth -
-                            this.$refs.scroll.clientWidth ===
-                        this.$refs.scroll.scrollLeft
+                        this.$refs.scroll.scrollWidth - this.$refs.scroll.clientWidth === this.$refs.scroll.scrollLeft
                     ) {
                         //@ts-ignore
                         this.$refs.scroll.scrollLeft = 0;
@@ -190,11 +188,17 @@ export default class AlbumShow extends Vue {
 
         if (document.exitFullscreen) {
             document.exitFullscreen();
+            //@ts-ignore
         } else if (document.mozCancelFullScreen) {
+            //@ts-ignore
             document.mozCancelFullScreen();
+            //@ts-ignore
         } else if (document.webkitExitFullscreen) {
+            //@ts-ignore
             document.webkitExitFullscreen();
+            //@ts-ignore
         } else if (document.msExitFullscreen) {
+            //@ts-ignore
             window.top.document.msExitFullscreen();
         }
     }

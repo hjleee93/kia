@@ -78,16 +78,23 @@ export default class Category extends Vue {
     albumPop.layerOpen();
      let elem = document.documentElement;
         if (elem.requestFullscreen) {
+          //@ts-ignore
             elem.requestFullscreen();
+            //@ts-ignore
         } else if (elem.mozRequestFullScreen) {
             /* Firefox */
+            //@ts-ignore
             elem.mozRequestFullScreen();
+            //@ts-ignore
         } else if (elem.webkitRequestFullscreen) {
             /* Chrome, Safari & Opera */
+            //@ts-ignore
             elem.webkitRequestFullscreen();
+            //@ts-ignore
         } else if (elem.msRequestFullscreen) {
             /* IE/Edge */
             elem = window.top.document.body; //To break out of frame in IE
+            //@ts-ignore
             elem.msRequestFullscreen();
         }
   }
