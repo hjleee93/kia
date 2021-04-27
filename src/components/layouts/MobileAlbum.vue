@@ -119,6 +119,7 @@ export default class AlbumShow extends Vue {
         this.init();
     }
     async init() {
+       
         const heightRatio = 1.0681818182;
 
         const imageList = this.imgArr;
@@ -151,22 +152,25 @@ export default class AlbumShow extends Vue {
                 url: imageList[i],
             });
 
-            if( this.autoScroll ) {
-              this.stopInterval();
+            if (this.autoScroll) {
+                this.stopInterval();
             }
 
             this.autoScroll = setInterval(() => {
                 if (this.$refs.scroll !== undefined) {
                     //@ts-ignore
-                    this.$refs.scroll.scrollLeft += 10;
+                    this.$refs.scroll.scrollLeft += 2;
                     if (
                         //@ts-ignore
-                        this.$refs.scroll.scrollWidth - this.$refs.scroll.clientWidth === this.$refs.scroll.scrollLeft
+                        this.$refs.scroll.scrollWidth -
+                            this.$refs.scroll.clientWidth ===
+                        this.$refs.scroll.scrollLeft
                     ) {
-                        this.stopInterval();
+                        //@ts-ignore
+                        this.$refs.scroll.scrollLeft = 0;
                     }
                 }
-            }, 1000/60);
+            }, 1000 / 60);
         }
     }
 
@@ -183,6 +187,16 @@ export default class AlbumShow extends Vue {
             // isDesktop();
             // document.querySelector("#layer .grid")!.innerHTML = "";
         });
+
+        if (document.exitFullscreen) {
+            document.exitFullscreen();
+        } else if (document.mozCancelFullScreen) {
+            document.mozCancelFullScreen();
+        } else if (document.webkitExitFullscreen) {
+            document.webkitExitFullscreen();
+        } else if (document.msExitFullscreen) {
+            window.top.document.msExitFullscreen();
+        }
     }
 
     layerOpenDepth2(image: any) {

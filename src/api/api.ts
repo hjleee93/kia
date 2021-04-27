@@ -1,5 +1,6 @@
 import store from '@/store';
 import axios, { AxiosInstance } from 'axios'
+import { result } from 'lodash';
 import Vue, { PluginObject } from "vue";
 
 export default class Api {
@@ -135,7 +136,7 @@ export default class Api {
     }
 
     async showToot(param: object) {
-        await this.getCurrentUser()
+        // await this.getCurrentUser()
         const result = await Vue.$axios
             ({
                 method: 'get',

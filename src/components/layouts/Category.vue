@@ -74,7 +74,22 @@ export default class Category extends Vue {
   }
 
   openAlbum(): void {
+    
     albumPop.layerOpen();
+     let elem = document.documentElement;
+        if (elem.requestFullscreen) {
+            elem.requestFullscreen();
+        } else if (elem.mozRequestFullScreen) {
+            /* Firefox */
+            elem.mozRequestFullScreen();
+        } else if (elem.webkitRequestFullscreen) {
+            /* Chrome, Safari & Opera */
+            elem.webkitRequestFullscreen();
+        } else if (elem.msRequestFullscreen) {
+            /* IE/Edge */
+            elem = window.top.document.body; //To break out of frame in IE
+            elem.msRequestFullscreen();
+        }
   }
   clickedCategory(category: string) {
     this.active = category;

@@ -3,7 +3,7 @@
         <div class="content">
             <div class="wrap-fixed">
                 <div class="sec-fixed">
-                    <SearchBar />
+                    <SearchBar @searchToot="searchToot" />
                     <Category @tagResult="tagResult" />
                     <div class="sec-grid-top">
                         <BoxGridTop
@@ -44,7 +44,7 @@ export default class Exhibition extends Vue {
     private tagSearch: any[] = [];
     private tootCnt: number = -1;
     private tag: string = "";
-    private el: any;
+    private el: HTMLElement = document.documentElement;
 
     beforeUpdate() {
         tootDropDown.init();
@@ -80,12 +80,15 @@ export default class Exhibition extends Vue {
             }
             wait();
         });
-
+        this.toot.ready();
         this.toot.newVersion(this.category);
         window.addEventListener("scroll", this.scrollHandler);
     }
     beforeDestroy() {
         window.removeEventListener("scroll", this.scrollHandler);
+    }
+    searchToot() {
+        this.toot && this.toot.newVersion(this.category, true);
     }
 
     scrollHandler() {

@@ -64,7 +64,6 @@ export default {
         resetSearchInfo({ commit }) {
             commit('searchInput', '')
             commit('searchType', 'contents')
-            // commit('sortOrder', 'recent')
             commit('hashtag', '')
             commit('searchResult', [])
         },

@@ -169,8 +169,8 @@ import Toot from "@/scripts/toot";
 
 @Component({ components: {} })
 export default class SearchBar extends Vue {
-    private Search: Search = new Search();
-    private toot: Toot = new Toot();
+    private search: Search = new Search();
+    // private toot: Toot = new Toot();
 
     @Prop() sortOrder!: string;
     private searchInput: string = "";
@@ -182,7 +182,7 @@ export default class SearchBar extends Vue {
     private recentOrder: boolean = true;
     private searchType: string = "contents";
 
-    private searchHistory = this.Search.searchHistory;
+    private searchHistory = this.search.searchHistory;
 
     @Watch("$store.getters.currCategory")
     getCategory() {
@@ -209,7 +209,6 @@ export default class SearchBar extends Vue {
         if (this.searchInput.length !== 0) {
             if (e.keyCode === 13) {
                 this.searchToot();
-                this.isDone = true;
             }
         }
     }
@@ -255,24 +254,19 @@ export default class SearchBar extends Vue {
     }
 
     searchToot() {
+        this.isDone = true;
         this.$store.dispatch("tootReset");
         if (this.searchInput.length !== 0) {
             this.$store.commit("searchInput", this.searchInput);
             this.$store.commit("searchType", this.searchType);
-            this.Search.saveSearchHistory(this.searchInput);
-            if (
-                this.category.toLowerCase() === "posting" ||
-                this.category.toLowerCase() === "hive"
-            ) {
-                this.toot && this.toot.newVersion();
-            } else {
-                this.toot && this.toot.newVersion(this.category);
-            }
+            this.search.saveSearchHistory(this.searchInput);
+
+            this.$emit("searchToot");
         }
     }
 
     deleteHistory(idx: number) {
-        this.searchHistory = this.Search.deleteSearchHistory(idx);
+        this.searchHistory = this.search.deleteSearchHistory(idx);
     }
 
     clickedRctKeyword(keyword: string) {
@@ -280,8 +274,10 @@ export default class SearchBar extends Vue {
     }
 
     deleteResult() {
-        this.$store.dispatch("resetSearchInfo");
         this.isDone = false;
+        this.searchInput = "";
+        this.$store.dispatch("resetSearchInfo");
+        this.$emit("searchToot");
     }
 }
 </script>

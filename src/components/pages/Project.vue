@@ -3,7 +3,7 @@
         <div class="content">
             <div class="wrap-fixed">
                 <div class="sec-fixed">
-                    <SearchBar />
+                    <SearchBar @searchToot="searchToot" />
                     <Category @tagResult="tagResult" />
                     <div class="sec-grid-top">
                         <BoxGridTop @sortOrder="sortOrder" />
@@ -31,13 +31,6 @@ import {
     getDevice,
 } from "@/scripts/ui_common";
 
-enum ETootLoadingState {
-    none,
-    loading,
-    complete,
-    end,
-}
-
 @Component({
     components: { SearchBar, Category, Grid, BoxGridTop },
 })
@@ -46,12 +39,9 @@ export default class Project extends Vue {
     private category: string = "Project";
     private tagSearch: any[] = [];
     private limitCount: number = 20;
-    private loadingState: ETootLoadingState = ETootLoadingState.none;
-    private recentOrder: string = "";
     private tag: string = "";
-    private currentCategory: string = "Project";
+    private el: HTMLElement = document.documentElement;
 
-    private el: any;
     beforeUpdate() {
         tootDropDown.init();
         hashDropDown.init();
@@ -61,9 +51,12 @@ export default class Project extends Vue {
     tagResult(result: any) {
         this.tagSearch = result;
     }
-
+    searchToot() {
+        this.toot && this.toot.newVersion(this.category, true);
+    }
+    
     async mounted() {
-        this.$store.commit("currCategory", this.currentCategory);
+        this.$store.commit("currCategory", this.category);
 
         this.tag = this.$store.getters.currCategory.toLowerCase();
 
@@ -74,6 +67,7 @@ export default class Project extends Vue {
             this.tagSearch = [];
             this.$store.dispatch("resetSearchInfo");
         });
+
         this.toot.create(document.documentElement);
         await new Promise<void>((resolve) => {
             const store = this.$store;
@@ -86,18 +80,13 @@ export default class Project extends Vue {
             }
             wait();
         });
-        this.toot.newVersion(this.currentCategory);
+        this.toot.ready();
+        this.toot.newVersion(this.category);
         window.addEventListener("scroll", this.scrollHandler);
     }
 
     beforeDestroy() {
         window.removeEventListener("scroll", this.scrollHandler);
-    }
-    @Watch("$store.getters.searchInput")
-    init() {
-        this.el = document.documentElement;
-        this.tagSearch = [];
-        this.$store.dispatch("tootReset");
     }
 
     scrollHandler() {
@@ -112,7 +101,7 @@ export default class Project extends Vue {
 
     @Watch("$store.getters.sortOrder")
     async sortOrder() {
-        this.toot && this.toot.newVersion(this.currentCategory);
+        this.toot && this.toot.newVersion(this.category);
     }
     @Watch("$store.getters.hashtag")
     watchHashtag(val: string) {

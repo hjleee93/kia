@@ -3,7 +3,7 @@
         <div class="content">
             <div class="wrap-fixed">
                 <div class="sec-fixed">
-                    <SearchBar />
+                    <SearchBar @searchToot="searchToot" />
                     <Category />
                     <div class="sec-grid-top">
                         <BoxGridTop @sortOrder="sortOrder" />
@@ -50,7 +50,8 @@ export default class Hive extends Vue {
     }
 
     async mounted() {
-        this.$store.commit("currCategory", "Hive");
+        this.$store.commit("currCategory", this.category);
+
         this.toot.event.$on("addToot", (result: any) => {
             this.allResult.push(...result);
         });
@@ -58,6 +59,7 @@ export default class Hive extends Vue {
             this.allResult = [];
             this.$store.dispatch("resetSearchInfo");
         });
+
         this.toot.create(document.documentElement);
 
         await new Promise<void>((resolve) => {
@@ -71,9 +73,12 @@ export default class Hive extends Vue {
             }
             wait();
         });
-
+        this.toot.ready();
         this.toot.newVersion();
         window.addEventListener("scroll", this.scrollHandler);
+    }
+    searchToot() {
+        this.toot && this.toot.newVersion("", true);
     }
 
     beforeDestroy() {

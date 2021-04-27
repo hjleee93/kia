@@ -18,6 +18,7 @@
                         </li>
                         <li class="list-toot" @click="clickedHeader('Toot')">
                             <router-link
+                          
                                 to="/mastodon/web/statuses/new"
                                 class="btn btn-link"
                                 :class="{ active: isActive('Toot') }"
@@ -144,6 +145,8 @@ export default class Header extends Vue {
     clickedLogo() {
         this.$router.push("/mastodon/web/timelines/public").catch(() => {});
     }
+
+   
 }
 </script>
 

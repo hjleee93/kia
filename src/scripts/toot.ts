@@ -3,6 +3,7 @@ import store from './../store';
 
 enum ETootLoadingState {
     none,
+    ready,
     loading,
     complete,
     end,
@@ -24,28 +25,41 @@ export default class Toot {
         this.el = el;
     }
 
-    newVersion(tag?: string) {
+    newVersion(tag?: string, isSearch?: boolean) {
+
+        if(this.loadingState === ETootLoadingState.none){
+            return;
+        }
+
         this.version++;
         this.allResult = [];
-        this.event.$emit('resetToot');
+        if (!isSearch) {
+            this.event.$emit('resetToot');
+        }
         this.offset = 0;
-        this.loadingState = ETootLoadingState.none;
+        this.loadingState = ETootLoadingState.ready;
         if (tag) {
             this.tag = tag;
         }
         this.load();
 
     }
+    ready(){
+        if(this.loadingState === ETootLoadingState.none){
+            this.loadingState = ETootLoadingState.ready;
+        }
+            
+    }
 
     async load() {
-        if (this.loadingState === ETootLoadingState.none
+        if (this.loadingState === ETootLoadingState.ready 
             || this.loadingState === ETootLoadingState.complete) {
-            let posting = false;
 
-            let searchInput = store.getters.searchInput;
+            let posting = false;
             let username = '';
+            let searchInput = store.getters.searchInput;
             const searchType = store.getters.searchType;
-            const recentOrder = store.getters.sortOrder;
+            const recentOrder = store.getters.sortOrder;            
             const account_id = store.getters.currentUser.id;
             const currCategory = store.getters.currCategory.toLowerCase();
 
@@ -79,6 +93,7 @@ export default class Toot {
             store.commit("albumResult", this.allResult);
             store.commit("tootCnt", this.allResult.length);
             this.offset += result.length;
+
 
             if (result.length < this.limitCount) {
                 this.loadingState = ETootLoadingState.end;

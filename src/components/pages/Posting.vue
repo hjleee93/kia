@@ -3,7 +3,7 @@
         <div class="content">
             <div class="wrap-fixed">
                 <div class="sec-fixed">
-                    <SearchBar />
+                    <SearchBar @searchToot="searchToot" />
                     <CategoryP @category="getCategory" />
                     <div class="sec-grid-top">
                         <BoxGridTop
@@ -54,7 +54,7 @@ export default class Posting extends Vue {
     private loadingState: ETootLoadingState = ETootLoadingState.none;
     private recentOrder: string = "";
     private offset = 0;
-    private el: any;
+    private el: HTMLElement = document.documentElement;
 
     beforeUpdate() {
         tootDropDown.init();
@@ -65,15 +65,16 @@ export default class Posting extends Vue {
     }
     async mounted() {
         this.$store.commit("currCategory", this.category);
+
         this.toot.event.$on("addToot", (result: any) => {
             this.allResult.push(...result);
         });
         this.toot.event.$on("resetToot", () => {
             this.allResult = [];
             this.$store.dispatch("resetSearchInfo");
-            
         });
         this.toot.create(document.documentElement);
+
         await new Promise<void>((resolve) => {
             const store = this.$store;
             function wait() {
@@ -85,6 +86,7 @@ export default class Posting extends Vue {
             }
             wait();
         });
+        this.toot.ready();
         this.toot.newVersion();
         window.addEventListener("scroll", this.scrollHandler);
     }
@@ -95,6 +97,9 @@ export default class Posting extends Vue {
         if (this.recentResult.length > 0) {
             this.allResult = this.recentResult;
         }
+    }
+    searchToot() {
+        this.toot && this.toot.newVersion("", true);
     }
 
     beforeDestroy() {
@@ -122,7 +127,7 @@ export default class Posting extends Vue {
 
     getCategory(val: string) {
         this.category = val;
-        this.toot && this.toot.newVersion();
+        this.toot && this.toot.newVersion(val);
     }
 
     @Watch("$store.getters.hashtag")

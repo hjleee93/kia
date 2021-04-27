@@ -134,7 +134,6 @@ export default class Rank extends Vue {
         }
     }
     onClickTab(event: Event) {
-        console.log(event.target);
         tab.click(event.target);
     }
 

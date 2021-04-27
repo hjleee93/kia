@@ -3,7 +3,7 @@
         <div class="content">
             <div class="wrap-fixed">
                 <div class="sec-fixed">
-                    <SearchBar />
+                    <SearchBar @searchToot="searchToot" />
                     <Category @tagResult="tagResult" />
                     <div class="sec-grid-top">
                         <BoxGridTop @sortOrder="sortOrder" />
@@ -38,11 +38,8 @@ export default class Inspiration extends Vue {
     private toot: Toot = new Toot();
     private category: string = "Inspiration";
     private tagSearch: any[] = [];
-    private limitCount: number = 20;
-
-    private recentOrder: string = "";
     private tag: string = "";
-    private el: any;
+    private el: HTMLElement = document.documentElement;
 
     beforeUpdate() {
         tootDropDown.init();
@@ -54,6 +51,9 @@ export default class Inspiration extends Vue {
     tagResult(result: any) {
         this.tagSearch = result;
     }
+    searchToot() {
+        this.toot && this.toot.newVersion(this.category, true);
+    }
 
     async mounted() {
         this.$store.commit("currCategory", this.category);
@@ -63,7 +63,7 @@ export default class Inspiration extends Vue {
         });
         this.toot.event.$on("resetToot", () => {
             this.tagSearch = [];
-           this.$store.dispatch("resetSearchInfo");
+            this.$store.dispatch("resetSearchInfo");
         });
         this.toot.create(document.documentElement);
         await new Promise<void>((resolve) => {
@@ -77,20 +77,19 @@ export default class Inspiration extends Vue {
             }
             wait();
         });
-
+        this.toot.ready();
         this.toot.newVersion(this.category);
         window.addEventListener("scroll", this.scrollHandler);
     }
-    
+
     beforeDestroy() {
         window.removeEventListener("scroll", this.scrollHandler);
     }
 
-
     scrollHandler() {
         if (this.el.scrollTop === 0) {
         } else if (
-             this.el.scrollTop + this.el.clientHeight ===
+            this.el.scrollTop + this.el.clientHeight ===
             this.el.scrollHeight
         ) {
             this.toot.load();
