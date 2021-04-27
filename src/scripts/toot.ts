@@ -47,7 +47,7 @@ class Toot {
         return this.recentOrder
     }
 
-    async loadToot(el: any, allResult: any, tag?: string, call?: Function) {
+    async loadToot(posting: boolean, el: any, allResult: any, tag?: string, call?: Function) {
         this.userId = store.getters.currentUser.id
         let searchType = store.getters.searchlType;
         let searchInput = store.getters.searchInput;
@@ -62,11 +62,15 @@ class Toot {
                 max_id = allResult[allResult.length - 1].id;
             }
 
+            if(posting){
+                searchInput =store.getters.currentUser.username
+                console.log(searchInput)
+            }
+
             let param = {
                 account_id: this.userId,
-                posting: false,
+                posting: posting,
                 limit: 20,
-
                 offset: this.offset,
                 tag: tag,
                 username: searchType === "contents" ? "" : searchInput,
@@ -76,7 +80,7 @@ class Toot {
             // await store.dispatch("showToot", param);
             //이전 상태 감지
 
-            const prevCount = this.count; // 
+            const prevCount = this.count;
             this.loadingState = this.ETootLoadingState.loading;
             const result = await Vue.$api.showToot(param);
             console.log(prevCount, this.count)
@@ -94,21 +98,21 @@ class Toot {
             store.commit("albumResult", allResult);
             store.commit("tootCnt", allResult.length);
 
-
             //hive 로 result 보내고 
             if (result.length < this.limitcount) {
                 this.loadingState = this.ETootLoadingState.end;
+
             } else {
-                setTimeout(() => {
-                    this.loadingState = this.ETootLoadingState.complete;
+                // setTimeout(() => {
+                this.loadingState = this.ETootLoadingState.complete;
 
-                    if (el.scrollHeight <= el.clientHeight) {
-                        this.loadToot(el, result, tag, call);
-                    }
+                if (el.scrollHeight <= el.clientHeight) {
+                    this.loadToot(posting, el, result, tag, call);
+                    console.log("setTime1", allResult)
 
+                }
 
-
-                }, 200);
+                // }, 200);
             }
         }
 

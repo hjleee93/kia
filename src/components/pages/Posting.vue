@@ -33,6 +33,7 @@ import {
     tootDropDown,
     getDevice,
 } from "@/scripts/ui_common";
+import Toot from "@/scripts/toot";
 
 enum ETootLoadingState {
     none,
@@ -45,6 +46,7 @@ enum ETootLoadingState {
     components: { SearchBar, CategoryP, Grid, BoxGridTop },
 })
 export default class Posting extends Vue {
+    private Toot: Toot = new Toot();
     private category: string = "Posting";
     private allResult: any[] = [];
     private recentResult: any[] = [];
@@ -52,6 +54,7 @@ export default class Posting extends Vue {
     private loadingState: ETootLoadingState = ETootLoadingState.none;
     private recentOrder: string = "";
     private offset = 0;
+    private el: any;
 
     beforeUpdate() {
         tootDropDown.init();
@@ -63,8 +66,10 @@ export default class Posting extends Vue {
     async mounted() {
         window.addEventListener("scroll", this.scrollHandler);
         this.$store.commit("currCategory", "Posting");
+        this.init();
         await this.loadToot();
     }
+    
     @Watch("recentResult")
     @Watch("allResult")
     result() {
@@ -84,15 +89,16 @@ export default class Posting extends Vue {
     @Watch("$store.getters.searchType")
     @Watch("$store.getters.searchInput")
     init() {
-        this.loadingState = ETootLoadingState.none;
         this.allResult = [];
+        this.el = document.documentElement;
         this.$store.dispatch("tootReset");
     }
     scrollHandler() {
-        let el = document.documentElement;
-
-        if (el.scrollTop === 0) {
-        } else if (el.scrollTop + el.clientHeight >= el.scrollHeight - 100) {
+        if (this.el.scrollTop === 0) {
+        } else if (
+            this.el.scrollTop + this.el.clientHeight >=
+            this.el.scrollHeight - 100
+        ) {
             this.loadToot();
         }
     }
@@ -103,69 +109,23 @@ export default class Posting extends Vue {
 
     @Watch("$store.getters.searchInput")
     async loadToot() {
-        let searchType = this.$store.getters.searchType;
-        let searchInput = this.$store.getters.searchInput;
-        if (
-            this.loadingState === ETootLoadingState.none ||
-            this.loadingState === ETootLoadingState.complete
-        ) {
-            let max_id = undefined;
-
-            if (this.allResult.length) {
-                max_id = this.allResult[this.allResult.length - 1].id;
+        await this.Toot.loadToot(
+            true,
+            this.el,
+            this.allResult,
+            "",
+            (allResult: any[]) => {
+                console.log("allResult", this.allResult);
+                this.allResult.push(...allResult);
             }
-            this.loadingState = ETootLoadingState.loading;
-
-            let userInfo = await this.$store.getters.currentUser;
-
-            let param = {
-                account_id: userInfo.id,
-                posting: true,
-                limit: this.limitCount,
-                max_id: this.recentOrder === "f" ? "" : max_id,
-                offset: this.recentOrder === "f" ? this.offset : "",
-                tag: this.category === "Posting" ? "" : this.category,
-                username: userInfo.username,
-                text: searchType === "contents" ? searchInput : "",
-                order: this.recentOrder,
-            };
-
-            await this.$store.dispatch("showToot", param);
-
-            if (this.$store.getters.searchResult.length === 0) {
-                this.loadingState = ETootLoadingState.end;
-            } else {
-                setTimeout(() => {
-                    this.$nextTick(() => {
-                        this.$nextTick(() => {
-                            const el = document.documentElement;
-                            if (el.scrollHeight <= el.clientHeight) {
-                                this.loadingState = ETootLoadingState.complete;
-                                this.loadToot();
-                            } else {
-                                this.loadingState = ETootLoadingState.complete;
-                            }
-                        });
-                    });
-                }, 400);
-            }
-            this.offset += this.limitCount;
-            this.allResult.push(...this.$store.getters.searchResult);
-            this.$store.commit("albumResult", this.allResult);
-            this.$store.commit("tootCnt", this.allResult.length);
-        }
+        );
     }
 
     @Watch("$store.getters.sortOrder")
-    sortOrder(value: string) {
-        if (value === "popular") {
-            this.offset = 0;
-            this.recentOrder = "f";
-        } else if (value === "recent") {
-            this.recentOrder = "";
-        }
+    async sortOrder() {
         this.init();
-        this.loadToot();
+        this.recentOrder = this.Toot.sortOrder();
+        await this.loadToot();
     }
 
     getCategory(val: string) {

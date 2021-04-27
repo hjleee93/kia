@@ -39,7 +39,7 @@ import {
     components: { SearchBar, Category, Grid, BoxGridTop },
 })
 export default class Exhibition extends Vue {
-   private Toot: Toot = new Toot();
+    private Toot: Toot = new Toot();
     private category: string = "Exhibition";
     private tagSearch: any[] = [];
     private tootCnt: number = -1;
@@ -62,6 +62,7 @@ export default class Exhibition extends Vue {
     mounted() {
         this.$store.commit("currCategory", "Exhibition");
         this.tag = this.$store.getters.currCategory.toLowerCase();
+        this.init();
         this.loadToot();
         window.addEventListener("scroll", this.scrollHandler);
     }
@@ -82,13 +83,17 @@ export default class Exhibition extends Vue {
         this.el = document.documentElement;
 
         if (this.el.scrollTop === 0) {
-        } else if (this.el.scrollTop + this.el.clientHeight >= this.el.scrollHeight - 150) {
+        } else if (
+            this.el.scrollTop + this.el.clientHeight >=
+            this.el.scrollHeight - 150
+        ) {
             this.loadToot();
         }
     }
     @Watch("$store.getters.searchInput")
     async loadToot() {
-      await this.Toot.loadToot(
+        await this.Toot.loadToot(
+            false,
             this.el,
             this.tagSearch,
             this.tag,
@@ -98,7 +103,7 @@ export default class Exhibition extends Vue {
             }
         );
     }
-     @Watch("$store.getters.sortOrder")
+    @Watch("$store.getters.sortOrder")
     async sortOrder() {
         this.init();
         this.recentOrder = this.Toot.sortOrder();

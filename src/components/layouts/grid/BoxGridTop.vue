@@ -2,7 +2,7 @@
   <div class="box-grid-top">
     <div class="floated left">
       <!-- todo: toot 개수 가져오는 api 호출  -->
-      <p class="txt">총 {{ $store.getters.tootCnt }}개의 톳</p>
+      <p class="txt">총 {{tootCnt }}개의 톳</p>
       <!--<p class="txt">총 100개의 검색 결과</p>-->
     </div>
     <div class="floated right">
@@ -37,8 +37,12 @@ import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 
 @Component({ components: {} })
 export default class BoxGridTop extends Vue {
-  @Prop() tootCnt!: number;
+  private 
   private active: string = "recent";
+
+@Watch('$store.getters.tootCnt')
+  watchCnt(val){
+  }
 
   tootStatus(value: string) {
     this.active = value;

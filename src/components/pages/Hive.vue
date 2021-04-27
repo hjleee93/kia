@@ -39,7 +39,6 @@ export default class Hive extends Vue {
     private Toot: Toot = new Toot();
     private category: string = "Hive";
     private allResult: any[] = [];
-    private limitCount: number = 20;
     private recentOrder: string = "";
     private el: any;
 
@@ -70,7 +69,6 @@ export default class Hive extends Vue {
 
     @Watch("$store.getters.searchInput" || "$store.getters.searchType")
     init() {
-        // this.loadingState = ETootLoadingState.none;
         this.allResult = [];
         this.el = document.documentElement;
         this.$store.dispatch("tootReset");
@@ -82,6 +80,7 @@ export default class Hive extends Vue {
             this.el.scrollTop + this.el.clientHeight >=
             this.el.scrollHeight - 100
         ) {
+            console.log("load");
             this.loadToot();
         }
     }
@@ -89,12 +88,15 @@ export default class Hive extends Vue {
     @Watch("$store.getters.searchInput" || "$store.getters.searchType")
     async loadToot() {
         await this.Toot.loadToot(
+            false,
             this.el,
             this.allResult,
             "",
             (allResult: any[]) => {
-                console.log("allResult", this.allResult);
                 this.allResult.push(...allResult);
+                this.$store.commit("tootCnt", this.allResult.length);
+                console.log("allResult hive", this.allResult);
+                console.log("allResult length", this.$store.getters.tootCnt);
             }
         );
     }
@@ -109,3 +111,5 @@ export default class Hive extends Vue {
 </script>
 
 <style></style>
+store.commit("albumResult", allResult);
+            store.commit("tootCnt", allResult.length);

@@ -71,24 +71,22 @@ export default class Inspiration extends Vue {
 
     @Watch("$store.getters.searchInput" || "$store.getters.searchType")
     init() {
-  
         this.tagSearch = [];
         this.el = document.documentElement;
         this.$store.dispatch("tootReset");
     }
 
     scrollHandler() {
-        let el = document.documentElement;
-
-        if (el.scrollTop === 0) {
-        } else if (el.scrollTop + el.clientHeight >= el.scrollHeight - 150) {
+        if (this.el.scrollTop === 0) {
+        } else if (this.el.scrollTop + this.el.clientHeight >= this.el.scrollHeight - 150) {
             this.loadToot();
         }
     }
 
     @Watch("$store.getters.searchInput" || "$store.getters.searchType")
     async loadToot() {
-       await this.Toot.loadToot(
+        await this.Toot.loadToot(
+            false,
             this.el,
             this.tagSearch,
             this.tag,
