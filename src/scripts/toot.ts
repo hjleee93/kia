@@ -1,125 +1,105 @@
-
 import Vue from "vue";
 import store from './../store';
 
-class Toot {
+enum ETootLoadingState {
+    none,
+    loading,
+    complete,
+    end,
+}
 
-    private ETootLoadingState = {
-        none: 0,
-        loading: 1,
-        complete: 2,
-        end: 3,
+
+export default class Toot {
+    event: Vue = new Vue();
+
+    private el: HTMLElement = document.body;
+    private limitCount: number = 10;
+    private version: number = 0;
+    private tag: string = ''
+    allResult: any[] = [];
+    private loadingState: ETootLoadingState = ETootLoadingState.none;
+    private offset = 0;
+
+    create(el: HTMLElement) {
+        this.el = el;
     }
-    private userId: number = 0;
-    private count: number = 0;
-    private offset: number = 0;
-    private recentOrder: string = '';
-    private limitcount: number = 20;
-    private loadingState: number = this.ETootLoadingState.none;
 
-    async getCurrentUser() {
-        let user = await Vue.$api.getCurrentUser();
-        this.userId = user.id
-    }
-
-    init() {
-        // 이전 상태가 달라질때 마다 호출 
+    newVersion(tag?: string) {
+        this.version++;
+        this.allResult = [];
+        this.event.$emit('resetToot');
         this.offset = 0;
-        this.recentOrder = '';
-        this.loadingState = this.ETootLoadingState.none;
-        store.commit("albumResult", []);
-        store.commit("tootCnt", 0);
-        store.commit("searchResult", []);
-        this.count++;
-
-
-    }
-
-    sortOrder() {
-        let value = store.getters.sortOrder
-        this.init();
-        console.log('value', value)
-        if (value === "popular") {
-            this.recentOrder = "f";
-        } else if (value === "recent") {
-            this.recentOrder = "";
+        this.loadingState = ETootLoadingState.none;
+        if (tag) {
+            this.tag = tag;
         }
-        return this.recentOrder
+        this.load();
+
     }
 
-    async loadToot(posting: boolean, el: any, allResult: any, tag?: string, call?: Function) {
-        this.userId = store.getters.currentUser.id
-        let searchType = store.getters.searchlType;
-        let searchInput = store.getters.searchInput;
+    async load() {
+        if (this.loadingState === ETootLoadingState.none
+            || this.loadingState === ETootLoadingState.complete) {
+            let posting = false;
 
+            let searchInput = store.getters.searchInput;
+            let username ='';
+            const searchType = store.getters.searchType;
+            const recentOrder = store.getters.sortOrder;
+            const account_id = store.getters.currentUser.id;
+            const currCategory = store.getters.currCategory.toLowerCase();
 
-        if (
-            this.loadingState === this.ETootLoadingState.none ||
-            this.loadingState === this.ETootLoadingState.complete
-        ) {
-            let max_id = undefined;
-            if (allResult.length) {
-                max_id = allResult[allResult.length - 1].id;
+            if (searchType === "contents" && currCategory === 'posting') {
+                posting = true;
+                username = store.getters.currentUser.username
+            }else if(searchType !== "contents"){
+                username = searchInput
             }
 
-            if(posting){
-                searchInput =store.getters.currentUser.username
-                console.log(searchInput)
-            }
 
             let param = {
-                account_id: this.userId,
+                account_id,
                 posting: posting,
-                limit: 20,
+                limit: this.limitCount,
                 offset: this.offset,
-                tag: tag,
-                username: searchType === "contents" ? "" : searchInput,
+                tag: this.tag,
+                username: username,
                 text: searchType === "contents" ? searchInput : "",
-                order: this.recentOrder,
+                order: recentOrder === 'popular' ? 'f' : '',
             };
-            // await store.dispatch("showToot", param);
-            //이전 상태 감지
 
-            const prevCount = this.count;
-            this.loadingState = this.ETootLoadingState.loading;
+            const reqVersion = this.version;
             const result = await Vue.$api.showToot(param);
-            console.log(prevCount, this.count)
-            //이전이랑 현재 상태랑 비교해서 
-            if (this.count !== prevCount) {
-                //다르면 무시
+            if (reqVersion !== this.version) {
                 return;
             }
 
-            // store.commit('searchResult', result);
-            call && call(result);
+            console.log('result', result)
+            this.allResult.push(...result);
+            this.event.$emit('addToot', result);
+            store.commit('searchResult', this.allResult)
+            store.commit("albumResult", this.allResult);
+            store.commit("tootCnt", this.allResult.length);
             this.offset += result.length;
 
-            // allResult.push(...result);
-            store.commit("albumResult", allResult);
-            store.commit("tootCnt", allResult.length);
-
-            //hive 로 result 보내고 
-            if (result.length < this.limitcount) {
-                this.loadingState = this.ETootLoadingState.end;
-
-            } else {
-                // setTimeout(() => {
-                this.loadingState = this.ETootLoadingState.complete;
-
-                if (el.scrollHeight <= el.clientHeight) {
-                    this.loadToot(posting, el, result, tag, call);
-                    console.log("setTime1", allResult)
-
-                }
-
-                // }, 200);
+            if (result.length < this.limitCount) {
+                this.loadingState = ETootLoadingState.end;
+            }
+            else {
+                setTimeout(() => {
+                    if (this.el.scrollHeight <= this.el.clientHeight) {
+                        this.loadingState = ETootLoadingState.complete;
+                        this.load();
+                    } else {
+                        this.loadingState = ETootLoadingState.complete;
+                    }
+                }, 200);
             }
         }
 
 
-        return allResult;
     }
 
-}
 
-export default Toot;
+
+}

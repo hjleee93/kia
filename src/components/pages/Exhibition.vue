@@ -14,7 +14,7 @@
                     <div class="dim"></div>
                 </div>
             </div>
-            <Grid :allResult="tagSearch" />
+            <Grid :key="$store.getters.sortOrder" :allResult="tagSearch" />
         </div>
     </div>
 </template>
@@ -39,7 +39,7 @@ import {
     components: { SearchBar, Category, Grid, BoxGridTop },
 })
 export default class Exhibition extends Vue {
-    private Toot: Toot = new Toot();
+    private toot: Toot = new Toot();
     private category: string = "Exhibition";
     private tagSearch: any[] = [];
     private tootCnt: number = -1;
@@ -59,11 +59,30 @@ export default class Exhibition extends Vue {
         this.tagSearch = result;
     }
 
-    mounted() {
-        this.$store.commit("currCategory", "Exhibition");
+    async mounted() {
+        this.$store.commit("currCategory", this.category);
         this.tag = this.$store.getters.currCategory.toLowerCase();
-        this.init();
-        this.loadToot();
+
+        this.toot.event.$on("addToot", (result: any) => {
+            this.tagSearch.push(...result);
+        });
+        this.toot.event.$on("resetToot", () => {
+            this.tagSearch = [];
+        });
+        this.toot.create(document.documentElement);
+        await new Promise<void>((resolve) => {
+            const store = this.$store;
+            function wait() {
+                if (store.getters.currentUser !== null) {
+                    resolve();
+                } else {
+                    setTimeout(wait, 100);
+                }
+            }
+            wait();
+        });
+
+        this.toot.newVersion(this.category);
         window.addEventListener("scroll", this.scrollHandler);
     }
     beforeCreate() {
@@ -73,48 +92,24 @@ export default class Exhibition extends Vue {
         window.removeEventListener("scroll", this.scrollHandler);
     }
 
-    @Watch("$store.getters.searchInput")
-    init() {
-        this.tagSearch = [];
-        this.$store.dispatch("tootReset");
-    }
-
     scrollHandler() {
-        this.el = document.documentElement;
-
         if (this.el.scrollTop === 0) {
         } else if (
-            this.el.scrollTop + this.el.clientHeight >=
-            this.el.scrollHeight - 150
+             this.el.scrollTop + this.el.clientHeight ===
+            this.el.scrollHeight
         ) {
-            this.loadToot();
+            this.toot.load();
         }
     }
-    @Watch("$store.getters.searchInput")
-    async loadToot() {
-        await this.Toot.loadToot(
-            false,
-            this.el,
-            this.tagSearch,
-            this.tag,
-            (allResult: any[]) => {
-                console.log("allResult", this.tagSearch);
-                this.tagSearch.push(...allResult);
-            }
-        );
-    }
+
     @Watch("$store.getters.sortOrder")
     async sortOrder() {
-        this.init();
-        this.recentOrder = this.Toot.sortOrder();
-        await this.loadToot();
+        this.toot && this.toot.newVersion(this.category);
     }
 
     @Watch("$store.getters.hashtag")
     watchHashtag(val: string) {
-        this.tag = val;
-        this.init();
-        this.loadToot();
+        this.toot && this.toot.newVersion(val);
     }
 }
 </script>

@@ -11,7 +11,7 @@
                     <div class="dim"></div>
                 </div>
             </div>
-            <Grid :key="recentOrder.toString()" :allResult="allResult" />
+            <Grid :key="$store.getters.sortOrder" :allResult="allResult" />
         </div>
     </div>
 </template>
@@ -36,11 +36,10 @@ import Toot from "@/scripts/toot";
     components: { SearchBar, Category, Grid, BoxGridTop },
 })
 export default class Hive extends Vue {
-    private Toot: Toot = new Toot();
+    private toot: Toot = new Toot();
     private category: string = "Hive";
     private allResult: any[] = [];
-    private recentOrder: string = "";
-    private el: any;
+    private el: HTMLElement = document.documentElement;
 
     beforeUpdate() {
         tootDropDown.init();
@@ -51,65 +50,62 @@ export default class Hive extends Vue {
     }
 
     async mounted() {
-        await Vue.$api.getCurrentUser();
+        this.toot.event.$on("addToot", (result: any) => {
+            this.allResult.push(...result);
+        });
+        this.toot.event.$on("resetToot", () => {
+            this.allResult = [];
+        });
+        this.toot.create(document.documentElement);
         this.$store.commit("currCategory", "Hive");
-        this.init();
-        this.loadToot();
 
+        await new Promise<void>((resolve) => {
+            const store = this.$store;
+            function wait() {
+                if (store.getters.currentUser !== null) {
+                    resolve();
+                } else {
+                    setTimeout(wait, 100);
+                }
+            }
+            wait();
+        });
+
+        this.toot.newVersion();
         window.addEventListener("scroll", this.scrollHandler);
     }
 
-    async beforeCreate() {
-        this.$store.dispatch("resetSearchInfo");
-    }
+    // async beforeCreate() {
+    //     this.$store.dispatch("resetSearchInfo");
+    // }
 
     beforeDestroy() {
         window.removeEventListener("scroll", this.scrollHandler);
     }
 
-    @Watch("$store.getters.searchInput" || "$store.getters.searchType")
-    init() {
-        this.allResult = [];
-        this.el = document.documentElement;
-        this.$store.dispatch("tootReset");
-    }
+    // @Watch("$store.getters.searchInput" || "$store.getters.searchType")
+    // init() {
+    //     this.loadingState = ETootLoadingState.none;
+    //     this.allResult = [];
+    //     this.el = document.documentElement;
+    //     this.$store.dispatch("tootReset");
+    // }
 
     scrollHandler() {
         if (this.el.scrollTop === 0) {
         } else if (
-            this.el.scrollTop + this.el.clientHeight >=
-            this.el.scrollHeight - 100
+            this.el.scrollTop + this.el.clientHeight ===
+            this.el.scrollHeight
         ) {
-            console.log("load");
-            this.loadToot();
+            this.toot.load();
         }
-    }
-
-    @Watch("$store.getters.searchInput" || "$store.getters.searchType")
-    async loadToot() {
-        await this.Toot.loadToot(
-            false,
-            this.el,
-            this.allResult,
-            "",
-            (allResult: any[]) => {
-                this.allResult.push(...allResult);
-                this.$store.commit("tootCnt", this.allResult.length);
-                console.log("allResult hive", this.allResult);
-                console.log("allResult length", this.$store.getters.tootCnt);
-            }
-        );
     }
 
     @Watch("$store.getters.sortOrder")
     async sortOrder() {
-        this.init();
-        this.recentOrder = this.Toot.sortOrder();
-        await this.loadToot();
+        this.toot && this.toot.newVersion();
     }
 }
 </script>
 
 <style></style>
-store.commit("albumResult", allResult);
-            store.commit("tootCnt", allResult.length);

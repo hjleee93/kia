@@ -14,7 +14,7 @@
                     <div class="dim"></div>
                 </div>
             </div>
-            <Grid :allResult="allResult" />
+            <Grid :key="$store.getters.sortOrder" :allResult="allResult" />
         </div>
     </div>
 </template>
@@ -46,7 +46,7 @@ enum ETootLoadingState {
     components: { SearchBar, CategoryP, Grid, BoxGridTop },
 })
 export default class Posting extends Vue {
-    private Toot: Toot = new Toot();
+    private toot: Toot = new Toot();
     private category: string = "Posting";
     private allResult: any[] = [];
     private recentResult: any[] = [];
@@ -64,12 +64,29 @@ export default class Posting extends Vue {
         gnb.init();
     }
     async mounted() {
+        this.$store.commit("currCategory", this.category);
+        this.toot.event.$on("addToot", (result: any) => {
+            this.allResult.push(...result);
+        });
+        this.toot.event.$on("resetToot", () => {
+            this.allResult = [];
+        });
+        this.toot.create(document.documentElement);
+        await new Promise<void>((resolve) => {
+            const store = this.$store;
+            function wait() {
+                if (store.getters.currentUser !== null) {
+                    resolve();
+                } else {
+                    setTimeout(wait, 100);
+                }
+            }
+            wait();
+        });
+        this.toot.newVersion();
         window.addEventListener("scroll", this.scrollHandler);
-        this.$store.commit("currCategory", "Posting");
-        this.init();
-        await this.loadToot();
     }
-    
+
     @Watch("recentResult")
     @Watch("allResult")
     result() {
@@ -86,20 +103,13 @@ export default class Posting extends Vue {
         window.removeEventListener("scroll", this.scrollHandler);
     }
 
-    @Watch("$store.getters.searchType")
-    @Watch("$store.getters.searchInput")
-    init() {
-        this.allResult = [];
-        this.el = document.documentElement;
-        this.$store.dispatch("tootReset");
-    }
     scrollHandler() {
         if (this.el.scrollTop === 0) {
         } else if (
-            this.el.scrollTop + this.el.clientHeight >=
-            this.el.scrollHeight - 100
+            this.el.scrollTop + this.el.clientHeight ===
+            this.el.scrollHeight
         ) {
-            this.loadToot();
+            this.toot.load();
         }
     }
 
@@ -107,38 +117,19 @@ export default class Posting extends Vue {
         this.allResult = result;
     }
 
-    @Watch("$store.getters.searchInput")
-    async loadToot() {
-        await this.Toot.loadToot(
-            true,
-            this.el,
-            this.allResult,
-            "",
-            (allResult: any[]) => {
-                console.log("allResult", this.allResult);
-                this.allResult.push(...allResult);
-            }
-        );
-    }
-
     @Watch("$store.getters.sortOrder")
     async sortOrder() {
-        this.init();
-        this.recentOrder = this.Toot.sortOrder();
-        await this.loadToot();
+        this.toot && this.toot.newVersion();
     }
 
     getCategory(val: string) {
         this.category = val;
-        this.init();
-        this.loadToot();
+        this.toot && this.toot.newVersion();
     }
 
     @Watch("$store.getters.hashtag")
     watchHashtag(val: string) {
-        this.category = val;
-        this.init();
-        this.loadToot();
+        this.toot && this.toot.newVersion(val);
     }
 }
 </script>

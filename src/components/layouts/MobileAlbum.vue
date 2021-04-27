@@ -157,11 +157,11 @@ export default class AlbumShow extends Vue {
 
             this.autoScroll = setInterval(() => {
                 if (this.$refs.scroll !== undefined) {
+                    //@ts-ignore
                     this.$refs.scroll.scrollLeft += 10;
                     if (
-                        this.$refs.scroll.scrollWidth -
-                            this.$refs.scroll.clientWidth ===
-                        this.$refs.scroll.scrollLeft
+                        //@ts-ignore
+                        this.$refs.scroll.scrollWidth - this.$refs.scroll.clientWidth === this.$refs.scroll.scrollLeft
                     ) {
                         this.stopInterval();
                     }
