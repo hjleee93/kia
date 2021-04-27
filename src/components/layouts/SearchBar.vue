@@ -255,13 +255,19 @@ export default class SearchBar extends Vue {
     }
 
     searchToot() {
-      console.log("??")
         this.$store.dispatch("tootReset");
         if (this.searchInput.length !== 0) {
             this.$store.commit("searchInput", this.searchInput);
             this.$store.commit("searchType", this.searchType);
             this.Search.saveSearchHistory(this.searchInput);
-            this.toot.load();
+            if (
+                this.category.toLowerCase() === "posting" ||
+                this.category.toLowerCase() === "hive"
+            ) {
+                this.toot && this.toot.newVersion();
+            } else {
+                this.toot && this.toot.newVersion(this.category);
+            }
         }
     }
 

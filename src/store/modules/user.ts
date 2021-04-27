@@ -15,7 +15,6 @@ export default {
     },
     mutations: {
         userToken(state: any, payload: boolean) {
-            console.log('user', payload)
             state.userToken = payload;
         },
         currentUser(state: any, payload: any) {

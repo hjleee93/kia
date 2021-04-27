@@ -64,8 +64,9 @@ export default {
         resetSearchInfo({ commit }) {
             commit('searchInput', '')
             commit('searchType', 'contents')
-            commit('sortOrder', 'recent')
+            // commit('sortOrder', 'recent')
             commit('hashtag', '')
+            commit('searchResult', [])
         },
 
 
@@ -82,11 +83,11 @@ export default {
                 console.log(err)
                 //TODO: error handling
             }
-           
+
         },
         //@ts-ignore
-        async tootReset({ commit }) {
-            await commit('searchResult', [])
+        tootReset({ commit }) {
+            commit('searchResult', [])
         }
     }
 }

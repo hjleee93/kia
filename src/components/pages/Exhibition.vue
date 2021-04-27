@@ -43,8 +43,6 @@ export default class Exhibition extends Vue {
     private category: string = "Exhibition";
     private tagSearch: any[] = [];
     private tootCnt: number = -1;
-    private limitCount: number = 20;
-    private recentOrder: string = "";
     private tag: string = "";
     private el: any;
 
@@ -68,6 +66,7 @@ export default class Exhibition extends Vue {
         });
         this.toot.event.$on("resetToot", () => {
             this.tagSearch = [];
+            this.$store.dispatch("resetSearchInfo");
         });
         this.toot.create(document.documentElement);
         await new Promise<void>((resolve) => {
@@ -85,9 +84,6 @@ export default class Exhibition extends Vue {
         this.toot.newVersion(this.category);
         window.addEventListener("scroll", this.scrollHandler);
     }
-    beforeCreate() {
-        this.$store.dispatch("resetSearchInfo");
-    }
     beforeDestroy() {
         window.removeEventListener("scroll", this.scrollHandler);
     }
@@ -95,7 +91,7 @@ export default class Exhibition extends Vue {
     scrollHandler() {
         if (this.el.scrollTop === 0) {
         } else if (
-             this.el.scrollTop + this.el.clientHeight ===
+            this.el.scrollTop + this.el.clientHeight ===
             this.el.scrollHeight
         ) {
             this.toot.load();

@@ -70,6 +70,8 @@ export default class Posting extends Vue {
         });
         this.toot.event.$on("resetToot", () => {
             this.allResult = [];
+            this.$store.dispatch("resetSearchInfo");
+            
         });
         this.toot.create(document.documentElement);
         await new Promise<void>((resolve) => {
@@ -93,10 +95,6 @@ export default class Posting extends Vue {
         if (this.recentResult.length > 0) {
             this.allResult = this.recentResult;
         }
-    }
-
-    beforeCreate() {
-        this.$store.dispatch("resetSearchInfo");
     }
 
     beforeDestroy() {

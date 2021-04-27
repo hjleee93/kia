@@ -64,6 +64,7 @@ export default class Project extends Vue {
 
     async mounted() {
         this.$store.commit("currCategory", this.currentCategory);
+
         this.tag = this.$store.getters.currCategory.toLowerCase();
 
         this.toot.event.$on("addToot", (result: any) => {
@@ -71,6 +72,7 @@ export default class Project extends Vue {
         });
         this.toot.event.$on("resetToot", () => {
             this.tagSearch = [];
+            this.$store.dispatch("resetSearchInfo");
         });
         this.toot.create(document.documentElement);
         await new Promise<void>((resolve) => {
@@ -86,9 +88,6 @@ export default class Project extends Vue {
         });
         this.toot.newVersion(this.currentCategory);
         window.addEventListener("scroll", this.scrollHandler);
-    }
-    beforeCreate() {
-        this.$store.dispatch("resetSearchInfo");
     }
 
     beforeDestroy() {

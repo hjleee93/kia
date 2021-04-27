@@ -43,7 +43,7 @@ export default class Toot {
             let posting = false;
 
             let searchInput = store.getters.searchInput;
-            let username ='';
+            let username = '';
             const searchType = store.getters.searchType;
             const recentOrder = store.getters.sortOrder;
             const account_id = store.getters.currentUser.id;
@@ -52,10 +52,9 @@ export default class Toot {
             if (searchType === "contents" && currCategory === 'posting') {
                 posting = true;
                 username = store.getters.currentUser.username
-            }else if(searchType !== "contents"){
+            } else if (searchType !== "contents") {
                 username = searchInput
             }
-
 
             let param = {
                 account_id,
@@ -74,7 +73,6 @@ export default class Toot {
                 return;
             }
 
-            console.log('result', result)
             this.allResult.push(...result);
             this.event.$emit('addToot', result);
             store.commit('searchResult', this.allResult)

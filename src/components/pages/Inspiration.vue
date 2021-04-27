@@ -63,6 +63,7 @@ export default class Inspiration extends Vue {
         });
         this.toot.event.$on("resetToot", () => {
             this.tagSearch = [];
+           this.$store.dispatch("resetSearchInfo");
         });
         this.toot.create(document.documentElement);
         await new Promise<void>((resolve) => {
@@ -80,9 +81,7 @@ export default class Inspiration extends Vue {
         this.toot.newVersion(this.category);
         window.addEventListener("scroll", this.scrollHandler);
     }
-    beforeCreate() {
-        this.$store.dispatch("resetSearchInfo");
-    }
+    
     beforeDestroy() {
         window.removeEventListener("scroll", this.scrollHandler);
     }

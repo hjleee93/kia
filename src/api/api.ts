@@ -135,7 +135,6 @@ export default class Api {
     }
 
     async showToot(param: object) {
-        console.log(param)
         await this.getCurrentUser()
         const result = await Vue.$axios
             ({

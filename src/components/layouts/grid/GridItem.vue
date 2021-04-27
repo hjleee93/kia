@@ -111,7 +111,6 @@ export default class GridItem extends Vue {
 
     @Watch("toot")
     watchResult() {
-        console.log("toot", this.toot);
         this.mediaToot = this.toot;
         if (this.mediaToot.content !== undefined) {
             this.tootContent = this.mediaToot.content.replaceAll(

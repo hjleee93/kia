@@ -77,9 +77,7 @@ export default class Grid extends Vue {
 
     @Watch("$store.getters.searchResult")
     changeResult() {
-      console.log('allToots',this.allToots)
         this.allToots = this.$store.getters.searchResult;
-        console.log("changeResult", this.$store.getters.searchResult);
         //@ts-ignore
         imagesLoaded(document.querySelector(".grid"), () => {
             setTimeout(() => {

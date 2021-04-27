@@ -50,14 +50,15 @@ export default class Hive extends Vue {
     }
 
     async mounted() {
+        this.$store.commit("currCategory", "Hive");
         this.toot.event.$on("addToot", (result: any) => {
             this.allResult.push(...result);
         });
         this.toot.event.$on("resetToot", () => {
             this.allResult = [];
+            this.$store.dispatch("resetSearchInfo");
         });
         this.toot.create(document.documentElement);
-        this.$store.commit("currCategory", "Hive");
 
         await new Promise<void>((resolve) => {
             const store = this.$store;
@@ -75,21 +76,9 @@ export default class Hive extends Vue {
         window.addEventListener("scroll", this.scrollHandler);
     }
 
-    // async beforeCreate() {
-    //     this.$store.dispatch("resetSearchInfo");
-    // }
-
     beforeDestroy() {
         window.removeEventListener("scroll", this.scrollHandler);
     }
-
-    // @Watch("$store.getters.searchInput" || "$store.getters.searchType")
-    // init() {
-    //     this.loadingState = ETootLoadingState.none;
-    //     this.allResult = [];
-    //     this.el = document.documentElement;
-    //     this.$store.dispatch("tootReset");
-    // }
 
     scrollHandler() {
         if (this.el.scrollTop === 0) {
