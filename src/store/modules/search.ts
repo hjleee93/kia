@@ -68,22 +68,6 @@ export default {
             commit('searchResult', [])
         },
 
-
-        //@ts-ignore
-        async showToot({ commit, dispatch }, searchParam) {
-            let result: any;
-            try {
-                //@ts-ignore
-                result = await Vue.$api.showToot(searchParam);
-                commit('searchResult', result)
-
-            } catch (err) {
-                dispatch('tootReset')
-                console.log(err)
-                //TODO: error handling
-            }
-
-        },
         //@ts-ignore
         tootReset({ commit }) {
             commit('searchResult', [])

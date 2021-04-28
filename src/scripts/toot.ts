@@ -27,7 +27,7 @@ export default class Toot {
 
     newVersion(tag?: string, isSearch?: boolean) {
 
-        if(this.loadingState === ETootLoadingState.none){
+        if (this.loadingState === ETootLoadingState.none) {
             return;
         }
 
@@ -44,22 +44,22 @@ export default class Toot {
         this.load();
 
     }
-    ready(){
-        if(this.loadingState === ETootLoadingState.none){
+    ready() {
+        if (this.loadingState === ETootLoadingState.none) {
             this.loadingState = ETootLoadingState.ready;
         }
-            
+
     }
 
     async load() {
-        if (this.loadingState === ETootLoadingState.ready 
+        if (this.loadingState === ETootLoadingState.ready
             || this.loadingState === ETootLoadingState.complete) {
 
             let posting = false;
             let username = '';
             let searchInput = store.getters.searchInput;
             const searchType = store.getters.searchType;
-            const recentOrder = store.getters.sortOrder;            
+            const recentOrder = store.getters.sortOrder;
             const account_id = store.getters.currentUser.id;
             const currCategory = store.getters.currCategory.toLowerCase();
 
@@ -82,7 +82,9 @@ export default class Toot {
             };
 
             const reqVersion = this.version;
+
             const result = await Vue.$api.showToot(param);
+
             if (reqVersion !== this.version) {
                 return;
             }

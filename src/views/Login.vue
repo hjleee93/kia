@@ -35,9 +35,7 @@
                     <input type="text" hidden v-model="baseURL" />
                     <label
                         class="input"
-                        :class="[
-                            isEmailActive ? 'active' : '',
-                        ]"
+                        :class="[isEmailActive ? 'active' : '']"
                     >
                         <input
                             @focus="isEmailActive = true"
@@ -79,22 +77,23 @@
                     <!--default-->
                     <button
                         class="btn btn-login"
-                        :class="[email.match(emailRegExp) !== null &&
-                            password.length && isLoginError>= 8 ? 'active' : '']"
+                        :class="[
+                            email.match(emailRegExp) !== null &&
+                            password.length &&
+                            isLoginError >= 8
+                                ? 'active'
+                                : '',
+                        ]"
                         @click="login"
                         :disabled="
-                            (email.match(emailRegExp) === null && email.length >=0)  ||
-                            (password.length < 8 &&password.length>=0) ||
-                            isLoginError">
+                            (email.match(emailRegExp) === null &&
+                                email.length >= 0) ||
+                            (password.length < 8 && password.length >= 0) ||
+                            isLoginError
+                        "
+                    >
                         로그인
                     </button>
-
-                    <!--active-->
-                    <!--<button class="btn btn-login active">로그인</button>-->
-                    <!--disabled-->
-                    <!--<button class="btn btn-login disabled">로그인</button>-->
-                    <!--disabled attribute disabled-->
-                    <!--<button class="btn btn-login" disabled="disabled">로그인</button>-->
                 </div>
                 <!--조회시 에러일경우 에러메시지 출력-->
 
@@ -204,11 +203,11 @@ export default class Login extends Vue {
     async mounted() {
         this.$store.dispatch("logout");
         this.$store.commit("currCategory", "Login");
-        window.addEventListener("keydown", this.handleKeyDown);
+        window.addEventListener("keypress", this.handleKeyDown);
     }
 
     destroyed() {
-        window.removeEventListener("keydown", this.handleKeyDown);
+        window.removeEventListener("keypress", this.handleKeyDown);
         window.removeEventListener("message", this.iframeHandler);
     }
 
@@ -230,13 +229,16 @@ export default class Login extends Vue {
                 client_id: result.data.client_id,
                 client_secret: result.data.client_secret,
             };
+            //app verified
             try {
                 const result = await this.$api.attemptLogin(
                     email,
                     password,
                     instance
                 );
+                //login ok
                 if (result !== undefined) {
+
                     (this.$refs
                         .iframe as HTMLIFrameElement)?.contentWindow?.postMessage(
                         {
@@ -270,6 +272,8 @@ export default class Login extends Vue {
                         };
                         window.addEventListener("message", onMessage);
                     });
+
+
                     try {
                         if (
                             result.data.access_token !== undefined ||
@@ -282,6 +286,7 @@ export default class Login extends Vue {
                             );
 
                             try {
+                                //user info update
                                 await this.updateCurrentUser(
                                     result.data.access_token
                                 );
@@ -291,13 +296,12 @@ export default class Login extends Vue {
                             } catch (err) {
                                 this.appError();
                             }
-                        } else {
-                            this.appError();
-                        }
+                        } 
                     } catch (err) {
                         this.loginError();
                     }
-                } else {
+                }
+                 else {
                     this.loginError();
                 }
             } catch (err) {
@@ -328,7 +332,6 @@ export default class Login extends Vue {
 </script>
 
 <style scoped>
-
 .iframe {
     /* display: contents; */
     opacity: 0;
