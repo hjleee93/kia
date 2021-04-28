@@ -35,13 +35,6 @@ import {
 } from "@/scripts/ui_common";
 import Toot from "@/scripts/toot";
 
-enum ETootLoadingState {
-    none,
-    loading,
-    complete,
-    end,
-}
-
 @Component({
     components: { SearchBar, CategoryP, Grid, BoxGridTop },
 })
@@ -50,10 +43,6 @@ export default class Posting extends Vue {
     private category: string = "Posting";
     private allResult: any[] = [];
     private recentResult: any[] = [];
-    private limitCount: number = 20;
-    private loadingState: ETootLoadingState = ETootLoadingState.none;
-    private recentOrder: string = "";
-    private offset = 0;
     private el: HTMLElement = document.documentElement;
 
     beforeUpdate() {
@@ -65,7 +54,6 @@ export default class Posting extends Vue {
     }
     async mounted() {
         this.$store.commit("currCategory", this.category);
-
         this.toot.event.$on("addToot", (result: any) => {
             this.allResult.push(...result);
         });

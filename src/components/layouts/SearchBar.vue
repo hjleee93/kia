@@ -44,7 +44,7 @@
                     ></button>
                 </div>
                 <!-- 사용자, 검색어 추가 dropdown -->
-                <template v-if="$store.getters.currCategory !== 'Posting'">
+                <div v-show="$store.getters.currCategory !== 'Posting'">
                     <div class="box-toot-dropdown2">
                         <button data-val="" class="btn txt2" @click="txtClick2">
                             <span>내용</span>
@@ -81,7 +81,7 @@
                             </ul>
                         </div>
                     </div>
-                </template>
+                </div>
                 <div class="box-search-input">
                     <div class="box-input">
                         <label class="input" @click="listsOpen">
@@ -191,7 +191,7 @@ export default class SearchBar extends Vue {
             this.isAllToot = true;
         }
     }
-    async mounted() {
+    mounted() {
         tootDropDown.init();
         tootDropDown2.init();
         search.init();
@@ -222,6 +222,7 @@ export default class SearchBar extends Vue {
         tootDropDown.txtClick();
     }
     txtClick2() {
+        console.log('clicked')
         tootDropDown2.txtClick();
     }
     tootDrop2(arg: string) {
