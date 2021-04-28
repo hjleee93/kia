@@ -160,7 +160,6 @@ import Header from "@/components/layouts/Header.vue";
 @Component({ components: { Header } })
 export default class Login extends Vue {
     private baseURL: string = process.env.VUE_APP_BASE_API!;
-    private isIframeLoaded: boolean = false;
     private email: string = "";
     private password: string = "";
     private isLoginError: boolean = false;
@@ -181,16 +180,6 @@ export default class Login extends Vue {
             this.baseURL + "about"
         ) {
             window.addEventListener("message", this.iframeHandler);
-        }
-        if (this.isIframeLoaded === false) {
-            (this.$refs
-                .iframe as HTMLIFrameElement)?.contentWindow?.postMessage(
-                {
-                    type: "logout",
-                },
-                "*"
-            );
-            this.isIframeLoaded = true;
         }
     }
 
@@ -215,30 +204,20 @@ export default class Login extends Vue {
         this.attemptLogin(this.email, this.password);
     }
 
-    private attemptLogin = async (
-        email: string,
-        password: string
-    ): Promise<void> => {
-        this.isLoginError = false;
-        this.isAppVerfiedError = false;
-        let result = await this.$api.verifyApp();
+    async attemptLogin(email: string, password: string): Promise<void> {
+        let result!: any;
+        let instance = await this.appVerified();
 
-        if (result !== undefined) {
-            let instance = {
-                host: new URL(this.baseURL).host,
-                client_id: result.data.client_id,
-                client_secret: result.data.client_secret,
-            };
-            //app verified
-            try {
-                const result = await this.$api.attemptLogin(
-                    email,
-                    password,
-                    instance
-                );
-                //login ok
-                if (result !== undefined) {
+        if (instance) {
+            result = await this.$api.attemptLogin(email, password, instance);
+            //login ok
+            if (result) {
+                this.$store.commit("userToken", result.data.access_token);
 
+                if (
+                    (this.$refs.iframe as HTMLIFrameElement).src ===
+                    `${this.baseURL}about`
+                ) {
                     (this.$refs
                         .iframe as HTMLIFrameElement)?.contentWindow?.postMessage(
                         {
@@ -248,7 +227,7 @@ export default class Login extends Vue {
                         },
                         "*"
                     );
-
+                } else {
                     (this.$refs
                         .iframe as HTMLIFrameElement)?.contentWindow?.postMessage(
                         {
@@ -258,59 +237,50 @@ export default class Login extends Vue {
                         },
                         "*"
                     );
-
-                    await new Promise<void>((resolve) => {
-                        const onMessage = (e: MessageEvent) => {
-                            const data = e.data || {};
-                            if (data.type === "loadedPage") {
-                                window.removeEventListener(
-                                    "message",
-                                    onMessage
-                                );
-                                resolve();
-                            }
-                        };
-                        window.addEventListener("message", onMessage);
-                    });
-
-
-                    try {
-                        if (
-                            result.data.access_token !== undefined ||
-                            result.data.access_token !== null
-                        ) {
-                            //token이 존재하는 경우
-                            this.$store.commit(
-                                "userToken",
-                                result.data.access_token
-                            );
-
-                            try {
-                                //user info update
-                                await this.updateCurrentUser(
-                                    result.data.access_token
-                                );
-                                this.$router
-                                    .push("/mastodon/web/timelines/public")
-                                    .catch(() => {});
-                            } catch (err) {
-                                this.appError();
-                            }
-                        } 
-                    } catch (err) {
-                        this.loginError();
-                    }
                 }
-                 else {
-                    this.loginError();
-                }
-            } catch (err) {
+
+                await new Promise<void>((resolve) => {
+                    const onMessage = (e: MessageEvent) => {
+                        const data = e.data || {};
+                        if (data.type === "loadedPage") {
+                            window.removeEventListener("message", onMessage);
+                            resolve();
+                        }
+                    };
+                    window.addEventListener("message", onMessage);
+                });
+
+                this.updateCurrentUser(result.data.access_token);
+            } else {
                 this.loginError();
             }
+        }
+    }
+
+    async appVerified() {
+        let instance;
+        let result = await this.$api.verifyApp();
+
+        if (result) {
+            instance = {
+                host: new URL(this.baseURL).host,
+                client_id: result.data.client_id,
+                client_secret: result.data.client_secret,
+            };
+            return instance;
         } else {
             this.appError();
         }
-    };
+    }
+
+    updateCurrentUser(token: string) {
+        this.$store.dispatch("userStatus", token);
+        if (this.$store.getters.currentUser) {
+            this.$router.push("/mastodon/web/timelines/public").catch(() => {});
+        } else {
+            this.appError();
+        }
+    }
 
     loginError() {
         this.isLoginError = true;
@@ -321,19 +291,12 @@ export default class Login extends Vue {
         this.$store.dispatch("logout");
     }
 
-    async updateCurrentUser(token: string) {
-        try {
-            await this.$store.dispatch("userStatus", token);
-        } catch (err) {
-            this.appError();
-        }
-    }
+    
 }
 </script>
 
 <style scoped>
 .iframe {
-    /* display: contents; */
     opacity: 0;
     z-index: -1 !important;
 }

@@ -5,6 +5,7 @@ import Vue, { PluginObject } from "vue";
 
 export default class Api {
     private baseApiUrl = process.env.VUE_APP_API_URL;
+    
 
 
     async verifyApp() {
@@ -18,11 +19,10 @@ export default class Api {
             if (response.status >= 200 && response.status < 300) {
                 result = response;
             } else {
-                throw new Error("Error");
+                throw new Error();
             }
-        }).catch(err => {
+        }).catch(() => {
             store.dispatch('logout')
-
         });
 
         return result;
@@ -42,7 +42,7 @@ export default class Api {
             if (response.status >= 200 && response.status < 300) {
                 result = response;
             } else {
-                throw new Error("Error");
+                throw new Error();
             }
         }).catch(err => {
             store.dispatch('logout')
