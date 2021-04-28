@@ -104,19 +104,32 @@ enum ETootLoadingState {
 @Component({ components: { Calendar, BestUser, BestHashtag, TootCard } })
 export default class Rank extends Vue {
     private tootList: any[] = [];
-    private limitCount: number = 30;
     private loadingState: ETootLoadingState = ETootLoadingState.none;
     private gte!: string;
-    private lte: string = this.getFormatDate(new Date());
+    private lte: string = `${this.getFormatDate(new Date())} 23:59:59`;
     private offset = 20;
     private limit = 20;
     private isWatch: boolean = false;
+
     async mounted() {
         gnb.init();
         this.$store.commit("currCategory", "Rank");
         let today = new Date();
         today.setDate(today.getDate() - 30);
-        this.gte = this.getFormatDate(today);
+        this.gte = `${this.getFormatDate(today)} 00:00:01`;
+
+        await new Promise<void>((resolve) => {
+            const store = this.$store;
+            function wait() {
+                if (store.getters.currentUser !== null) {
+                    resolve();
+                } else {
+                    setTimeout(wait, 100);
+                }
+            }
+            wait();
+        });
+
         const result = await this.$api.getBestToot(
             this.gte,
             this.lte,
@@ -125,6 +138,7 @@ export default class Rank extends Vue {
 
         this.tootList = result;
     }
+
     handleScroll(el: any) {
         if (
             el.target.offsetHeight + el.target.scrollTop >=
@@ -172,14 +186,14 @@ export default class Rank extends Vue {
         this.offset = 0;
         this.limit = 20;
         this.tootList = [];
-        this.lte = e;
+        this.lte =`${e} 23:59:59`;
         this.isWatch = true;
     }
     getGte(e: any) {
         this.offset = 0;
         this.limit = 20;
         this.tootList = [];
-        this.gte = e;
+        this.gte = `${e} 00:00:01`;
         this.isWatch = true;
     }
 }

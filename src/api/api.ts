@@ -175,7 +175,6 @@ export default class Api {
     }
 
     async getBestToot(gte: string, lte: string, limit?: number, offset?: number) {
-        await this.getCurrentUser()
         const result = await Vue.$axios
             ({
                 method: 'get',

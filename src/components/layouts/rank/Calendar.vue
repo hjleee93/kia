@@ -204,6 +204,7 @@ export default class Calendar extends Vue {
     }
 
     getFormatDate(date: Date) {
+        console.log(date)
         let year = date.getFullYear();
         let month = 1 + date.getMonth();
         //@ts-ignore

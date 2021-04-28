@@ -70,12 +70,12 @@ import { bus } from "@/main";
 export default class BestUser extends Vue {
   private userList: any[] = [];
   private gte!: string;
-  private lte: string = this.getFormatDate(new Date());
+  private lte: string = `${this.getFormatDate(new Date())} 23:59:59`;
 
   async mounted() {
     let today = new Date();
     today.setDate(today.getDate() - 30);
-    this.gte = this.getFormatDate(today);
+    this.gte = `${this.getFormatDate(today)} 00:00:01`;
     const result = await this.$api.getBestUser(this.gte, this.lte, 10);
     this.userList = result;
 

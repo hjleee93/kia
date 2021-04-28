@@ -116,7 +116,6 @@ export default class Tag extends Vue {
     private inputHashtag: string = "";
     private isDone: boolean = false;
     private offset = 0;
-    private isClickedEnter: boolean = false;
 
     mounted() {
         gnb.init();
@@ -132,7 +131,6 @@ export default class Tag extends Vue {
 
     handleKeyDown(e: any) {
         if (e.code === "Enter" || e.keyCode === 13) {
-            this.isClickedEnter = true;
             this.tagList = [];
             this.offset = 0;
             this.searchTag(this.inputHashtag);
