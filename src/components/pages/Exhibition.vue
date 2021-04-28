@@ -6,10 +6,7 @@
                     <SearchBar @searchToot="searchToot" />
                     <Category @tagResult="tagResult" />
                     <div class="sec-grid-top">
-                        <BoxGridTop
-                            @sortOrder="sortOrder"
-                            :tootCnt="tagSearch.length"
-                        />
+                        <BoxGridTop @sortOrder="sortOrder" />
                     </div>
                     <div class="dim"></div>
                 </div>
@@ -42,7 +39,6 @@ export default class Exhibition extends Vue {
     private toot: Toot = new Toot();
     private category: string = "Exhibition";
     private tagSearch: any[] = [];
-    private tootCnt: number = -1;
     private tag: string = "";
     private el: HTMLElement = document.documentElement;
 
@@ -69,6 +65,7 @@ export default class Exhibition extends Vue {
             this.$store.dispatch("resetSearchInfo");
         });
         this.toot.create(document.documentElement);
+
         await new Promise<void>((resolve) => {
             const store = this.$store;
             function wait() {
@@ -80,6 +77,7 @@ export default class Exhibition extends Vue {
             }
             wait();
         });
+
         this.toot.ready();
         this.toot.newVersion(this.category);
         window.addEventListener("scroll", this.scrollHandler);

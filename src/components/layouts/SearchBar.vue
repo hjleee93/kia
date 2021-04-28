@@ -169,15 +169,10 @@ import {
 @Component({ components: {} })
 export default class SearchBar extends Vue {
     private search: Search = new Search();
-
-    @Prop() sortOrder!: string;
     private searchInput: string = "";
     private isDone: boolean = false;
     private category: string = "";
     private isAllToot!: Boolean;
-
-    private tagSearch: any[] = [];
-    private recentOrder: boolean = true;
     private searchType: string = "contents";
 
     private searchHistory = this.search.searchHistory;

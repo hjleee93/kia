@@ -92,21 +92,15 @@ import BestUser from "../layouts/rank/BestUser.vue";
 import Calendar from "../layouts/rank/Calendar.vue";
 import BestHashtag from "../layouts/rank/BestHastag.vue";
 import { calendar, dim, gnb, tab } from "@/scripts/ui_common";
-
 import TootCard from "@/components/layouts/toot/TootCard.vue";
-enum ETootLoadingState {
-    none,
-    loading,
-    complete,
-    end,
-}
+import CalendarScript from "@/scripts/calendar";
 
 @Component({ components: { Calendar, BestUser, BestHashtag, TootCard } })
 export default class Rank extends Vue {
+    private calendar: CalendarScript = new CalendarScript();
     private tootList: any[] = [];
-    private loadingState: ETootLoadingState = ETootLoadingState.none;
     private gte!: string;
-    private lte: string = `${this.getFormatDate(new Date())} 23:59:59`;
+    private lte: string = `${this.calendar.getFormatDate(new Date())} 23:59:59`;
     private offset = 20;
     private limit = 20;
     private isWatch: boolean = false;
@@ -116,7 +110,7 @@ export default class Rank extends Vue {
         this.$store.commit("currCategory", "Rank");
         let today = new Date();
         today.setDate(today.getDate() - 30);
-        this.gte = `${this.getFormatDate(today)} 00:00:01`;
+        this.gte = `${this.calendar.getFormatDate(today)} 00:00:01`;
 
         await new Promise<void>((resolve) => {
             const store = this.$store;
@@ -172,21 +166,11 @@ export default class Rank extends Vue {
         }
     }
 
-    getFormatDate(date: Date) {
-        let year = date.getFullYear();
-        let month = 1 + date.getMonth();
-        //@ts-ignore
-        month = month >= 10 ? month : "0" + month;
-        let day = date.getDate();
-        //@ts-ignore
-        day = day >= 10 ? day : "0" + day;
-        return year + "-" + month + "-" + day;
-    }
     getLte(e: any) {
         this.offset = 0;
         this.limit = 20;
         this.tootList = [];
-        this.lte =`${e} 23:59:59`;
+        this.lte = `${e} 23:59:59`;
         this.isWatch = true;
     }
     getGte(e: any) {

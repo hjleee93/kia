@@ -51,12 +51,6 @@ export default class Dropdwon extends Vue {
     @Watch("$store.getters.currCategory")
     getCategory() {
         this.category = this.$store.getters.currCategory;
-
-        // if(this.category==='Posting'){
-        //     this.isAllToot = false;
-        // }else{
-        //     this.isAllToot = true;
-        // }
     }
     mounted() {
         tootDropDown.init();
@@ -67,13 +61,6 @@ export default class Dropdwon extends Vue {
     }
     tootDrop(arg: string) {
         tootDropDown.btnDropdownClick(this.$refs[arg]);
-        // if (arg === "myToot") {
-        //     this.isAllToot = false;
-        //     this.$router.push("/Posting").catch(() => {});
-        // } else if (arg === "allToot") {
-        //     this.isAllToot = true;
-        //     this.$router.push("/Hive").catch(() => {});
-        // }
     }
 }
 </script>

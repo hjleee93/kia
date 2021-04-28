@@ -76,7 +76,7 @@
                     </div>
                     <ul v-else-if="tagList.length > 0" class="hash-lists">
                         <!--검색 결과 있음-->
-                        <template v-for="hashData in tagList">
+                        <template v-for="hashData in tagList" >
                             <li>
                                 <button
                                     class="btn btn-hash"
@@ -110,8 +110,8 @@ import { gnb } from "@/scripts/ui_common";
 
 @Component({ components: {} })
 export default class Tag extends Vue {
-    isSearch: boolean = false;
-    tagList: string[] = [];
+    private isSearch: boolean = false;
+    private tagList: string[] = [];
     private hashtag: string = "";
     private inputHashtag: string = "";
     private isDone: boolean = false;
@@ -165,8 +165,6 @@ export default class Tag extends Vue {
             this.offset = 0;
         }
         this.isSearch = true;
-
-        const el = document.documentElement;
 
         try {
             const result = await this.$api.searchHashtag(

@@ -83,11 +83,11 @@ import isotope from "vueisotope";
 
 @Component({ components: { isotope } })
 export default class AlbumShow extends Vue {
-    isOpen: boolean = false;
-    list: any[] = [];
-    detailStc: string = "";
-    category: string = "";
-    autoScroll!: any;
+    private isOpen: boolean = false;
+    private list: any[] = [];
+    private detailStc: string = "";
+    private category: string = "";
+    private autoScroll!: any;
     private imgArr: string[] = [];
 
     async mounted() {

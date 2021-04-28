@@ -38,7 +38,6 @@ export default class Project extends Vue {
     private toot: Toot = new Toot();
     private category: string = "Project";
     private tagSearch: any[] = [];
-    private limitCount: number = 20;
     private tag: string = "";
     private el: HTMLElement = document.documentElement;
 

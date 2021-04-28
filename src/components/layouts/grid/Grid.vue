@@ -54,14 +54,10 @@ import { getDevice } from "@/scripts/ui_common";
 @Component({ components: { GridItem, isotope } })
 export default class Grid extends Vue {
     @Prop() tagSearch!: any;
-    @Prop() allResult!: any;
-
     private active: boolean = false;
-    private idx: number = 20;
     private device: string = "";
     // api
     private allToots: any[] = [];
-    private foundUser: any[] = [];
 
     @Watch("device")
     changeDevice() {

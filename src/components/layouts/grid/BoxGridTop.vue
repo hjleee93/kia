@@ -37,7 +37,6 @@ import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 
 @Component({ components: {} })
 export default class BoxGridTop extends Vue {
-  @Prop() tootCnt!: number;
   private active: string = "recent";
 
   tootStatus(value: string) {

@@ -182,11 +182,6 @@ export default class Calendar extends Vue {
     }
     calendarComplete() {
         calendar.calendarComplete();
-        // @ts-ignore
-        // this.endDate = window.litepicker.options.endDate;
-        // // @ts-ignore
-        // this.startDate = window.litepicker.options.startDate;
-
         this.getDate();
     }
     getDate() {
