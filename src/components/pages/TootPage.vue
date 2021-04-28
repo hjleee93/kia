@@ -4,14 +4,14 @@
             <div class="wrap-fixed">
                 <div class="sec-fixed">
                     <SearchBar @searchToot="searchToot" />
-                    <Category  />
+                    <Category />
                     <div class="sec-grid-top">
                         <BoxGridTop @sortOrder="sortOrder" />
                     </div>
                     <div class="dim"></div>
                 </div>
             </div>
-            <Grid :key="$store.getters.sortOrder" :allResult="tagSearch" />
+            <Grid :key="$store.getters.sortOrder" :allResult="allResult" />
         </div>
     </div>
 </template>
@@ -19,47 +19,50 @@
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import Category from "@/components/layouts/Category.vue";
-
 import Grid from "@/components/layouts/grid/Grid.vue";
 import BoxGridTop from "@/components/layouts/grid/BoxGridTop.vue";
 import SearchBar from "@/components/layouts/SearchBar.vue";
-import Toot from "@/scripts/toot";
 import {
     dim,
     gnb,
     hashDropDown,
+    search,
     tootDropDown,
     getDevice,
 } from "@/scripts/ui_common";
+import Toot from "@/scripts/toot";
 
 @Component({
     components: { SearchBar, Category, Grid, BoxGridTop },
 })
-export default class Exhibition extends Vue {
+export default class Hive extends Vue {
     private toot: Toot = new Toot();
-    private category: string = "Exhibition";
-    private tagSearch: any[] = [];
+    private category: string = this.$route.name!;
+    private allResult: any[] = [];
     private tag: string = "";
     private el: HTMLElement = document.documentElement;
 
     beforeUpdate() {
         tootDropDown.init();
         hashDropDown.init();
+        search.init();
         dim.init();
         gnb.init();
     }
 
     async mounted() {
         this.$store.commit("currCategory", this.category);
+
         this.tag = this.$store.getters.currCategory.toLowerCase();
 
         this.toot.event.$on("addToot", (result: any) => {
-            this.tagSearch.push(...result);
+            this.allResult.push(...result);
         });
         this.toot.event.$on("resetToot", () => {
-            this.tagSearch = [];
+            this.allResult = [];
             this.$store.dispatch("resetSearchInfo");
         });
+
         this.toot.create(document.documentElement);
 
         await new Promise<void>((resolve) => {
@@ -78,9 +81,11 @@ export default class Exhibition extends Vue {
         this.toot.newVersion(this.category);
         window.addEventListener("scroll", this.scrollHandler);
     }
+
     beforeDestroy() {
         window.removeEventListener("scroll", this.scrollHandler);
     }
+
     searchToot() {
         this.toot && this.toot.newVersion(this.category, true);
     }
@@ -103,6 +108,12 @@ export default class Exhibition extends Vue {
     @Watch("$store.getters.hashtag")
     watchHashtag(val: string) {
         this.toot && this.toot.newVersion(val);
+    }
+
+    @Watch("$store.getters.currCategory")
+    watchCategory() {
+        console.log(this.$store.getters.currCategory)
+        this.toot && this.toot.newVersion(this.$store.getters.currCategory);
     }
 }
 </script>

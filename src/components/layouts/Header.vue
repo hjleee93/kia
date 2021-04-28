@@ -135,6 +135,7 @@ export default class Header extends Vue {
 
     clickedHeader(category: string) {
         this.$store.commit("currCategory", category);
+        
         this.active = category;
     }
 

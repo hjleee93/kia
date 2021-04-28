@@ -3,7 +3,7 @@ export default [
         name : 'Inspiration',
         tags : [
             {name:'Inspiration'},
-            {name:'inshashtag1'},
+            {name:'Inspiration1'},
             {name:'inshashtag2'},
             {name:'inshashtag3'},
             {name:'inshashtag4'},

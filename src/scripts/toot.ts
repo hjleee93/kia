@@ -25,8 +25,14 @@ export default class Toot {
         this.el = el;
     }
 
-    newVersion(tag?: string, isSearch?: boolean) {
-
+    newVersion(tag: string, isSearch?: boolean) {
+        console.log('newVersion', tag)
+        if(tag.toLowerCase() === 'hive'){
+            console.log("??????")
+            tag = '';
+        }else{
+            this.tag = tag;
+        }
         if (this.loadingState === ETootLoadingState.none) {
             return;
         }
@@ -38,9 +44,6 @@ export default class Toot {
         }
         this.offset = 0;
         this.loadingState = ETootLoadingState.ready;
-        if (tag) {
-            this.tag = tag;
-        }
         this.load();
 
     }
@@ -54,7 +57,7 @@ export default class Toot {
     async load() {
         if (this.loadingState === ETootLoadingState.ready
             || this.loadingState === ETootLoadingState.complete) {
-
+console.log('load', this.tag)
             let posting = false;
             let username = '';
             let searchInput = store.getters.searchInput;

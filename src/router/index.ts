@@ -14,7 +14,7 @@ const routes: Array<RouteConfig> = [
             {
                 path: '/hive',
                 name: 'Hive',
-                component: () => import(/* webpackChunkName: "about" */ '@/components/pages/Hive.vue'),
+                component: () => import(/* webpackChunkName: "about" */ '@/components/pages/TootPage.vue'),
 
 
             },
@@ -41,7 +41,7 @@ const routes: Array<RouteConfig> = [
             {
                 path: '/inspiration',
                 name: 'Inspiration',
-                component: () => import(/* webpackChunkName: "about" */ '@/components/pages/Inspiration.vue'),
+                component: () => import(/* webpackChunkName: "about" */ '@/components/pages/TootPage.vue'),
 
 
             },

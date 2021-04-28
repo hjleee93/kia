@@ -273,8 +273,8 @@ export default class Login extends Vue {
         }
     }
 
-    updateCurrentUser(token: string) {
-        this.$store.dispatch("userStatus", token);
+   async updateCurrentUser(token: string) {
+       await this.$store.dispatch("userStatus", token);
         if (this.$store.getters.currentUser) {
             this.$router.push("/mastodon/web/timelines/public").catch(() => {});
         } else {

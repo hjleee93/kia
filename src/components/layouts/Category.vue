@@ -51,10 +51,10 @@
                 </li>
             </ul>
         </div>
+        
         <template v-if="$store.getters.currCategory !== 'Hive'">
             <Hashtag
                 :tag="$store.getters.currCategory"
-                @tagResult="tagResult"
             />
         </template>
     </div>
@@ -73,9 +73,7 @@ export default class Category extends Vue {
         return this.active === value;
     }
 
-    tagResult(result: any) {
-        this.$emit("tagResult", result);
-    }
+    
 
     openAlbum(): void {
         albumPop.layerOpen();
