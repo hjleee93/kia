@@ -81,7 +81,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
-import { albumPop, isDesktop } from "@/scripts/ui_common";
+import { albumPop, isDesktop, wrapOverflow } from "@/scripts/ui_common";
 //@ts-ignore
 import isotope from "vueisotope";
 
@@ -132,6 +132,7 @@ export default class AlbumShow extends Vue {
             }
 
             const img = document.createElement("img") as HTMLImageElement;
+            //@ts-ignore
             img.src = imageList[i].url;
 
             await new Promise<void>((resolve) => {
@@ -154,7 +155,9 @@ export default class AlbumShow extends Vue {
 
             this.list.push({
                 width: img.width,
+                //@ts-ignore
                 url: imageList[i].url,
+                //@ts-ignore
                 id: imageList[i].id,
             });
             if (this.autoScroll) {
@@ -168,7 +171,9 @@ export default class AlbumShow extends Vue {
                     if (
                         //@ts-ignore
                         this.$refs.scroll.scrollWidth -
+                        //@ts-ignore
                             this.$refs.scroll.clientWidth ===
+                            //@ts-ignore
                         this.$refs.scroll.scrollLeft
                     ) {
                         //@ts-ignore
@@ -238,6 +243,7 @@ export default class AlbumShow extends Vue {
         };
     }
     goToDetailPage(imgId: string) {
+        wrapOverflow.auto();
         this.endFullScreen();
         this.$router.push(`/mastodon/web/statuses/${imgId}`);
     }

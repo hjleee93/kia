@@ -1344,10 +1344,9 @@ var LayerPop = function LayerPop() {
 
         if (domWrap.classList.contains("close")) {
             domWrap.classList.remove("close");
-        }
-
-        // wrapOverflow.hidden();
+        }      
         
+        wrapOverflow.hidden();
         domWrap.style.display = "block";
 
         setTimeout(function () {
@@ -1355,10 +1354,7 @@ var LayerPop = function LayerPop() {
             openCallback && openCallback();
 
             if (domWrap.classList.contains("open")) {
-                
                 document.addEventListener('wheel', horizontalScroll)
-            } else {
-                wrapOverflow.auto();
             }
         });
 
@@ -1436,7 +1432,7 @@ function Isotope2() {
     var elem;
     var msnry;
     var device;
-
+    wrapOverflow.auto();
     function injection(target) {
         //isotope script 제거
         if (msnry) {
@@ -1570,4 +1566,5 @@ export {
     isMobile,
     getSecFixedRect,
     getDevice,
+    wrapOverflow
 }
