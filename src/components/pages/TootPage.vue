@@ -4,7 +4,12 @@
             <div class="wrap-fixed">
                 <div class="sec-fixed">
                     <SearchBar @searchToot="searchToot" />
-                    <Category />
+                    <template v-if="$store.getters.currCategory === 'Posting'">
+                        <CategoryP @category="getCategory" />
+                    </template>
+                    <template v-else>
+                        <Category />
+                    </template>
                     <div class="sec-grid-top">
                         <BoxGridTop @sortOrder="sortOrder" />
                     </div>
@@ -19,6 +24,7 @@
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import Category from "@/components/layouts/Category.vue";
+import CategoryP from "@/components/layouts/posting/CategoryP.vue"; // posting 용 카테고리
 import Grid from "@/components/layouts/grid/Grid.vue";
 import BoxGridTop from "@/components/layouts/grid/BoxGridTop.vue";
 import SearchBar from "@/components/layouts/SearchBar.vue";
@@ -33,7 +39,7 @@ import {
 import Toot from "@/scripts/toot";
 
 @Component({
-    components: { SearchBar, Category, Grid, BoxGridTop },
+    components: { SearchBar, Category, Grid, BoxGridTop, CategoryP },
 })
 export default class Hive extends Vue {
     private toot: Toot = new Toot();
@@ -86,10 +92,6 @@ export default class Hive extends Vue {
         window.removeEventListener("scroll", this.scrollHandler);
     }
 
-    searchToot() {
-        this.toot && this.toot.newVersion(this.category, true);
-    }
-
     scrollHandler() {
         if (this.el.scrollTop === 0) {
         } else if (
@@ -98,6 +100,15 @@ export default class Hive extends Vue {
         ) {
             this.toot.load();
         }
+    }
+
+    searchToot() {
+        this.toot && this.toot.newVersion(this.category, true);
+    }
+    //posting 용
+    getCategory(val: string) {
+        this.category = val;
+        this.toot && this.toot.newVersion(val);
     }
 
     @Watch("$store.getters.sortOrder")
@@ -112,7 +123,6 @@ export default class Hive extends Vue {
 
     @Watch("$store.getters.currCategory")
     watchCategory() {
-        console.log(this.$store.getters.currCategory)
         this.toot && this.toot.newVersion(this.$store.getters.currCategory);
     }
 }

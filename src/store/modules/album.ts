@@ -13,8 +13,8 @@ export default {
             for (let i = 0; i < payload.length; i++) {
                 if (payload[i].media_attachments.length > 0) {
                     if (payload[i].media_attachments[0].type === "image") {
-                        if (!payload[i].sensitive) {
-                            state.albumResult.push(payload[i].media_attachments[0].url);
+                        if (!payload[i].sensitive) {                            
+                            state.albumResult.push({url: payload[i].media_attachments[0].url, id:payload[i].id});
                         }
                     }
                 }

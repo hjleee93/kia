@@ -34,7 +34,7 @@ const routes: Array<RouteConfig> = [
             {
                 path: '/posting',
                 name: 'Posting',
-                component: () => import(/* webpackChunkName: "about" */ '@/components/pages/Posting.vue'),
+                component: () => import(/* webpackChunkName: "about" */ '@/components/pages/TootPage.vue'),
 
 
             },
@@ -48,14 +48,14 @@ const routes: Array<RouteConfig> = [
             {
                 path: '/exhibition',
                 name: 'Exhibition',
-                component: () => import(/* webpackChunkName: "about" */ '@/components/pages/Exhibition.vue'),
+                component: () => import(/* webpackChunkName: "about" */ '@/components/pages/TootPage.vue'),
 
 
             },
             {
                 path: '/project',
                 name: 'Project',
-                component: () => import(/* webpackChunkName: "about" */ '@/components/pages/Project.vue'),
+                component: () => import(/* webpackChunkName: "about" */ '@/components/pages/TootPage.vue'),
 
 
             },

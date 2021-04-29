@@ -7,7 +7,7 @@
                     <router-view></router-view>
                 </section>
             </div>
-            <MobileAlbum />
+            <AlbumShow />
         </div>
     </div>
 </template>
@@ -16,10 +16,10 @@
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import { initApp } from "@/scripts/ui_common";
 import Header from "@/components/layouts/Header.vue";
-import MobileAlbum from "@/components/layouts/MobileAlbum.vue";
+import AlbumShow from "@/components/layouts/AlbumShow.vue";
 
 @Component({
-    components: { Header, MobileAlbum },
+    components: { Header, AlbumShow },
 })
 export default class App extends Vue {  
     async mounted() {

@@ -54,6 +54,7 @@ export default class Posting extends Vue {
     }
     async mounted() {
         this.$store.commit("currCategory", this.category);
+        
         this.toot.event.$on("addToot", (result: any) => {
             this.allResult.push(...result);
         });

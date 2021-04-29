@@ -65,6 +65,10 @@ import { albumPop, dim, gnb } from "@/scripts/ui_common";
 export default class CategoryP extends Vue {
     private active: string = this.$store.getters.currCategory;
 
+    mounted() {
+     console.log('categoryP{', this.active)   
+    }
+
     isActive(value: string) {
 
         return this.active === value;

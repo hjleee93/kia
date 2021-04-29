@@ -78,6 +78,7 @@ export default class Category extends Vue {
     openAlbum(): void {
         albumPop.layerOpen();
         let elem = document.documentElement;
+        //@ts-ignore
         if (elem.requestFullscreen) {
             //@ts-ignore
             elem.requestFullscreen();
@@ -101,6 +102,7 @@ export default class Category extends Vue {
     }
     clickedCategory(category: string) {
         this.active = category;
+        this.$store.commit('currCategory', category)
         this.$router.push("/" + category.toLowerCase()).catch(() => {});
     }
 

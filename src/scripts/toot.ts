@@ -12,12 +12,11 @@ enum ETootLoadingState {
 
 export default class Toot {
     event: Vue = new Vue();
-
     private el: HTMLElement = document.body;
     private limitCount: number = 10;
     private version: number = 0;
     private tag: string = ''
-    allResult: any[] = [];
+    private allResult: any[] = [];
     private loadingState: ETootLoadingState = ETootLoadingState.none;
     private offset = 0;
 
@@ -26,11 +25,9 @@ export default class Toot {
     }
 
     newVersion(tag: string, isSearch?: boolean) {
-        console.log('newVersion', tag)
-        if(tag.toLowerCase() === 'hive'){
-            console.log("??????")
-            tag = '';
-        }else{
+        if (tag.toLowerCase() === 'hive' || tag.toLowerCase() === 'posting') {
+            this.tag = '';
+        } else {
             this.tag = tag;
         }
         if (this.loadingState === ETootLoadingState.none) {
@@ -51,13 +48,13 @@ export default class Toot {
         if (this.loadingState === ETootLoadingState.none) {
             this.loadingState = ETootLoadingState.ready;
         }
-
     }
 
     async load() {
         if (this.loadingState === ETootLoadingState.ready
             || this.loadingState === ETootLoadingState.complete) {
-console.log('load', this.tag)
+
+
             let posting = false;
             let username = '';
             let searchInput = store.getters.searchInput;
@@ -99,19 +96,20 @@ console.log('load', this.tag)
             store.commit("tootCnt", this.allResult.length);
             this.offset += result.length;
 
-
             if (result.length < this.limitCount) {
                 this.loadingState = ETootLoadingState.end;
             }
             else {
                 setTimeout(() => {
+                    console.log(this.el.scrollHeight, this.el.clientHeight)
                     if (this.el.scrollHeight <= this.el.clientHeight) {
                         this.loadingState = ETootLoadingState.complete;
                         this.load();
                     } else {
                         this.loadingState = ETootLoadingState.complete;
                     }
-                }, 200);
+                }, 300);
+
             }
         }
 
