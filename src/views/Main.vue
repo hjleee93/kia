@@ -18,6 +18,7 @@ import { initApp } from "@/scripts/ui_common";
 import Header from "@/components/layouts/Header.vue";
 import AlbumShow from "@/components/layouts/AlbumShow.vue";
 
+
 @Component({
     components: { Header, AlbumShow },
 })

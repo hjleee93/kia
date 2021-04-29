@@ -13,8 +13,8 @@
                                 <button
                                     data-val="all"
                                     class="btn btn-dropdown"
-                                    @click="tootDrop('allToot')"
-                                    ref="allToot"
+                                    @click="tootDrop('Hive')"
+                                    ref="Hive"
                                 >
                                     <span>모든 툿</span>
                                 </button>
@@ -27,8 +27,8 @@
                                     :class="
                                         category === 'Posting' ? 'active' : ''
                                     "
-                                    @click="tootDrop('myToot')"
-                                    ref="myToot"
+                                    @click="tootDrop('Posting')"
+                                    ref="Posting"
                                 >
                                     <span>내가 쓴 툿</span>
                                 </button>
@@ -179,6 +179,7 @@ export default class SearchBar extends Vue {
 
     @Watch("$store.getters.currCategory")
     getCategory() {
+        this.searchInput = "";
         this.category = this.$store.getters.currCategory;
         if (this.category === "Posting") {
             this.isAllToot = false;
@@ -217,7 +218,6 @@ export default class SearchBar extends Vue {
         tootDropDown.txtClick();
     }
     txtClick2() {
-        console.log('clicked')
         tootDropDown2.txtClick();
     }
     tootDrop2(arg: string) {
@@ -226,13 +226,14 @@ export default class SearchBar extends Vue {
     }
     tootDrop(arg: string) {
         tootDropDown.btnDropdownClick(this.$refs[arg]);
-        if (arg === "myToot") {
+
+        if (arg.toLowerCase() === "posting") {
             this.isAllToot = false;
-            this.$router.push("/Posting").catch(() => {});
-        } else if (arg === "allToot") {
+        } else if (arg.toLowerCase() === "hive") {
             this.isAllToot = true;
-            this.$router.push("/Hive").catch(() => {});
         }
+        this.$store.commit("currCategory", arg);
+        this.$router.push("/" + arg.toLowerCase()).catch(() => {});
     }
     mobileToggle(arg: string) {
         search.mobileToggle(this.$refs[arg]);
@@ -272,6 +273,8 @@ export default class SearchBar extends Vue {
         this.searchInput = "";
         this.$store.dispatch("resetSearchInfo");
         this.$emit("searchToot");
+        //@ts-ignore
+        document.querySelector(".sec-category").style.display = "block";
     }
 }
 </script>

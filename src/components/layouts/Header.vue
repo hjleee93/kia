@@ -141,7 +141,7 @@ export default class Header extends Vue {
 
     @Watch("$store.getters.currCategory")
     getCategory() {
-        this.active = this.$store.getters.currCategory;
+        this.active = this.$store.getters.currCategory;        
     }
     clickedLogo() {
         this.$router.push("/mastodon/web/timelines/public").catch(() => {});

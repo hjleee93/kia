@@ -90,6 +90,7 @@ export default class Hive extends Vue {
 
     beforeDestroy() {
         window.removeEventListener("scroll", this.scrollHandler);
+        
     }
 
     scrollHandler() {

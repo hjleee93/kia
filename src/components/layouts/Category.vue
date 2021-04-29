@@ -51,11 +51,9 @@
                 </li>
             </ul>
         </div>
-        
+
         <template v-if="$store.getters.currCategory !== 'Hive'">
-            <Hashtag
-                :tag="$store.getters.currCategory"
-            />
+            <Hashtag :tag="$store.getters.currCategory" />
         </template>
     </div>
 </template>
@@ -73,9 +71,7 @@ export default class Category extends Vue {
         return this.active === value;
     }
 
-    
-
-    openAlbum(): void {
+    openAlbum(): void {      
         albumPop.layerOpen();
         let elem = document.documentElement;
         //@ts-ignore
@@ -100,9 +96,11 @@ export default class Category extends Vue {
             elem.msRequestFullscreen();
         }
     }
+
+ 
     clickedCategory(category: string) {
         this.active = category;
-        this.$store.commit('currCategory', category)
+        this.$store.commit("currCategory", category);
         this.$router.push("/" + category.toLowerCase()).catch(() => {});
     }
 

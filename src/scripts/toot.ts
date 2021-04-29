@@ -101,14 +101,13 @@ export default class Toot {
             }
             else {
                 setTimeout(() => {
-                    console.log(this.el.scrollHeight, this.el.clientHeight)
                     if (this.el.scrollHeight <= this.el.clientHeight) {
                         this.loadingState = ETootLoadingState.complete;
                         this.load();
                     } else {
                         this.loadingState = ETootLoadingState.complete;
                     }
-                }, 300);
+                }, 400);
 
             }
         }

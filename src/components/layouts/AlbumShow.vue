@@ -23,7 +23,7 @@
                         <span>닫기</span>
                     </button>
                 </div>
-                <div class="layer-content" ref="scroll">
+                <div class="layer-content" id="albumScroll" ref="scroll" >
                     <div class="grid-wrap">
                         <isotope class="grid" :options="options()" :list="list">
                             <div
@@ -63,10 +63,14 @@
                 </div>
 
                 <!--상세 이미지-->
-                <div class="layer-depth2" @click="goToDetailPage(imgId)">
+                <div class="layer-depth2" @click="layerCloseDepth2(imgId)">
                     <div class="layer-depth2-content">
                         <div class="box-img">
-                            <img :src="detailSrc" alt="" />
+                            <img
+                                :src="detailSrc"
+                                alt=""
+                                @click="goToDetailPage(imgId)"
+                            />
                         </div>
                     </div>
                 </div>
@@ -90,26 +94,21 @@ export default class AlbumShow extends Vue {
     private autoScroll!: any;
     private imgArr: string[] = [];
     private imgId: string = "";
-    beforeCreate() {
-        this.$store.dispatch("resetSearchInfo");
-    }
-    created() {
-        document.addEventListener("wheel", (e) => {
-            //@ts-ignore
-            this.$refs.scroll.scrollLeft += e.deltaY;
-        });
-    }
 
     async mounted() {
         this.stopInterval();
         albumPop.init(this.openCallback);
     }
-    beforeDestroy() {
-        albumPop.destroy();
+
+    beforeCreate() {
+        this.$store.dispatch("resetSearchInfo");
     }
 
     stopInterval() {
         clearInterval(this.autoScroll);
+    }
+    beforeDestroy() {
+        albumPop.destroy();
     }
 
     @Watch("$store.getters.albumResult")
@@ -127,7 +126,6 @@ export default class AlbumShow extends Vue {
     async init() {
         const heightRatio = 1.0681818182;
         const imageList = this.imgArr;
-        console.log(this.imgArr);
         for (let i = 0; i < imageList.length; i++) {
             if (!this.isOpen) {
                 return;
@@ -156,15 +154,13 @@ export default class AlbumShow extends Vue {
 
             this.list.push({
                 width: img.width,
-                //@ts-ignore
                 url: imageList[i].url,
-                //@ts-ignore
                 id: imageList[i].id,
             });
             if (this.autoScroll) {
                 this.stopInterval();
             }
-            // this.horizontalScroll();
+
             this.autoScroll = setInterval(() => {
                 if (this.$refs.scroll !== undefined) {
                     //@ts-ignore
@@ -191,41 +187,12 @@ export default class AlbumShow extends Vue {
     albumPopClose() {
         this.isOpen = false;
         this.list.length = 0;
-
         albumPop.layerClose(() => {
             // 상세 레이어 닫기
             // isDesktop();
             // document.querySelector("#layer .grid")!.innerHTML = "";
         });
         this.endFullScreen();
-    }
-
-    layerOpenDepth2(image: any) {
-        console.log("layerOpenDepth2", image);
-        this.detailSrc = image.url;
-        this.imgId = image.id;
-        // document.querySelector(".layer-depth2 .box-img img").src = src;
-        albumPop.layerOpenDepth2(); //상세 레이어 열기
-    }
-
-    goToDetailPage(imgId: string) {
-        // albumPop.layerCloseDepth2();imgId
-        this.$router.push(`/mastodon/web/statuses/${imgId}`);
-        this.endFullScreen();
-    }
-
-    options() {
-        return {
-            layoutMode: "masonryHorizontal",
-            // initLayout: false,
-            mansonryHorizontal: {
-                itemSelector: ".grid-item",
-            },
-            transitionDuration: 0,
-        };
-    }
-    goTootPage() {
-        console.log("clicked");
     }
 
     endFullScreen() {
@@ -246,6 +213,33 @@ export default class AlbumShow extends Vue {
             //@ts-ignore
             window.top.document.msExitFullscreen();
         }
+    }
+
+    layerOpenDepth2(image: any) {
+        this.detailSrc = image.url;
+
+        this.imgId = image.id;
+        // document.querySelector(".layer-depth2 .box-img img").src = src;
+        albumPop.layerOpenDepth2(); //상세 레이어 열기
+    }
+
+    layerCloseDepth2() {
+        this.albumPopClose();
+    }
+
+    options() {
+        return {
+            layoutMode: "masonryHorizontal",
+            // initLayout: false,
+            mansonryHorizontal: {
+                itemSelector: ".grid-item",
+            },
+            transitionDuration: 0,
+        };
+    }
+    goToDetailPage(imgId: string) {
+        this.endFullScreen();
+        this.$router.push(`/mastodon/web/statuses/${imgId}`);
     }
 }
 </script>

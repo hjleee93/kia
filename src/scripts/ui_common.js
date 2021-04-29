@@ -931,17 +931,19 @@ var Search = function Search() {
 
     var historyListsClose = function historyListsClose() {
         if (domWrap) {
-            //최근검색어 클릭한 경우 
-            if (document.querySelector(".search-history-lists") !== null) {
-                document.querySelector(".search-history-lists").removeEventListener("scroll", domInpBlur);
-                domSearchHistory.style.display = "none";
-                dim.close();
-            } else {
-                document.querySelector(".sec-category").style.display = "none";
-                document.querySelector(".wrap-fixed").style.height = "".concat(getSecFixedRect().height || 0, "px");
-                setTimeout(function () {
-                    info.flag = true;
-                }, 300);
+            if (domSearchHistory) {
+                //최근검색어 클릭한 경우 
+                if (document.querySelector(".search-history-lists") !== null) {
+                    document.querySelector(".search-history-lists").removeEventListener("scroll", domInpBlur);
+                    domSearchHistory.style.display = "none";
+                    dim.close();
+                } else {
+                    document.querySelector(".sec-category").style.display = "none";
+                    document.querySelector(".wrap-fixed").style.height = "".concat(getSecFixedRect().height || 0, "px");
+                    setTimeout(function () {
+                        info.flag = true;
+                    }, 300);
+                }
             }
         }
     };
@@ -1224,6 +1226,8 @@ var Calendar = function Calendar() {
             });
             dim.open();
         }
+
+
     };
 
     var layerClose = function layerClose() {
@@ -1337,30 +1341,50 @@ var LayerPop = function LayerPop() {
     };
 
     var layerOpen = function layerOpen() {
+
         if (domWrap.classList.contains("close")) {
             domWrap.classList.remove("close");
         }
 
-        wrapOverflow.hidden();
+        // wrapOverflow.hidden();
+        
         domWrap.style.display = "block";
+
         setTimeout(function () {
             domWrap.classList.add("open");
             openCallback && openCallback();
+
+            if (domWrap.classList.contains("open")) {
+                
+                document.addEventListener('wheel', horizontalScroll)
+            } else {
+                wrapOverflow.auto();
+            }
         });
+
     };
 
-    var layerClose = function layerClose(callback) {
-        domWrap.classList.add("close");
-        domWrap.classList.remove("open");
-        setTimeout(function () {
-            domWrap.classList.remove("close");
-            domWrap.style.display = "none";
-            wrapOverflow.auto();
+    var horizontalScroll = function horizontalScroll(e) {
+        if (domWrap.classList.contains("open")) {
+            document.querySelector("#albumScroll").scrollLeft += e.deltaY;
+        }
+    };
 
-            if (callback && typeof callback === 'function') {
-                callback();
-            }
-        }, 300);
+
+    var layerClose = function layerClose(callback) {
+        if (domWrap) {
+            domWrap.classList.add("close");
+            domWrap.classList.remove("open");
+            setTimeout(function () {
+                domWrap.classList.remove("close");
+                domWrap.style.display = "none";
+                wrapOverflow.auto();
+
+                if (callback && typeof callback === 'function') {
+                    callback();
+                }
+            }, 300);
+        }
     };
 
     var layerOpenDepth2 = function layerOpenDepth2(callback) {
