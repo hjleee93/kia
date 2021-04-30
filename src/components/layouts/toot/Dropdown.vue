@@ -21,7 +21,7 @@
                     <button
                         data-val="my"
                         class="btn btn-dropdown"
-                        :class="category === 'Posting' ? 'active' : ''"
+                        :class="category === 'posting' ? 'active' : ''"
                         @click="tootDrop('myToot')"
                         ref="myToot"
                     >

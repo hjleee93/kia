@@ -1,7 +1,7 @@
 <template>
     <div class="box-hash-dropdown">
         <button data-val="" class="txt" @click="txtClick">
-            <template v-if="$store.getters.currCategory !== 'Posting'">
+            <template v-if="$store.getters.currCategory !== 'posting'">
                 <span># {{ hashtags[0] }}</span>
             </template>
             <template v-else>
@@ -57,7 +57,7 @@ export default class Hashtag extends Vue {
 
         this.$store.commit("categories", categories);
 
-        if (this.$store.getters.currCategory === "Posting") {
+        if (this.$store.getters.currCategory === "posting") {
             for (const i in this.$store.getters.categories) {
                 for (const j in this.$store.getters.categories[i].tags) {
                     this.hashtags.push(

@@ -5,7 +5,7 @@ import Vue, { PluginObject } from "vue";
 
 export default class Api {
     private baseApiUrl = process.env.VUE_APP_API_URL;
-    
+
 
 
     async verifyApp() {
@@ -92,10 +92,10 @@ export default class Api {
 
     async getMyToots(max_id?: number,) {
         await this.getCurrentUser()
-        let userId = store.getters.currentUser.id
+        // let userId = store.getters.currentUser.id
         const result = await Vue.$axios({
             method: 'get',
-            url: `/api/v1/accounts/${userId}/statuses`,
+            url: `/api/v1/accounts/1/statuses`,
             params: { only_media: true, max_id }
         })
         return result.data

@@ -19,6 +19,7 @@ export default class App extends Vue {
   private path: string = "";
 
   mounted() {
+    
     this.$store.commit("currCategory", "INS");
     initApp();
     //gnb.init();
@@ -43,7 +44,7 @@ export default class App extends Vue {
     const { pathMatch } = params;
     this.path = pathMatch;
 
-    if (this.path === "web/statuses/new") {
+    if (this.path === "web/statuses/new") {  
       this.$store.commit("currCategory", "Toot");
     } else if (this.path === "web/timelines/public") {
       this.$store.commit("currCategory", "INS");

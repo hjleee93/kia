@@ -10,8 +10,8 @@
                 <!--<button class="btn btn-category active"></button>-->
                 <li class="list-all divider">
                     <button
-                        @click="clickedCategory('Posting')"
-                        :class="{ active: isActive('Posting') }"
+                        @click="clickedCategory('posting')"
+                        :class="{ active: isActive('posting') }"
                         class="btn btn-category"
                     >
                         <span>All</span>
@@ -19,8 +19,8 @@
                 </li>
                 <li class="list-inspiration">
                     <button
-                        @click="clickedCategory('Inspiration')"
-                        :class="{ active: isActive('Inspiration') }"
+                        @click="clickedCategory('inspiration')"
+                        :class="{ active: isActive('inspiration') }"
                         class="btn btn-category"
                     >
                         <span>Inspiration</span>
@@ -29,8 +29,8 @@
                 <li class="list-project">
                     <button
                         class="btn btn-category"
-                        @click="clickedCategory('Project')"
-                        :class="{ active: isActive('Project') }"
+                        @click="clickedCategory('project')"
+                        :class="{ active: isActive('project') }"
                     >
                         <span>Project</span>
                     </button>
@@ -38,8 +38,8 @@
                 <li class="list-exhibition divider">
                     <button
                         class="btn btn-category"
-                        @click="clickedCategory('Exhibition')"
-                        :class="{ active: isActive('Exhibition') }"
+                        @click="clickedCategory('exhibition')"
+                        :class="{ active: isActive('exhibition') }"
                     >
                         <span>Exhibition</span>
                     </button>

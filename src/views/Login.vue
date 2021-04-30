@@ -168,6 +168,7 @@ export default class Login extends Vue {
     private isPwdActive: boolean = false;
     private emailRegExp = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
     private goIframe: boolean = false;
+    private client_id: string = "";
 
     handleKeyDown(e: any) {
         if (e.code === "Enter" || e.keyCode === 13) {
@@ -190,6 +191,14 @@ export default class Login extends Vue {
     }
 
     async mounted() {
+
+        (this.$refs.iframe as HTMLIFrameElement)?.contentWindow?.postMessage(
+            {
+                type: "logout",
+            },
+            "*"
+        );
+        
         this.$store.dispatch("logout");
         this.$store.commit("currCategory", "Login");
         window.addEventListener("keypress", this.handleKeyDown);
@@ -249,7 +258,6 @@ export default class Login extends Vue {
                     };
                     window.addEventListener("message", onMessage);
                 });
-
                 this.updateCurrentUser(result.data.access_token);
             } else {
                 this.loginError();
@@ -267,14 +275,15 @@ export default class Login extends Vue {
                 client_id: result.data.client_id,
                 client_secret: result.data.client_secret,
             };
+            this.client_id = result.data.client_id;
             return instance;
         } else {
             this.appError();
         }
     }
 
-   async updateCurrentUser(token: string) {
-       await this.$store.dispatch("userStatus", token);
+    async updateCurrentUser(token: string) {
+        await this.$store.dispatch("userStatus", token);
         if (this.$store.getters.currentUser) {
             this.$router.push("/mastodon/web/timelines/public").catch(() => {});
         } else {
@@ -290,8 +299,6 @@ export default class Login extends Vue {
         this.isAppVerfiedError = true;
         this.$store.dispatch("logout");
     }
-
-    
 }
 </script>
 

@@ -25,10 +25,10 @@
                                     data-val="my"
                                     class="btn btn-dropdown"
                                     :class="
-                                        category === 'Posting' ? 'active' : ''
+                                        category === 'posting' ? 'active' : ''
                                     "
-                                    @click="tootDrop('Posting')"
-                                    ref="Posting"
+                                    @click="tootDrop('posting')"
+                                    ref="posting"
                                 >
                                     <span>내가 쓴 툿</span>
                                 </button>
@@ -44,7 +44,7 @@
                     ></button>
                 </div>
                 <!-- 사용자, 검색어 추가 dropdown -->
-                <div v-show="$store.getters.currCategory !== 'Posting'">
+                <div v-show="$store.getters.currCategory !== 'posting'">
                     <div class="box-toot-dropdown2">
                         <button data-val="" class="btn txt2" @click="txtClick2">
                             <span>내용</span>
@@ -68,7 +68,7 @@
                                         data-val="user"
                                         class="btn btn-dropdown2"
                                         :class="
-                                            category === 'Posting'
+                                            category === 'posting'
                                                 ? 'active'
                                                 : ''
                                         "
@@ -89,7 +89,7 @@
                                 type="text"
                                 name="search"
                                 :placeholder="
-                                    $store.getters.currCategory === 'Posting'
+                                    $store.getters.currCategory === 'posting'
                                         ? '내용검색'
                                         : '검색'
                                 "
@@ -181,7 +181,7 @@ export default class SearchBar extends Vue {
     getCategory() {
         this.searchInput = "";
         this.category = this.$store.getters.currCategory;
-        if (this.category === "Posting") {
+        if (this.category === "posting") {
             this.isAllToot = false;
         } else {
             this.isAllToot = true;

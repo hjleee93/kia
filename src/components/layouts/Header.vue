@@ -10,7 +10,20 @@
                     <ul>
                         <li class="list-ins" @click="clickedHeader('INS')">
                             <router-link
-                                to="/mastodon/web/timelines/public"
+                                :to="{
+                                    path:'/mastodon/web/timelines/public',
+                                     query:
+                                        $store.getters.currCategory ===
+                                            'inspiration' ||
+                                        $store.getters.currCategory ===
+                                            'project' ||
+                                        $store.getters.currCategory ===
+                                            'exhibition'
+                                            ? {
+                                                  tag: `${$store.getters.currCategory}`,
+                                              }
+                                            : '',
+                                } "
                                 class="btn btn-link"
                                 :class="{ active: isActive('INS') }"
                                 >INS</router-link
@@ -18,8 +31,20 @@
                         </li>
                         <li class="list-toot" @click="clickedHeader('Toot')">
                             <router-link
-                          
-                                to="/mastodon/web/statuses/new"
+                                :to="{
+                                    path: '/mastodon/web/statuses/new',
+                                    query:
+                                        $store.getters.currCategory ===
+                                            'inspiration' ||
+                                        $store.getters.currCategory ===
+                                            'project' ||
+                                        $store.getters.currCategory ===
+                                            'exhibition'
+                                            ? {
+                                                  tag: `${$store.getters.currCategory}`,
+                                              }
+                                            : '',
+                                }"
                                 class="btn btn-link"
                                 :class="{ active: isActive('Toot') }"
                                 >TOOT</router-link
@@ -35,45 +60,45 @@
                         </li>
                         <li
                             class="list-posting"
-                            @click="clickedHeader('Posting')"
+                            @click="clickedHeader('posting')"
                         >
                             <router-link
                                 to="/posting"
-                                :class="{ active: isActive('Posting') }"
+                                :class="{ active: isActive('posting') }"
                                 class="btn btn-link"
                                 >Posting</router-link
                             >
                         </li>
                         <li
                             class="list-inspiration"
-                            @click="clickedHeader('Inspiration')"
+                            @click="clickedHeader('inspiration')"
                         >
                             <router-link
                                 to="/inspiration"
-                                :class="{ active: isActive('Inspiration') }"
+                                :class="{ active: isActive('inspiration') }"
                                 class="btn btn-link"
                                 >Inspiration</router-link
                             >
                         </li>
-                       
+
                         <li
                             class="list-project"
-                            @click="clickedHeader('Project')"
+                            @click="clickedHeader('project')"
                         >
                             <router-link
                                 to="/project"
-                                :class="{ active: isActive('Project') }"
+                                :class="{ active: isActive('project') }"
                                 class="btn btn-link"
                                 >Project</router-link
                             >
                         </li>
-                         <li
+                        <li
                             class="list-exhibition"
-                            @click="clickedHeader('Exhibition')"
+                            @click="clickedHeader('exhibition')"
                         >
                             <router-link
                                 to="/exhibition"
-                                :class="{ active: isActive('Exhibition') }"
+                                :class="{ active: isActive('exhibition') }"
                                 class="btn btn-link"
                                 >Exhibition</router-link
                             >
@@ -135,19 +160,17 @@ export default class Header extends Vue {
 
     clickedHeader(category: string) {
         this.$store.commit("currCategory", category);
-        
+
         this.active = category;
     }
 
     @Watch("$store.getters.currCategory")
     getCategory() {
-        this.active = this.$store.getters.currCategory;        
+        this.active = this.$store.getters.currCategory;
     }
     clickedLogo() {
         this.$router.push("/mastodon/web/timelines/public").catch(() => {});
     }
-
-   
 }
 </script>
 

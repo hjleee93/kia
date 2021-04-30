@@ -27,8 +27,8 @@ export default {
             let result: any;
             try {
                 result = await Vue.$api.getCurrentUser();
-                localStorage.setItem('token', token)               
-                commit('currentUser',  result)
+                localStorage.setItem('token', token)
+                commit('currentUser', result)
             } catch (err) {
                 dispatch('logout')
             }
@@ -36,7 +36,7 @@ export default {
 
         },
         //@ts-ignore
-        logout({ commit }) {
+        async logout({ commit }) {
             console.log('logout')
             localStorage.removeItem("token");
             commit('userToken', null)

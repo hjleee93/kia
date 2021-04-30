@@ -19,8 +19,8 @@
                 </li>
                 <li class="list-inspiration">
                     <button
-                        @click="clickedCategory('Inspiration')"
-                        :class="{ active: isActive('Inspiration') }"
+                        @click="clickedCategory('inspiration')"
+                        :class="{ active: isActive('inspiration') }"
                         class="btn btn-category"
                     >
                         <span>Inspiration</span>
@@ -29,8 +29,8 @@
                 <li class="list-project">
                     <button
                         class="btn btn-category"
-                        @click="clickedCategory('Project')"
-                        :class="{ active: isActive('Project') }"
+                        @click="clickedCategory('project')"
+                        :class="{ active: isActive('project') }"
                     >
                         <span>Project</span>
                     </button>
@@ -39,7 +39,7 @@
                     <button
                         class="btn btn-category"
                         @click="clickedCategory('exhibition')"
-                        :class="{ active: isActive('Exhibition') }"
+                        :class="{ active: isActive('exhibition') }"
                     >
                         <span>Exhibition</span>
                     </button>
