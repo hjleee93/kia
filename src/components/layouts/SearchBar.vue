@@ -134,7 +134,6 @@
                                     v-for="(keyword, idx) in searchHistory"
                                     :key="keyword.id"
                                 >
-                                    <!-- issue: null -->
                                     <button
                                         class="btn btn-history"
                                         @click="searchInput = keyword"
@@ -177,18 +176,22 @@ export default class SearchBar extends Vue {
     private category: string = "";
     private isAllToot!: Boolean;
     private searchType: string = "contents";
-
     private searchHistory = this.search.searchHistory;
 
     @Watch("$store.getters.currCategory")
     getCategory() {
         this.searchInput = "";
+        this.isDone = false
         this.category = this.$store.getters.currCategory;
         if (this.category.toLowerCase() === "posting") {
             this.isAllToot = false;
         } else {
             this.isAllToot = true;
         }
+    }
+    @Watch('search.searchHistory')
+    getHistory(){
+        this.searchHistory = this.search.searchHistory;
     }
     mounted() {
         tootDropDown.init();
@@ -251,6 +254,8 @@ export default class SearchBar extends Vue {
         search.inpFocus(this.$refs[arg]);
     }
 
+
+
     searchToot() {
         this.isDone = true;
         this.$store.dispatch("tootReset");
@@ -268,6 +273,7 @@ export default class SearchBar extends Vue {
     }
 
     clickedRctKeyword(keyword: string) {
+       
         this.searchInput = keyword;
     }
 
