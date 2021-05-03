@@ -169,6 +169,8 @@ export default class Login extends Vue {
     private emailRegExp = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
     private goIframe: boolean = false;
     private client_id: string = "";
+    private isLoaded: boolean = false;
+    private isLogout: boolean = false;
 
     handleKeyDown(e: any) {
         if (e.code === "Enter" || e.keyCode === 13) {
@@ -176,12 +178,28 @@ export default class Login extends Vue {
         }
     }
     loaded() {
-        if (
-            (this.$refs.iframe as HTMLIFrameElement).src !==
-            this.baseURL + "about"
-        ) {
-            window.addEventListener("message", this.iframeHandler);
+        if (this.isLoaded === false) {
+            this.isLoaded = true;
+            if (this.isLoaded === true) {
+                (this.$refs
+                    .iframe as HTMLIFrameElement)?.contentWindow?.postMessage(
+                    {
+                        type: "logout",
+                    },
+                    "*"
+                );
+                this.isLogout = true;
+            }
+
+            if (
+                (this.$refs.iframe as HTMLIFrameElement).src !==
+                this.baseURL + "about"
+            ) {
+                window.addEventListener("message", this.iframeHandler);
+            }
         }
+
+        console.log((this.$refs.iframe as HTMLIFrameElement).src);
     }
 
     iframeHandler(e: MessageEvent) {
@@ -191,14 +209,6 @@ export default class Login extends Vue {
     }
 
     async mounted() {
-
-        (this.$refs.iframe as HTMLIFrameElement)?.contentWindow?.postMessage(
-            {
-                type: "logout",
-            },
-            "*"
-        );
-        
         this.$store.dispatch("logout");
         this.$store.commit("currCategory", "Login");
         window.addEventListener("keypress", this.handleKeyDown);
@@ -223,14 +233,11 @@ export default class Login extends Vue {
             if (result) {
                 this.$store.commit("userToken", result.data.access_token);
 
-                if (
-                    (this.$refs.iframe as HTMLIFrameElement).src ===
-                    `${this.baseURL}about`
-                ) {
+                if (this.isLogout) {
                     (this.$refs
                         .iframe as HTMLIFrameElement)?.contentWindow?.postMessage(
                         {
-                            type: "login",
+                            type: "login2",
                             email,
                             password,
                         },
@@ -240,7 +247,7 @@ export default class Login extends Vue {
                     (this.$refs
                         .iframe as HTMLIFrameElement)?.contentWindow?.postMessage(
                         {
-                            type: "login2",
+                            type: "login",
                             email,
                             password,
                         },

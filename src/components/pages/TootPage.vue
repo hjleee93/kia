@@ -4,8 +4,8 @@
             <div class="wrap-fixed">
                 <div class="sec-fixed">
                     <SearchBar @searchToot="searchToot" />
-                    <template v-if="$store.getters.currCategory === 'Posting'">
-                        <CategoryP @category="getCategory" />
+                    <template v-if="$store.getters.currCategory === 'posting'">
+                       <CategoryP @category="getCategory" />
                     </template>
                     <template v-else>
                         <Category />

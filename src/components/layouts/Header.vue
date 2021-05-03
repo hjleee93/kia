@@ -50,10 +50,10 @@
                                 >TOOT</router-link
                             >
                         </li>
-                        <li class="list-hive" @click="clickedHeader('Hive')">
+                        <li class="list-hive" @click="clickedHeader('hive')">
                             <router-link
                                 to="/hive"
-                                :class="{ active: isActive('Hive') }"
+                                :class="{ active: isActive('hive') }"
                                 class="btn btn-link"
                                 >HIVE</router-link
                             >

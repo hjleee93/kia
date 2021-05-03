@@ -13,8 +13,11 @@
                                 <button
                                     data-val="all"
                                     class="btn btn-dropdown"
-                                    @click="tootDrop('Hive')"
-                                    ref="Hive"
+                                     :class="
+                                        category !== 'posting' ? 'active' : ''
+                                    "
+                                    @click="tootDrop('hive')"
+                                    ref="hive"
                                 >
                                     <span>모든 툿</span>
                                 </button>
@@ -181,7 +184,7 @@ export default class SearchBar extends Vue {
     getCategory() {
         this.searchInput = "";
         this.category = this.$store.getters.currCategory;
-        if (this.category === "posting") {
+        if (this.category.toLowerCase() === "posting") {
             this.isAllToot = false;
         } else {
             this.isAllToot = true;
