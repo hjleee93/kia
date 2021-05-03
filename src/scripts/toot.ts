@@ -25,6 +25,7 @@ export default class Toot {
     }
 
     newVersion(tag: string, isSearch?: boolean) {
+       
         if (tag.toLowerCase() === 'hive' || tag.toLowerCase() === 'posting') {
             this.tag = '';
         } else {
@@ -53,7 +54,7 @@ export default class Toot {
     async load() {
         if (this.loadingState === ETootLoadingState.ready
             || this.loadingState === ETootLoadingState.complete) {
-
+            store.commit('hashtag', this.tag)
 
             let posting = false;
             let username = '';
@@ -103,6 +104,7 @@ export default class Toot {
                 setTimeout(() => {
                     if (this.el.scrollHeight <= this.el.clientHeight) {
                         this.loadingState = ETootLoadingState.complete;
+               
                         this.load();
                     } else {
                         this.loadingState = ETootLoadingState.complete;

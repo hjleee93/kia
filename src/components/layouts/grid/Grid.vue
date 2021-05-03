@@ -66,6 +66,7 @@ export default class Grid extends Vue {
             this.$refs.isotope.layout();
         }, 100);
     }
+    
     @Watch("tagSearch")
     changeTag() {
         this.allToots = this.tagSearch;

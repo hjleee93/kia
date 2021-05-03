@@ -53,7 +53,7 @@
         </div>
 
         <template v-if="$store.getters.currCategory !== 'hive'">
-            <Hashtag :tag="$store.getters.currCategory" />
+            <Hashtag :tag="$store.getters.currCategory"  />
         </template>
     </div>
 </template>
