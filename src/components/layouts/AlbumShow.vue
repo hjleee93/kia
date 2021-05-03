@@ -23,7 +23,7 @@
                         <span>닫기</span>
                     </button>
                 </div>
-                <div class="layer-content" id="albumScroll" ref="scroll" >
+                <div class="layer-content" id="albumScroll" ref="scroll">
                     <div class="grid-wrap">
                         <isotope class="grid" :options="options()" :list="list">
                             <div
@@ -94,10 +94,16 @@ export default class AlbumShow extends Vue {
     private autoScroll!: any;
     private imgArr: string[] = [];
     private imgId: string = "";
+    private pos = { top: 0, left: 0, x: 0, y: 0 };
+    private elem: any;
 
     async mounted() {
         this.stopInterval();
         albumPop.init(this.openCallback);
+
+        this.elem = document.getElementById("albumScroll")!;
+
+        this.elem.addEventListener("mousedown", this.mouseDownHandler);
     }
 
     beforeCreate() {
@@ -171,9 +177,9 @@ export default class AlbumShow extends Vue {
                     if (
                         //@ts-ignore
                         this.$refs.scroll.scrollWidth -
-                        //@ts-ignore
-                            this.$refs.scroll.clientWidth ===
                             //@ts-ignore
+                            this.$refs.scroll.clientWidth ===
+                        //@ts-ignore
                         this.$refs.scroll.scrollLeft
                     ) {
                         //@ts-ignore
@@ -222,14 +228,13 @@ export default class AlbumShow extends Vue {
 
     layerOpenDepth2(image: any) {
         this.detailSrc = image.url;
-
         this.imgId = image.id;
-        // document.querySelector(".layer-depth2 .box-img img").src = src;
         albumPop.layerOpenDepth2(); //상세 레이어 열기
     }
 
     layerCloseDepth2() {
         this.albumPopClose();
+        albumPop.detailPicClose();
     }
 
     options() {
@@ -246,6 +251,33 @@ export default class AlbumShow extends Vue {
         wrapOverflow.auto();
         this.endFullScreen();
         this.$router.push(`/mastodon/web/statuses/${imgId}`);
+    }
+
+    mouseDownHandler(e: MouseEvent) {
+        this.pos = {
+            // The current scroll
+            left: this.elem.scrollLeft,
+            top: this.elem.scrollTop,
+            // Get the current mouse position
+            x: e.clientX,
+            y: e.clientY,
+        };
+
+        document.addEventListener("mousemove", this.mouseMoveHandler);
+        document.addEventListener("mouseup", this.mouseUpHandler);
+    }
+    mouseUpHandler() {
+        this.elem.style.cursor = "grab";
+        this.elem.style.removeProperty("user-select");
+
+        document.removeEventListener("mousemove", this.mouseMoveHandler);
+        document.removeEventListener("mouseup", this.mouseUpHandler);
+    }
+
+    mouseMoveHandler(e: MouseEvent) {
+        this.elem.scrollLeft = 0;
+        const dx = e.clientX - this.pos.x;
+        this.elem.scrollLeft = this.pos.left - dx;
     }
 }
 </script>

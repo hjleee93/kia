@@ -2,7 +2,7 @@
     <div class="box-hash-dropdown">
         <button data-val="" class="txt" @click="txtClick">
             <template v-if="$store.getters.currCategory !== 'posting'">
-                <span># {{ hashtags[0] }}</span>
+                <span>#{{ hashtags[0] }}</span>
             </template>
             <template v-else>
                 <span># ALL TAG</span>
@@ -55,28 +55,27 @@ export default class Hashtag extends Vue {
     async initCate() {
         const categories = await this.getCategory();
 
-        this.$store.commit("categories", categories);
-
-        if (this.$store.getters.currCategory === "posting") {
-            for (const i in this.$store.getters.categories) {
-                for (const j in this.$store.getters.categories[i].tags) {
-                    this.hashtags.push(
-                        this.$store.getters.categories[i].tags[j].name
-                    );
-                }
-            }
-        } else {
-            const tags = this.$store.getters.category(this.tag)?.tags;
-            if (tags) {
-                for (const i in tags) {
-                    this.hashtags.push(tags[i].name);
+        for (const i in categories) {
+            for (const j in categories[i].tags) {
+                if (
+                    this.$store.getters.currCategory.toLowerCase() === "posting"
+                ) {
+                    this.hashtags.push(categories[i].tags[j].name);
+                } else {
+                    if (
+                        categories[i].name.toLowerCase() ===
+                        this.tag.toLowerCase()
+                    ) {
+                        this.hashtags.push(categories[i].tags[j].name);
+                    }
                 }
             }
         }
     }
 
-    @Watch("store.state.categories")
+    @Watch("$store.getters.currCategory")
     watchC() {
+        this.hashtags = [];
         this.initCate();
     }
 

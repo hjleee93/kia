@@ -10,8 +10,8 @@
                 <!--<button class="btn btn-category active"></button>-->
                 <li class="list-all divider">
                     <button
-                        @click="clickedCategory('Hive')"
-                        :class="{ active: isActive('Hive') }"
+                        @click="clickedCategory('hive')"
+                        :class="{ active: isActive('hive') }"
                         class="btn btn-category"
                     >
                         <span>All</span>
@@ -52,7 +52,7 @@
             </ul>
         </div>
 
-        <template v-if="$store.getters.currCategory !== 'Hive'">
+        <template v-if="$store.getters.currCategory !== 'hive'">
             <Hashtag :tag="$store.getters.currCategory" />
         </template>
     </div>

@@ -1398,6 +1398,10 @@ var LayerPop = function LayerPop() {
         });
     };
 
+    var detailPicClose = function detailPicClose(){
+        domWrapDepth2.style.display = "none";
+    }
+
     var layerCloseDepth2 = function layerCloseDepth2(callback) {
         domWrapDepth2.classList.add("close");
         domWrapDepth2.classList.remove("open");
@@ -1424,7 +1428,8 @@ var LayerPop = function LayerPop() {
         destroy: destroy,
         layerOpenDepth2: layerOpenDepth2,
         layerCloseDepth2: layerCloseDepth2,
-        getDom: getDom
+        getDom: getDom,
+        detailPicClose: detailPicClose
     };
 };
 

@@ -43,7 +43,7 @@ import Toot from "@/scripts/toot";
 })
 export default class Hive extends Vue {
     private toot: Toot = new Toot();
-    private category: string = this.$route.name!;
+    private category: string = this.$route.name?.toLowerCase()!;
     private allResult: any[] = [];
     private tag: string = "";
     private el: HTMLElement = document.documentElement;

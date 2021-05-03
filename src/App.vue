@@ -28,6 +28,9 @@ export default class App extends Vue {
             console.log(err);
         }
     }
+
+
+    
 }
 </script>
 <style>
