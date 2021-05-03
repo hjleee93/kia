@@ -74,6 +74,17 @@
                                 mediaToot.account.username
                             }}</span>
                         </router-link>
+
+                        <span
+                            class="txt more"
+                            @click="
+                                shareLink(
+                                    mediaToot.media_attachments[0].preview_url
+                                )
+                            "
+                        >
+                            공유하기
+                        </span>
                     </div>
                 </a>
                 <!--비활성-->
@@ -129,6 +140,9 @@ export default class GridItem extends Vue {
                 this.height = this.$refs.txtBox.clientHeight;
             }
         });
+    }
+    shareLink(imgSrc: string) {
+        console.log("공유하기", imgSrc);
     }
 }
 </script>

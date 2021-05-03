@@ -27,10 +27,9 @@ export default class App extends Vue {
         } catch (err) {
             console.log(err);
         }
+
+       
     }
-
-
-    
 }
 </script>
 <style>

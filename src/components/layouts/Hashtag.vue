@@ -19,7 +19,7 @@
             ><!--모바일 전용-->
             <ul>
                 <!--비선택-->
-                <li v-for="i in hashtags" :key="i">
+                <li v-for="i in hashtags" :key="i.idx">
                     <button
                         :data-val="i"
                         class="btn btn-dropdown"
@@ -64,7 +64,7 @@ export default class Hashtag extends Vue {
                 } else {
                     if (
                         categories[i].name.toLowerCase() ===
-                        this.tag.toLowerCase()
+                        this.tag
                     ) {
                         this.hashtags.push(categories[i].tags[j].name);
                     }
