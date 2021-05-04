@@ -71,117 +71,122 @@ export default class Api {
         return result.data
     }
 
-    async getTagToots(category: string, max_id?: number, limit?: number) {
-        const result = await Vue.$axios({
-            method: 'get',
-            url: `/api/v1/timelines/tag/${category}`,
-            params: { only_media: true, limit, max_id, local: true }
-        })
-        return result.data;
-    }
-
-    async getMediaTootsOnly(max_id?: number, limit?: number) {
-        const result = await Vue.$axios({
-            method: 'get',
-            url: '/api/v1/timelines/public',
-            params: { only_media: true, limit, max_id, local: true }
-
-        })
-        return result.data;
-    }
-
-    async getMyToots(max_id?: number,) {
-        await this.getCurrentUser()
-        // let userId = store.getters.currentUser.id
-        const result = await Vue.$axios({
-            method: 'get',
-            url: `/api/v1/accounts/1/statuses`,
-            params: { only_media: true, max_id }
-        })
-        return result.data
-
-    }
-
     async sendFavourite(tootId: number) {
-
-        const result = await Vue.$axios({
+        let result: any
+        await Vue.$axios({
             method: 'post',
             url: `/api/v1/statuses/${tootId}/favourite`,
-        })
+        }).then(response => {
+            result = response;
+        }).catch((err) => {
+            alert("잠시 후에 다시 시도해주세요.")
+            result = err;
+        });
         return result;
     }
 
     async sendUnfavourite(tootId: number) {
-
-        const result = await Vue.$axios({
+        let result: any
+        await Vue.$axios({
             method: 'post',
             url: `/api/v1/statuses/${tootId}/unfavourite`,
-        })
+        }).then(response => {
+            result = response;
+        }).catch((err) => {
+            alert("잠시 후에 다시 시도해주세요.")
+            result = err;
+        });
         return result;
     }
 
     async searchHashtag(searchInput: string, offset?: number, limit?: number) {
-
-
-        const result = await Vue.$axios
+        let result: any
+        await Vue.$axios
             ({
                 method: 'get',
                 url: '/tags',
                 baseURL: this.baseApiUrl,
                 params: { limit: limit, offset: offset, tag: searchInput },
-            })
+            }).then(response => {
+                result = response.data;
+            }).catch((err) => {
+                alert("잠시 후에 다시 시도해주세요.")
+                result = err;
+            });
 
 
-        return result.data
+        return result
     }
 
     async showToot(param: object) {
-        // await this.getCurrentUser()
-        const result = await Vue.$axios
+        let result: any
+        await Vue.$axios
             ({
                 method: 'get',
                 url: '/search/media',
                 baseURL: this.baseApiUrl,
                 params: Object.assign(param),
-            })
-        return result.data
+            }).then(response => {
+                result = response.data;
+            }).catch((err) => {
+                alert("잠시 후에 다시 시도해주세요.")
+                result = err;
+            });
+        return result
     }
 
 
     async getBestHashtags(gte: string, lte: string, limit?: number, offset?: number) {
-
-        const result = await Vue.$axios
+        let result: any
+        await Vue.$axios
             ({
                 method: 'get',
                 url: '/ranking/tags',
                 baseURL: this.baseApiUrl,
                 params: { gte: gte, lte: lte, limit: limit, offset: offset },
-            })
-        return result.data
+            }).then(response => {
+                result = response.data;
+            }).catch((err) => {
+                alert("잠시 후에 다시 시도해주세요.")
+                result = err;
+            });
+        return result
     }
 
     async getBestUser(gte: string, lte: string, limit?: number, offset?: number) {
-
-        const result = await Vue.$axios
+        let result: any;
+        await Vue.$axios
             ({
                 method: 'get',
                 url: '/ranking/user',
                 baseURL: this.baseApiUrl,
                 params: { gte: gte, lte: lte, limit: limit, offset: offset },
-            })
+            }).then(response => {
+                result = response.data;
+            }).catch((err) => {
+                alert("잠시 후에 다시 시도해주세요.")
+                result = err;
+            });
 
 
         return result.data
     }
 
     async getBestToot(gte: string, lte: string, limit?: number, offset?: number) {
-        const result = await Vue.$axios
+        let result: any;
+        await Vue.$axios
             ({
                 method: 'get',
                 url: '/ranking/toot',
                 baseURL: this.baseApiUrl,
                 params: { gte: gte, lte: lte, limit: limit, offset: offset, account_id: await store.getters.currentUser.id },
-            })
+            }).then(response => {
+                result = response.data;
+            }).catch((err) => {
+                alert("잠시 후에 다시 시도해주세요.")
+                result = err;
+            });
+
 
         return result.data
     }

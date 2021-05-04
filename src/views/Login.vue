@@ -199,7 +199,6 @@ export default class Login extends Vue {
             }
         }
 
-        console.log((this.$refs.iframe as HTMLIFrameElement).src);
     }
 
     iframeHandler(e: MessageEvent) {
