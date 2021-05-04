@@ -27,9 +27,13 @@ export default class App extends Vue {
         } catch (err) {
             console.log(err);
         }
-
-       
     }
+
+    @Watch('$route')
+    watchRoute(){
+        this.$store.commit("currCategory",  this.$route.name?.toLowerCase());
+    }
+    
 }
 </script>
 <style>

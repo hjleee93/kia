@@ -4,7 +4,6 @@
             <h1 class="logo">
                 <span @click="clickedLogo" class="btn btn-logo">KN</span>
             </h1>
-
             <template v-if="$store.getters.currentUser">
                 <nav class="navigation">
                     <ul>
@@ -159,8 +158,6 @@ export default class Header extends Vue {
     }
 
     clickedHeader(category: string) {
-        this.$store.commit("currCategory", category);
-
         this.active = category;
     }
 
