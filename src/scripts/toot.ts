@@ -16,6 +16,10 @@ export default class Toot {
     private limitCount: number = 10;
     private version: number = 0;
     private tag: string = ''
+    private text: string = ''
+    private order: string = ''
+    private type: string = ''
+    private input: string = ''
     private allResult: any[] = [];
     private loadingState: ETootLoadingState = ETootLoadingState.none;
     private offset = 0;
@@ -24,8 +28,8 @@ export default class Toot {
         this.el = el;
     }
 
-    newVersion(tag: string, isSearch?: boolean) {
-       
+    newVersion(tag: string) {
+
         if (tag.toLowerCase() === 'hive' || tag.toLowerCase() === 'posting') {
             this.tag = '';
         } else {
@@ -35,11 +39,14 @@ export default class Toot {
             return;
         }
 
+        this.text = store.getters.searchInput
+        this.order = store.getters.sortOrder
+        this.type = store.getters.searchType
+        this.input = store.getters.searchInput
+
         this.version++;
         this.allResult = [];
-        if (!isSearch) {
-            this.event.$emit('resetToot');
-        }
+
         this.offset = 0;
         this.loadingState = ETootLoadingState.ready;
         this.load();
@@ -54,11 +61,17 @@ export default class Toot {
     async load() {
         if (this.loadingState === ETootLoadingState.ready
             || this.loadingState === ETootLoadingState.complete) {
-            store.commit('hashtag', this.tag)
-
             let posting = false;
             let username = '';
-            let searchInput = store.getters.searchInput;
+
+            store.commit('hashtag', this.tag)
+            store.commit('searchInput', this.text)
+            store.commit('sortOrder', this.order)
+            store.commit('searchType', this.type)
+            store.commit('searchInput', this.input)
+
+
+            const searchInput = store.getters.searchInput;
             const searchType = store.getters.searchType;
             const recentOrder = store.getters.sortOrder;
             const account_id = store.getters.currentUser.id;
@@ -95,6 +108,7 @@ export default class Toot {
             store.commit('searchResult', this.allResult)
             store.commit("albumResult", this.allResult);
             store.commit("tootCnt", this.allResult.length);
+
             this.offset += result.length;
 
             if (result.length < this.limitCount) {
@@ -104,7 +118,6 @@ export default class Toot {
                 setTimeout(() => {
                     if (this.el.scrollHeight <= this.el.clientHeight) {
                         this.loadingState = ETootLoadingState.complete;
-               
                         this.load();
                     } else {
                         this.loadingState = ETootLoadingState.complete;

@@ -180,6 +180,7 @@ export default class SearchBar extends Vue {
 
     @Watch("$store.getters.currCategory")
     getCategory() {
+        this.tootDrop2('contents')
         this.searchInput = "";
         this.isDone = false
         this.category = this.$store.getters.currCategory;
@@ -189,6 +190,7 @@ export default class SearchBar extends Vue {
             this.isAllToot = true;
         }
     }
+    
     @Watch('search.searchHistory')
     getHistory(){
         this.searchHistory = this.search.searchHistory;
@@ -253,9 +255,6 @@ export default class SearchBar extends Vue {
         this.isDone = false;
         search.inpFocus(this.$refs[arg]);
     }
-
-
-
     searchToot() {
         this.isDone = true;
         this.$store.dispatch("tootReset");

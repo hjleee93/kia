@@ -62,9 +62,12 @@ export default class Grid extends Vue {
     @Watch("device")
     changeDevice() {
         setTimeout(() => {
+             if (this.$refs.isotope !== undefined) {
             //@ts-ignore
             this.$refs.isotope.layout();
+             }
         }, 100);
+        
     }
     
     @Watch("tagSearch")

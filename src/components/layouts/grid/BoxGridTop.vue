@@ -43,6 +43,10 @@ export default class BoxGridTop extends Vue {
     isActive(value: string) {
         return this.active === value;
     }
+    @Watch("$store.getters.currCategory")
+    watchOrder(){
+        this.active = "recent";
+    }
 }
 </script>
 

@@ -5,7 +5,7 @@
                 <div class="sec-fixed">
                     <SearchBar @searchToot="searchToot" />
                     <template v-if="$store.getters.currCategory === 'posting'">
-                       <CategoryP @category="getCategory" />
+                        <CategoryP @category="getCategory" />
                     </template>
                     <template v-else>
                         <Category />
@@ -46,8 +46,8 @@ export default class Hive extends Vue {
     private category: string = this.$route.name?.toLowerCase()!;
     private allResult: any[] = [];
     private tag: string = "";
+    private key: any = "";
     private el: HTMLElement = document.documentElement;
-    private key: any = '';
 
     beforeUpdate() {
         tootDropDown.init();
@@ -58,13 +58,12 @@ export default class Hive extends Vue {
     }
 
     async mounted() {
-        this.$store.commit("currCategory", this.category);
-
-        this.tag = this.$store.getters.currCategory.toLowerCase();
+        this.category = this.$store.getters.currCategory.toLowerCase();
 
         this.toot.event.$on("addToot", (result: any) => {
             this.allResult.push(...result);
         });
+        
         this.toot.event.$on("resetToot", () => {
             this.allResult = [];
             this.$store.dispatch("resetSearchInfo");
@@ -91,7 +90,6 @@ export default class Hive extends Vue {
 
     beforeDestroy() {
         window.removeEventListener("scroll", this.scrollHandler);
-        
     }
 
     scrollHandler() {
@@ -105,8 +103,9 @@ export default class Hive extends Vue {
     }
 
     searchToot() {
-        this.toot && this.toot.newVersion(this.category, true);
+        this.toot && this.toot.newVersion(this.category);
     }
+
     //posting 용
     getCategory(val: string) {
         this.category = val;
@@ -117,22 +116,22 @@ export default class Hive extends Vue {
     @Watch("$store.getters.sortOrder")
     async sortOrder() {
         this.toot && this.toot.newVersion(this.category);
-        this.key = this.$store.getters.sortOrder
+        this.key = this.$store.getters.sortOrder;
     }
 
     @Watch("$store.getters.hashtag")
     watchHashtag(val: string) {
         this.toot && this.toot.newVersion(val);
+        this.key = this.$store.getters.hashtag;
     }
 
     @Watch("$store.getters.currCategory")
     watchCategory() {
+        this.$store.dispatch("resetSearchInfo");
+        this.category = this.$store.getters.currCategory;
         this.toot && this.toot.newVersion(this.$store.getters.currCategory);
-        this.key = this.$store.getters.currCategory
+        this.key = this.$store.getters.currCategory;
     }
-
-
-
 }
 </script>
 

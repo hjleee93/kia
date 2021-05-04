@@ -11,6 +11,5 @@ module.exports = {
   configureWebpack: {
     entry: ["babel-polyfill", "./src/main.ts"]
   },
-  publicPath: './',
   productionSourceMap: false
 }

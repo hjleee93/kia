@@ -51,15 +51,15 @@ export default class App extends Vue {
     }
   }
 
-  onMessage(e: MessageEvent) {
+ onMessage(e: MessageEvent) {
     const data = e.data || {};
-
     const type = data.type;
+
     if (type === "loadedPage") {
       const url = new URL(data.url);
+
       switch (url.pathname) {
         case "/about":
-
           this.$router.push("/login").catch(() => {});
           break;
         case "/auth/sign_in":
@@ -68,6 +68,22 @@ export default class App extends Vue {
           break;
       }
     }
+    // else if( type === 'requestImage' ) {
+    //  console.log('store2', this.$store.getters.sharedImg)
+    //   // console.log('here', window.tempFile[0])
+    //   //@ts-ignore
+    //   if( this.$store.getters.sharedImg ) {
+
+    //     //@ts-ignore
+    //     this.$refs.iframe.contentWindow.postMessage({
+    //       type:'responseImage',
+    //       //@ts-ignore
+    //       files:this.$store.getters.sharedImg,
+    //     }, '*');
+    //     //@ts-ignore
+    //     window.tempFile = null;
+    //   }
+    // }
   }
 }
 </script>

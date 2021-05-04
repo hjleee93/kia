@@ -1344,8 +1344,8 @@ var LayerPop = function LayerPop() {
 
         if (domWrap.classList.contains("close")) {
             domWrap.classList.remove("close");
-        }      
-        
+        }
+
         wrapOverflow.hidden();
         domWrap.style.display = "block";
 
@@ -1398,8 +1398,10 @@ var LayerPop = function LayerPop() {
         });
     };
 
-    var detailPicClose = function detailPicClose(){
-        domWrapDepth2.style.display = "none";
+    var detailPicClose = function detailPicClose() {
+        if (domWrapDepth2) {
+            domWrapDepth2.style.display = "none";
+        }
     }
 
     var layerCloseDepth2 = function layerCloseDepth2(callback) {

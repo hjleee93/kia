@@ -65,6 +65,7 @@ export default {
             commit('searchInput', '')
             commit('searchType', 'contents')
             commit('hashtag', '')
+            commit('sortOrder', '')
             commit('searchResult', [])
         },
 

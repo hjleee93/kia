@@ -42,7 +42,7 @@
           :to="`mastodon/tags/${idx}`"
         >
           <template v-if="idx.length !== 0">
-            <span class="tag">#{{ idx }}</span>
+          <span class="tag">#{{ idx }}</span>
           </template>
         </router-link>
       </p>
@@ -100,40 +100,41 @@ export default class TootCard extends Vue {
   mounted() {
     this.matchHeight();
     this.contentsParser();
-    //태그
+    // //태그
     if (this.tag.length > 0) {
       if (this.tag.length === 1) {
         this.tootContent = this.toot.text.replace(
           "#" + this.tag[0],
-          `<a href='#/mastodon/tags/${this.tag[0]}' class="mention hashtag">#${this.tag[0]}</a>`
+          `<a href='/mastodon/tags/${this.tag[0]}' class="mention hashtag">#${this.tag[0]}</a>`
         );
       } else {
         this.tootContent = this.toot.text.replace(
           "#" + this.tag[0],
-          `<a href='#/mastodon/tags/${this.tag[0]}' class="mention hashtag">#${this.tag[0]}</a>`
+          `<a href='/mastodon/tags/${this.tag[0]}' class="mention hashtag">#${this.tag[0]}</a>`
         );
         for (let i = 1; i < this.tag.length; i++) {
           this.tootContent = this.tootContent.replace(
             "#" + this.tag[i],
-            `<a href='#/mastodon/tags/${this.tag[i]}' class="mention hashtag">#${this.tag[i]}</a>`
+            `<a href='/mastodon/tags/${this.tag[i]}' class="mention hashtag">#${this.tag[i]}</a>`
           );
         }
       }
-    } else {
+    } 
+    else {
       this.tootContent = this.toot.text;
     }
 
-    //멘션
+    // //멘션
     if (this.mention.length > 0) {
       this.tootContent = this.tootContent.replace(
         this.mention[0],
-        `<a href='#/mastodon/web/accounts/${this.mention[0]}' class="mention hashtag">${this.mention[0]}</a>`
+        `<a href='/mastodon/web/accounts/${this.mention[0]}' class="mention hashtag">${this.mention[0]}</a>`
       );
 
       for (let i = 1; i < this.tag.length; i++) {
         this.tootContent = this.tootContent.replace(
           this.mention[i],
-          `<a href='#/mastodon/web/accounts/${this.mention[i]}' class="mention hashtag">${this.mention[i]}</a>`
+          `<a href='/mastodon/web/accounts/${this.mention[i]}' class="mention hashtag">${this.mention[i]}</a>`
         );
       }
     }
