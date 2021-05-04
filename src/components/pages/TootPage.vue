@@ -16,7 +16,7 @@
                     <div class="dim"></div>
                 </div>
             </div>
-            <Grid :key="$store.getters.sortOrder" :allResult="allResult" />
+            <Grid :key="key" :allResult="allResult" />
         </div>
     </div>
 </template>
@@ -47,6 +47,7 @@ export default class Hive extends Vue {
     private allResult: any[] = [];
     private tag: string = "";
     private el: HTMLElement = document.documentElement;
+    private key: any = '';
 
     beforeUpdate() {
         tootDropDown.init();
@@ -110,11 +111,13 @@ export default class Hive extends Vue {
     getCategory(val: string) {
         this.category = val;
         this.toot && this.toot.newVersion(val);
+        this.key = val;
     }
 
     @Watch("$store.getters.sortOrder")
     async sortOrder() {
         this.toot && this.toot.newVersion(this.category);
+        this.key = this.$store.getters.sortOrder
     }
 
     @Watch("$store.getters.hashtag")
@@ -125,7 +128,11 @@ export default class Hive extends Vue {
     @Watch("$store.getters.currCategory")
     watchCategory() {
         this.toot && this.toot.newVersion(this.$store.getters.currCategory);
+        this.key = this.$store.getters.currCategory
     }
+
+
+
 }
 </script>
 
