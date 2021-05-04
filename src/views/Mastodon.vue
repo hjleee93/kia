@@ -57,10 +57,10 @@ export default class App extends Vue {
     const type = data.type;
     if (type === "loadedPage") {
       const url = new URL(data.url);
-
       switch (url.pathname) {
         case "/about":
-          this.$router.push("/").catch(() => {});
+
+          this.$router.push("/login").catch(() => {});
           break;
         case "/auth/sign_in":
           this.$store.dispatch("logout");

@@ -9,7 +9,7 @@ const routes: Array<RouteConfig> = [
         path: '/',
         name: 'Main',
         component: () => import('@/views/Main.vue'),
-        redirect: '/hive',
+        redirect: '/mastodon/web/timelines/public',
         children: [
             {
                 path: '/hive',
