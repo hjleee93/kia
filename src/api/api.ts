@@ -1,29 +1,26 @@
 import store from '@/store';
-import axios, { AxiosInstance } from 'axios'
-import { result } from 'lodash';
 import Vue, { PluginObject } from "vue";
 
 export default class Api {
     private baseApiUrl = process.env.VUE_APP_API_URL;
 
-
-
     async verifyApp() {
         let result: any;
 
-        await Vue.$axios.post("api/v1/apps", {
-            client_name: "KIA",
-            redirect_uris: "urn:ietf:wg:oauth:2.0:oob",
-            scopes: ["read", "write", "follow"].join(" ")
-        }).then(response => {
-            if (response.status >= 200 && response.status < 300) {
-                result = response;
+        try {
+            result = await Vue.$axios.post("api/v1/apps", {
+                client_name: "KIA",
+                redirect_uris: "urn:ietf:wg:oauth:2.0:oob",
+                scopes: ["read", "write", "follow"].join(" ")
+            })
+
+            if (result.status >= 200 && result.status < 300) {
             } else {
                 throw new Error();
             }
-        }).catch(() => {
+        } catch (err) {
             store.dispatch('logout')
-        });
+        };
 
         return result;
     }
@@ -31,23 +28,26 @@ export default class Api {
     async attemptLogin(email: string, password: string, instance: { client_id: any; client_secret: any; }) {
         let result: any;
 
-        await Vue.$axios.post("/oauth/token", {
-            client_id: instance.client_id,
-            client_secret: instance.client_secret,
-            grant_type: "password",
-            username: email,
-            password: password,
-            scope: ["read", "write", "follow"].join(" "),
-        }).then(response => {
-            if (response.status >= 200 && response.status < 300) {
-                result = response;
+        try {
+            result = await Vue.$axios.post("/oauth/token", {
+                client_id: instance.client_id,
+                client_secret: instance.client_secret,
+                grant_type: "password",
+                username: email,
+                password: password,
+                scope: ["read", "write", "follow"].join(" "),
+            })
+
+            if (result.status >= 200 && result.status < 300) {
+
             } else {
                 throw new Error();
             }
-        }).catch(err => {
+        }
+        catch (err) {
             store.dispatch('logout')
 
-        });
+        };
         return result
 
     }
@@ -55,118 +55,123 @@ export default class Api {
 
     async getCurrentUser() {
         let result: any;
-        await Vue.$axios({
-            method: 'get',
-            url: '/api/v1/accounts/verify_credentials'
-        }).then(response => {
-            if (response.status >= 200 && response.status < 300) {
-                result = response;
+
+        try {
+            result = await Vue.$axios({
+                method: 'get',
+                url: '/api/v1/accounts/verify_credentials'
+            })
+            if (result.status >= 200 && result.status < 300) {
             } else {
                 throw new Error("Error");
             }
-        }).catch(err => {
+        }
+        catch (err) {
             store.dispatch('logout')
 
-        });
+        };
         return result.data
     }
 
     async sendFavourite(tootId: number) {
         let result: any
-        await Vue.$axios({
-            method: 'post',
-            url: `/api/v1/statuses/${tootId}/favourite`,
-        }).then(response => {
-            result = response;
-        }).catch((err) => {
+        try {
+            result = await Vue.$axios({
+                method: 'post',
+                url: `/api/v1/statuses/${tootId}/favourite`,
+
+            })
+        } catch (err) {
             alert("잠시 후에 다시 시도해주세요.")
             result = err;
-        });
+        };
         return result;
     }
 
     async sendUnfavourite(tootId: number) {
         let result: any
-        await Vue.$axios({
-            method: 'post',
-            url: `/api/v1/statuses/${tootId}/unfavourite`,
-        }).then(response => {
-            result = response;
-        }).catch((err) => {
+        try {
+            result = await Vue.$axios({
+                method: 'post',
+                url: `/api/v1/statuses/${tootId}/unfavourite`,
+            })
+        } catch (err) {
             alert("잠시 후에 다시 시도해주세요.")
             result = err;
-        });
+        };
         return result;
     }
 
     async searchHashtag(searchInput: string, offset?: number, limit?: number) {
         let result: any
-        await Vue.$axios
-            ({
-                method: 'get',
-                url: '/tags',
-                baseURL: this.baseApiUrl,
-                params: { limit: limit, offset: offset, tag: searchInput },
-            }).then(response => {
-                result = response.data;
-            }).catch((err) => {
-                alert("잠시 후에 다시 시도해주세요.")
-                result = err;
-            });
+        try {
+            result = await Vue.$axios
+                ({
+                    method: 'get',
+                    url: '/tags',
+                    baseURL: this.baseApiUrl,
+                    params: { limit: limit, offset: offset, tag: searchInput },
+                })
+        } catch (err) {
+            alert("잠시 후에 다시 시도해주세요.")
+            result = err;
+        };
 
 
-        return result
+        return result.data
     }
 
     async showToot(param: object) {
         let result: any
-        await Vue.$axios
-            ({
-                method: 'get',
-                url: '/search/media',
-                baseURL: this.baseApiUrl,
-                params: Object.assign(param),
-            }).then(response => {
-                result = response.data;
-            }).catch((err) => {
-                alert("잠시 후에 다시 시도해주세요.")
-                result = err;
-            });
-        return result
+        try {
+            result = await Vue.$axios
+                ({
+                    method: 'get',
+                    url: '/search/media',
+                    baseURL: this.baseApiUrl,
+                    params: Object.assign(param),
+                })
+        } catch (err) {
+            alert("잠시 후에 다시 시도해주세요.")
+            result = err;
+        };
+        return result.data
     }
 
 
     async getBestHashtags(gte: string, lte: string, limit?: number, offset?: number) {
         let result: any
-        await Vue.$axios
-            ({
-                method: 'get',
-                url: '/ranking/tags',
-                baseURL: this.baseApiUrl,
-                params: { gte: gte, lte: lte, limit: limit, offset: offset },
-            }).then(response => {
-                result = response.data;
-            }).catch((err) => {
-                alert("잠시 후에 다시 시도해주세요.")
-                result = err;
-            });
-        return result
+        try {
+            result = await Vue.$axios
+                ({
+                    method: 'get',
+                    url: '/ranking/tags',
+                    baseURL: this.baseApiUrl,
+                    params: { gte: gte, lte: lte, limit: limit, offset: offset },
+                })
+        }
+        catch (err) {
+            alert("잠시 후에 다시 시도해주세요.")
+            result = err;
+        };
+        return result.data
     }
 
     async getBestUser(gte: string, lte: string, limit?: number, offset?: number) {
         let result: any;
-        await Vue.$axios
-            ({
-                method: 'get',
-                url: '/ranking/user',
-                baseURL: this.baseApiUrl,
-                params: { gte: gte, lte: lte, limit: limit, offset: offset },
-            }).then(response => {
-                result = response.data;
-            }).catch((err) => {
-                alert("잠시 후에 다시 시도해주세요.")
-                result = err;
-            });
+        try {
+            result = await Vue.$axios
+                ({
+                    method: 'get',
+                    url: '/ranking/user',
+                    baseURL: this.baseApiUrl,
+                    params: { gte: gte, lte: lte, limit: limit, offset: offset },
+                })
+        }
+        catch (err) {
+            alert("잠시 후에 다시 시도해주세요.")
+            result = err;
+        };
 
 
         return result.data
@@ -174,18 +179,20 @@ export default class Api {
 
     async getBestToot(gte: string, lte: string, limit?: number, offset?: number) {
         let result: any;
-        await Vue.$axios
-            ({
-                method: 'get',
-                url: '/ranking/toot',
-                baseURL: this.baseApiUrl,
-                params: { gte: gte, lte: lte, limit: limit, offset: offset, account_id: await store.getters.currentUser.id },
-            }).then(response => {
-                result = response.data;
-            }).catch((err) => {
-                alert("잠시 후에 다시 시도해주세요.")
-                result = err;
-            });
+
+        try {
+            result = await Vue.$axios
+                ({
+                    method: 'get',
+                    url: '/ranking/toot',
+                    baseURL: this.baseApiUrl,
+                    params: { gte: gte, lte: lte, limit: limit, offset: offset, account_id: await store.getters.currentUser.id },
+                })
+        }
+        catch (err) {
+            alert("잠시 후에 다시 시도해주세요.")
+            result = err;
+        };
 
 
         return result.data
