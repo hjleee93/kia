@@ -78,7 +78,10 @@ export default class Hashtag extends Vue {
                 ) {
                     this.hashtags.push(categories[i].tags[j].name);
                 } else {
-                    if (categories[i].name.toLowerCase() === this.tag) {
+                    if (
+                        categories[i].name.toLowerCase() ===
+                        this.$store.getters.currCategory.toLowerCase()
+                    ) {
                         this.hashtags.push(categories[i].tags[j].name);
                     }
                 }
@@ -95,6 +98,7 @@ export default class Hashtag extends Vue {
     @Watch("tag")
     watchTag() {
         this.hashtags = [];
+        this.hashtags.push(this.tag);
         const categories = this.getCategory();
         for (const i in categories) {
             for (const j in categories[i].tags) {

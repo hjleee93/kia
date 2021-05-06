@@ -121,6 +121,7 @@ export default class Hive extends Vue {
 
     @Watch("$store.getters.hashtag")
     watchHashtag(val: string) {
+        
         this.toot && this.toot.newVersion(val);
         this.key = this.$store.getters.hashtag;
     }

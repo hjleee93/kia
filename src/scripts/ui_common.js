@@ -1,5 +1,7 @@
 "use strict";
 
+import store from "@/store";
+
 if (!Array.prototype.findIndex) {
     Object.defineProperty(Array.prototype, 'findIndex', {
         value: function value(predicate) {
@@ -583,6 +585,7 @@ var DropDown = function DropDown(wrap) {
     };
 
     var btnDropdownClick = function btnDropdownClick(self, callback) {
+      
         if (domWrap && self) {
             var _self$dataset;
 
@@ -590,7 +593,7 @@ var DropDown = function DropDown(wrap) {
             var val = ((_self$dataset = self.dataset) === null || _self$dataset === void 0 ? void 0 : _self$dataset.val) || '';
             domTxt.querySelector("span").innerHTML = txt;
             domTxt.dataset.val = val;
-
+            store.commit('hashtag', domTxt.dataset.val)
             if (document.querySelector("#boxHashDropdownList")) {
                 domBtnLists = Array.prototype.slice.call(document.querySelector("#boxHashDropdownList").querySelectorAll(".btn-dropdown"));
                 ;

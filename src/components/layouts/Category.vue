@@ -53,7 +53,7 @@
         </div>
 
         <template v-if="$store.getters.currCategory !== 'hive'">
-            <Hashtag :tag="$store.getters.currCategory"  />
+            <Hashtag />
         </template>
     </div>
 </template>
@@ -71,7 +71,7 @@ export default class Category extends Vue {
         return this.active === value;
     }
 
-    openAlbum(): void {      
+    openAlbum(): void {
         albumPop.layerOpen();
         let elem = document.documentElement;
         //@ts-ignore
@@ -97,7 +97,6 @@ export default class Category extends Vue {
         }
     }
 
- 
     clickedCategory(category: string) {
         this.active = category;
         this.$store.commit("currCategory", category);

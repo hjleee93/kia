@@ -37,7 +37,7 @@ export default class App extends Vue {
 
     beforeDestroy() {
         window.removeEventListener("message", this.onMessage);
-          this.$store.commit("sharedImg", []);
+        this.$store.commit("sharedImg", []);
     }
 
     @Watch("$route.params.pathMatch")
@@ -69,25 +69,25 @@ export default class App extends Vue {
                     this.$router.push("/login").catch(() => {});
                     break;
             }
-        } 
-        else if (type === "requestImage") {
-          
-            if (!this.isShared) {
-                //@ts-ignore
-                if (this.$store.getters.sharedImg) {
-                    //@ts-ignore
-                    this.$refs.iframe.contentWindow.postMessage(
-                        {
-                            type: "responseImage",
-                            //@ts-ignore
-                            images: this.$store.getters.sharedImg,
-                        },
-                        "*"
-                    );
-                }
-                this.isShared = true;
-            }
         }
+        // else if (type === "requestImage") {
+
+        //     if (!this.isShared) {
+        //         //@ts-ignore
+        //         if (this.$store.getters.sharedImg) {
+        //             //@ts-ignore
+        //             this.$refs.iframe.contentWindow.postMessage(
+        //                 {
+        //                     type: "responseImage",
+        //                     //@ts-ignore
+        //                     images: this.$store.getters.sharedImg,
+        //                 },
+        //                 "*"
+        //             );
+        //         }
+        //         this.isShared = true;
+        //     }
+        // }
     }
 }
 </script>
