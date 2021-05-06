@@ -20,6 +20,7 @@ export default class Toot {
     private order: string = ''
     private type: string = ''
     private input: string = ''
+    private all: string = ''
     private allResult: any[] = [];
     private loadingState: ETootLoadingState = ETootLoadingState.none;
     private offset = 0;
@@ -28,12 +29,31 @@ export default class Toot {
         this.el = el;
     }
 
-    newVersion(tag: string) {
+    newVersion(tag?: string) {
+        console.log('newVersion', store.getters.currCategory, tag)
+        if (tag) {
 
-        if (tag.toLowerCase() === 'hive' || tag.toLowerCase() === 'posting') {
+            if (tag.toLowerCase() === 'all tag') {
+                this.all = store.getters.currCategory
+            }
+            else if(store.getters.currCategory === 'posting'){
+                if(tag.toLowerCase() === 'all tag'){
+                    this.tag = '';
+                    this.all = '';
+                    console.log("==================", this.all, this.tag)
+                }else{
+                    this.all = '';
+                    this.tag = tag;
+                }
+               
+            }
+            else {
+                console.log('here!', this.all)
+                this.tag = tag;
+            }
+        }
+        else {
             this.tag = '';
-        } else {
-            this.tag = tag;
         }
         if (this.loadingState === ETootLoadingState.none) {
             return;
@@ -89,15 +109,19 @@ export default class Toot {
                 posting: posting,
                 limit: this.limitCount,
                 offset: this.offset,
-                tag: this.tag,
+                tag: this.all.length === 0 ? this.tag : '',
                 username: username,
                 text: searchType === "contents" ? searchInput : "",
                 order: recentOrder === 'popular' ? 'f' : '',
+                all: this.all
+
             };
 
             const reqVersion = this.version;
 
             const result = await Vue.$api.showToot(param);
+
+            console.log(result)
 
             if (reqVersion !== this.version) {
                 return;
@@ -121,6 +145,7 @@ export default class Toot {
                         this.load();
                     } else {
                         this.loadingState = ETootLoadingState.complete;
+                        this.all = '';
                     }
                 }, 400);
 

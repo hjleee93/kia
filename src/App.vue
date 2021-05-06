@@ -30,7 +30,7 @@ export default class App extends Vue {
     }
 
     @Watch('$route')
-    watchRoute(){
+    watchRoute(){        
         this.$store.commit("currCategory",  this.$route.name?.toLowerCase());
     }
     

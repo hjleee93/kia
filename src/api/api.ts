@@ -197,6 +197,24 @@ export default class Api {
         return result.data
     }
 
+    async getCategory() {
+        let result: any;
+        try {
+            result = await Vue.$axios
+                ({
+                    method: 'get',
+                    url: '/category',
+                    baseURL: this.baseApiUrl,
+                })
+        } catch (err) {
+            alert("잠시 후에 다시 시도해주세요.")
+            result = err;
+        };
+        return result.data
+    }
+
+
+
 }
 
 declare module 'vue/types/vue' {

@@ -1,23 +1,7 @@
 <template>
     <div class="box-hash-dropdown" :key="$store.getters.currCategory">
         <button data-val="" class="txt" @click="txtClick">
-            <template
-                v-if="
-                    $store.getters.currCategory !== 'posting' ||
-                    ($store.getters.currCategory === 'posting' &&
-                        tag !== 'posting')
-                "
-            >
-                <span>#{{ hashtags[0] }}</span>
-            </template>
-            <template
-                v-if="
-                    $store.getters.currCategory === 'posting' &&
-                    tag === 'posting'
-                "
-            >
-                <span># ALL TAG</span>
-            </template>
+            <span># ALL TAG</span>
         </button>
         <div class="lists">
             <strong class="tit">해시태그</strong
@@ -60,29 +44,32 @@ export default class Hashtag extends Vue {
         this.initCate();
     }
 
-    getCategory() {
-        return tempCategory;
+    async getCategory() {
+        const result = await this.$api.getCategory();
+        console.log("getCategory", result);
+        return result;
     }
-    initCate() {
-        const categories = this.getCategory();
-        if (this.$store.getters.currCategory.toLowerCase() === "posting") {
-            this.hashtags.push("ALL TAG");
-        } else {
-            this.hashtags.push(this.$store.getters.currCategory);
-        }
+    //todo: 한번만 불러오게 수정하기
+    async initCate() {
+        const categories = await this.getCategory();
 
-        for (const i in categories) {
-            for (const j in categories[i].tags) {
+        this.hashtags.push("ALL TAG");
+
+        let category = Object.keys(categories);
+
+        for (const i in category) {
+            let detailCtgry = categories[category[i]];
+            for (const j in detailCtgry) {
                 if (
                     this.$store.getters.currCategory.toLowerCase() === "posting"
                 ) {
-                    this.hashtags.push(categories[i].tags[j].name);
+                    this.hashtags.push(detailCtgry[j]);
                 } else {
                     if (
-                        categories[i].name.toLowerCase() ===
+                        category[i].toLowerCase() ===
                         this.$store.getters.currCategory.toLowerCase()
                     ) {
-                        this.hashtags.push(categories[i].tags[j].name);
+                        this.hashtags.push(detailCtgry[j]);
                     }
                 }
             }
@@ -96,14 +83,17 @@ export default class Hashtag extends Vue {
     }
 
     @Watch("tag")
-    watchTag() {
+    async watchTag() {
+        console.log('Watch',this.tag)
         this.hashtags = [];
-        this.hashtags.push(this.tag);
-        const categories = this.getCategory();
-        for (const i in categories) {
-            for (const j in categories[i].tags) {
-                if (categories[i].name.toLowerCase() === this.tag) {
-                    this.hashtags.push(categories[i].tags[j].name);
+        this.hashtags.push("ALL TAG");
+        const categories = await this.getCategory();
+        let category = Object.keys(categories);
+        for (const i in category) {
+            let detailCtgry = categories[category[i]];
+            for (const j in detailCtgry) {
+                if (category[i].toLowerCase() === this.tag) {
+                    this.hashtags.push(detailCtgry[j]);
                 }
             }
         }

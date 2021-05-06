@@ -299,7 +299,7 @@ export default class SearchBar extends Vue {
 
 @media (min-width: 320px) and (max-width: 1023px) {
     #content.hive .box-toot-dropdown2 .lists2 {
-        left: 135px !important;
+        top: 105px !important;
     }
 }
 </style>

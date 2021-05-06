@@ -41,23 +41,6 @@
                                     ></div>
                                 </button>
                             </div>
-                            <!--
-                              개발 관련하여 안내 사항
-                              image를 강제로 188로 줄여 그 비율이 1.0681818182(176px)이 넘어가면
-                              image를 강제로 width 480으로 늘려야합니다.
-
-                              이미지가 미리 로딩이 되어서 width height값을 출력할수 있어야합니다.
-                              아니면 data에 width height값을 저장이 필요할것으로 판단됩니다.
-
-                              테스트 코드는 아래의 쪽 isotopeHorizontal 함수를 확인바랍니다.
-                            -->
-                            <!--
-                <div class="grid-item">
-                  <button class="btn btn-image" style="width: 변동px; background-image: url(src)" onclick="albumPop.layerOpenDepth2()">
-                    <div class="box-img"></div>
-                  </button>
-                </div>
-                -->
                         </isotope>
                     </div>
                 </div>
@@ -92,6 +75,9 @@ export default class AlbumShow extends Vue {
     private detailSrc: string = "";
     private category: string = "";
     private autoScroll!: any;
+    private scrollBegin!: any;
+    private startAlbum!: any;
+
     private imgArr: string[] = [];
     private imgId: string = "";
     private pos = { top: 0, left: 0, x: 0, y: 0 };
@@ -112,6 +98,10 @@ export default class AlbumShow extends Vue {
 
     stopInterval() {
         clearInterval(this.autoScroll);
+    }
+    stopTimeout() {
+        clearTimeout(this.scrollBegin);
+        clearTimeout(this.startAlbum);
     }
     beforeDestroy() {
         albumPop.destroy();
@@ -170,24 +160,47 @@ export default class AlbumShow extends Vue {
                 this.stopInterval();
             }
 
-            this.autoScroll = setInterval(() => {
-                if (this.$refs.scroll !== undefined) {
-                    //@ts-ignore
-                    this.$refs.scroll.scrollLeft += 2;
-                    if (
-                        //@ts-ignore
-                        this.$refs.scroll.scrollWidth -
-                            //@ts-ignore
-                            this.$refs.scroll.clientWidth ===
-                        //@ts-ignore
-                        this.$refs.scroll.scrollLeft
-                    ) {
-                        //@ts-ignore
-                        this.$refs.scroll.scrollLeft = 0;
-                    }
-                }
-            }, 1000 / 60);
+            this.stopTimeout();
+            this.elem.scrollLeft = 0;
+            this.startAlbum = setTimeout(() => {
+                this.scrollInterval();
+            }, 200);
         }
+    }
+
+    scrollInterval() {
+        this.autoScroll = setInterval(() => {
+            if (this.$refs.scroll !== undefined) {
+                //@ts-ignore
+                this.$refs.scroll.scrollLeft += 2;
+                if (
+                    //@ts-ignore
+                    this.$refs.scroll.scrollWidth -
+                        //@ts-ignore
+                        this.$refs.scroll.clientWidth ===
+                    //@ts-ignore
+                    this.$refs.scroll.scrollLeft
+                ) {
+                    console.log("end");
+                    // this.stopInterval();
+                    //@ts-ignore
+                    // this.$refs.scroll.scrollLeft = 0;
+                    this.scrollToBegin();
+                }
+            }
+        }, 1000 / 60);
+    }
+
+    scrollToBegin() {
+        this.stopInterval();
+        this.scrollBegin = setTimeout(() => {
+            this.elem.scrollTo({
+                behavior: "smooth",
+                left: 0,
+                top: 0,
+            });
+            this.scrollInterval();
+        }, 1000);
     }
 
     layerClose() {
@@ -204,6 +217,8 @@ export default class AlbumShow extends Vue {
             // document.querySelector("#layer .grid")!.innerHTML = "";
         });
         this.endFullScreen();
+        this.stopInterval();
+        this.stopTimeout();
     }
 
     endFullScreen() {
@@ -230,11 +245,11 @@ export default class AlbumShow extends Vue {
         this.detailSrc = image.url;
         this.imgId = image.id;
         albumPop.layerOpenDepth2(); //상세 레이어 열기
+        this.stopInterval();
     }
 
     layerCloseDepth2() {
-        this.albumPopClose();
-        albumPop.detailPicClose();
+        albumPop.layerCloseDepth2();
     }
 
     options() {
@@ -244,7 +259,7 @@ export default class AlbumShow extends Vue {
             mansonryHorizontal: {
                 itemSelector: ".grid-item",
             },
-            transitionDuration: 0,
+            transitionDuration: "0.2s",
         };
     }
     goToDetailPage(imgId: string) {
@@ -281,5 +296,3 @@ export default class AlbumShow extends Vue {
     }
 }
 </script>
-
-<style></style>

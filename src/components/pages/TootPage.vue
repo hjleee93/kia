@@ -63,7 +63,7 @@ export default class Hive extends Vue {
         this.toot.event.$on("addToot", (result: any) => {
             this.allResult.push(...result);
         });
-        
+
         this.toot.event.$on("resetToot", () => {
             this.allResult = [];
             this.$store.dispatch("resetSearchInfo");
@@ -84,7 +84,14 @@ export default class Hive extends Vue {
         });
 
         this.toot.ready();
-        this.toot.newVersion(this.category);
+        if (
+            this.$store.getters.currCategory.toLowerCase() === "hive" ||
+            this.$store.getters.currCategory.toLowerCase() === "posting"
+        ) {
+            this.toot.newVersion();
+        } else {
+            this.toot.newVersion(this.category);
+        }
         window.addEventListener("scroll", this.scrollHandler);
     }
 
@@ -130,7 +137,14 @@ export default class Hive extends Vue {
     watchCategory() {
         this.$store.dispatch("resetSearchInfo");
         this.category = this.$store.getters.currCategory;
-        this.toot && this.toot.newVersion(this.$store.getters.currCategory);
+        if (
+            this.$store.getters.currCategory.toLowerCase() === "hive" ||
+            this.$store.getters.currCategory.toLowerCase() === "posting"
+        ) {
+            this.toot && this.toot.newVersion();
+        } else {
+            this.toot && this.toot.newVersion("all tag");
+        }
         this.key = this.$store.getters.currCategory;
     }
 }

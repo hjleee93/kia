@@ -1403,7 +1403,7 @@ var LayerPop = function LayerPop() {
 
     var detailPicClose = function detailPicClose() {
         if (domWrapDepth2) {
-            domWrapDepth2.style.display = "none";
+            domWrapDepth2.classList.remove("close");
         }
     }
 
