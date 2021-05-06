@@ -1,10 +1,21 @@
 <template>
     <div class="box-hash-dropdown" :key="$store.getters.currCategory">
         <button data-val="" class="txt" @click="txtClick">
-            <template v-if="$store.getters.currCategory !== 'posting'">
+            <template
+                v-if="
+                    $store.getters.currCategory !== 'posting' ||
+                    ($store.getters.currCategory === 'posting' &&
+                        tag !== 'posting')
+                "
+            >
                 <span>#{{ hashtags[0] }}</span>
             </template>
-            <template v-else>
+            <template
+                v-if="
+                    $store.getters.currCategory === 'posting' &&
+                    tag === 'posting'
+                "
+            >
                 <span># ALL TAG</span>
             </template>
         </button>
@@ -49,11 +60,11 @@ export default class Hashtag extends Vue {
         this.initCate();
     }
 
-    async getCategory() {
+    getCategory() {
         return tempCategory;
     }
-    async initCate() {
-        const categories = await this.getCategory();
+    initCate() {
+        const categories = this.getCategory();
         if (this.$store.getters.currCategory.toLowerCase() === "posting") {
             this.hashtags.push("ALL TAG");
         } else {
@@ -80,7 +91,19 @@ export default class Hashtag extends Vue {
         this.hashtags = [];
         this.initCate();
     }
-   
+
+    @Watch("tag")
+    watchTag() {
+        this.hashtags = [];
+        const categories = this.getCategory();
+        for (const i in categories) {
+            for (const j in categories[i].tags) {
+                if (categories[i].name.toLowerCase() === this.tag) {
+                    this.hashtags.push(categories[i].tags[j].name);
+                }
+            }
+        }
+    }
 
     txtClick() {
         hashDropDown.txtClick();

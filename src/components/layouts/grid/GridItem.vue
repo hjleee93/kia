@@ -2,7 +2,7 @@
     <div class="grid-item">
         <template v-if="mediaToot.media_attachments !== undefined">
             <template v-if="mediaToot.media_attachments[0] !== undefined">
-                <a href="#" class="btn btn-link">
+                <a class="btn btn-link">
                     <router-link :to="'/mastodon/web/statuses/' + mediaToot.id">
                         <div class="box-img">
                             <template
@@ -21,7 +21,6 @@
                                         mediaToot.media_attachments[0]
                                             .preview_url
                                     "
-                                    alt=""
                                     style="width: 100%"
                                 />
                             </template>
@@ -35,7 +34,6 @@
                                         mediaToot.media_attachments[0]
                                             .preview_url
                                     "
-                                    alt=""
                                     style="width: 100%"
                                 />
                             </template>
@@ -80,7 +78,7 @@
                             class="txt more"
                             @click="
                                 shareLink(
-                                    mediaToot.media_attachments[0].preview_url
+                                    mediaToot.media_attachments
                                 )
                             "
                         >
@@ -143,7 +141,11 @@ export default class GridItem extends Vue {
         });
     }
     shareLink(imgSrc: any) {
-        this.$store.commit("sharedImg", imgSrc);
+         this.$store.commit("sharedImg", []);
+        for(const i in imgSrc){
+             this.$store.commit("sharedImg", imgSrc[i].preview_url);
+        }
+       
         this.$router.push("/mastodon/web/statuses/new");       
     }
 
