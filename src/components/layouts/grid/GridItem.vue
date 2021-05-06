@@ -76,7 +76,7 @@
                         </router-link>
 
                         <span
-                        id="shareBtn"
+                            id="shareBtn"
                             class="txt more"
                             @click="
                                 shareLink(
@@ -143,61 +143,11 @@ export default class GridItem extends Vue {
         });
     }
     shareLink(imgSrc: any) {
-        console.log(imgSrc)
-
-        
-// this.toDataUrl(imgSrc, (( myBase64 : any)=> {
-//    let file = this.dataURLtoFile(myBase64, 'sample.jpg')
-//    console.log(file)
-//    const input = document.getElementById('shareBtn')
-// console.log(input)
-// //    window.tempFile = file
-
-// //    this.$router.push('/mastodon/web/statuses/new');
-//         // input.addEventListener('click', ()=>{
-//           //@ts-ignore
-//             this.$store.commit('sharedImg', file)
-//   console.log('store1', this.$store.getters.sharedImg)
-//             this.$router.push('/mastodon/web/statuses/new');
-//         // });
-// }));
-        // let file = this.dataURLtoFile(imgSrc, 'sample.jpg')
-
-        // console.log(file)
-        
-        //  const input = document.createElement('input');
-        // input.type = 'file';
-        // input.click();
-
+        this.$store.commit("sharedImg", imgSrc);
+        this.$router.push("/mastodon/web/statuses/new");       
     }
 
-//    toDataUrl(url :any, callback :any) {
-//     var xhr = new XMLHttpRequest();
-//     xhr.onload = function() {
-//         var reader = new FileReader();
-//         reader.onloadend = function() {
-//             callback(reader.result);
-//         }
-//         reader.readAsDataURL(xhr.response);
-//     };
-//     xhr.open('GET', url);
-//     xhr.responseType = 'blob';
-//     xhr.send();
-// }
-
-
- 
-// dataURLtoFile(dataurl : string, filename: any) {
-// let arr = dataurl.split(',');
-
-// let mime = arr[0].match(/:(.*?);/)![1];
-//     let bstr = atob(arr[1]); let n = bstr.length, u8arr = new Uint8Array(n);
-//     while(n--){
-//         u8arr[n] = bstr.charCodeAt(n);
-//     }
-//     return new File([u8arr], filename, {type:mime});
-// }
-
+   
 }
 </script>
 

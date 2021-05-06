@@ -179,14 +179,13 @@ export default class Api {
 
     async getBestToot(gte: string, lte: string, limit?: number, offset?: number) {
         let result: any;
-
         try {
             result = await Vue.$axios
                 ({
                     method: 'get',
                     url: '/ranking/toot',
                     baseURL: this.baseApiUrl,
-                    params: { gte: gte, lte: lte, limit: limit, offset: offset, account_id: await store.getters.currentUser.id },
+                    params: { gte: gte, lte: lte, limit: limit, offset: offset, account_id: store.getters.currentUser.id },
                 })
         }
         catch (err) {

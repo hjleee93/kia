@@ -48,7 +48,7 @@
             </ul>
         </div>
 
-        <Hashtag :tag="$store.getters.currCategory" @tagResult="tagResult" />
+        <Hashtag :tag="active" @tagResult="tagResult" />
     </div>
 </template>
 

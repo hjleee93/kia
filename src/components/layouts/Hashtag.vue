@@ -1,5 +1,5 @@
 <template>
-    <div class="box-hash-dropdown">
+    <div class="box-hash-dropdown" :key="$store.getters.currCategory">
         <button data-val="" class="txt" @click="txtClick">
             <template v-if="$store.getters.currCategory !== 'posting'">
                 <span>#{{ hashtags[0] }}</span>
@@ -54,6 +54,11 @@ export default class Hashtag extends Vue {
     }
     async initCate() {
         const categories = await this.getCategory();
+        if (this.$store.getters.currCategory.toLowerCase() === "posting") {
+            this.hashtags.push("ALL TAG");
+        } else {
+            this.hashtags.push(this.$store.getters.currCategory);
+        }
 
         for (const i in categories) {
             for (const j in categories[i].tags) {
@@ -62,10 +67,7 @@ export default class Hashtag extends Vue {
                 ) {
                     this.hashtags.push(categories[i].tags[j].name);
                 } else {
-                    if (
-                        categories[i].name.toLowerCase() ===
-                        this.tag
-                    ) {
+                    if (categories[i].name.toLowerCase() === this.tag) {
                         this.hashtags.push(categories[i].tags[j].name);
                     }
                 }
@@ -78,13 +80,12 @@ export default class Hashtag extends Vue {
         this.hashtags = [];
         this.initCate();
     }
+   
 
     txtClick() {
         hashDropDown.txtClick();
     }
-    async btnDropdownClick(arg: string) {
-        //미디어 태그 분류
-        let mediaTag: any[] = [];
+    btnDropdownClick(arg: string) {
         //@ts-ignore
         hashDropDown.btnDropdownClick(this.$refs[arg][0]);
         this.$store.commit("hashtag", arg);
