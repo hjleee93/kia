@@ -37,7 +37,7 @@ export default class App extends Vue {
 
     beforeDestroy() {
         window.removeEventListener("message", this.onMessage);
-          this.$store.commit("sharedImg", '');
+          this.$store.commit("sharedImg", []);
     }
 
     @Watch("$route.params.pathMatch")
@@ -69,7 +69,9 @@ export default class App extends Vue {
                     this.$router.push("/login").catch(() => {});
                     break;
             }
-        } else if (type === "requestImage") {
+        } 
+        else if (type === "requestImage") {
+          
             if (!this.isShared) {
                 //@ts-ignore
                 if (this.$store.getters.sharedImg) {
@@ -78,7 +80,7 @@ export default class App extends Vue {
                         {
                             type: "responseImage",
                             //@ts-ignore
-                            images: [this.$store.getters.sharedImg],
+                            images: this.$store.getters.sharedImg,
                         },
                         "*"
                     );

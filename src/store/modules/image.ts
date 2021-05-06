@@ -1,6 +1,6 @@
 export default {
     state: {
-        sharedImg: null
+        sharedImg: [],
     },
     getters: {
         sharedImg(state: any) {
@@ -9,8 +9,13 @@ export default {
 
     },
     mutations: {
-        sharedImg(state: any, payload: boolean) {
-            state.sharedImg = payload;
+        sharedImg(state: any, payload: any) {
+            if(payload.length === 0){
+                state.sharedImg = []
+            }else{
+                state.sharedImg.push(payload);
+
+            }
         },
 
     },
