@@ -11,9 +11,8 @@
                             <!--비선택-->
                             <li>
                                 <button
-                                    data-val="all"
                                     class="btn btn-dropdown"
-                                     :class="
+                                    :class="
                                         category !== 'posting' ? 'active' : ''
                                     "
                                     @click="tootDrop('hive')"
@@ -25,7 +24,6 @@
                             <!--선택-->
                             <li>
                                 <button
-                                    data-val="my"
                                     class="btn btn-dropdown"
                                     :class="
                                         category === 'posting' ? 'active' : ''
@@ -57,7 +55,6 @@
                                 <!--비선택-->
                                 <li>
                                     <button
-                                        data-val="contents"
                                         class="btn btn-dropdown2"
                                         @click="tootDrop2('contents')"
                                         ref="contents"
@@ -68,7 +65,6 @@
                                 <!--선택-->
                                 <li>
                                     <button
-                                        data-val="user"
                                         class="btn btn-dropdown2"
                                         :class="
                                             category === 'posting'
@@ -119,12 +115,6 @@
                                 @click="deleteResult"
                             ></button>
                         </template>
-                        <!--조회 중-->
-                        <!-- <template v-if="!searchInput">
-      <button class="btn btn-search active"></button>-->
-                        <!-- </template>  -->
-                        <!--조회 완료-->
-                        <!--<button class="btn btn-search delete"></button>-->
                     </div>
                     <template v-if="searchInput.length === 0">
                         <div class="box-search-history">
@@ -173,26 +163,22 @@ export default class SearchBar extends Vue {
     private search: Search = new Search();
     private searchInput: string = "";
     private isDone: boolean = false;
-    private category: string = "";
+    private category: string = this.$store.getters.currCategory;
     private isAllToot!: Boolean;
     private searchType: string = "contents";
     private searchHistory = this.search.searchHistory;
 
     @Watch("$store.getters.currCategory")
     getCategory() {
-        this.tootDrop2('contents')
+        this.tootDrop2("contents");
         this.searchInput = "";
-        this.isDone = false
+        this.isDone = false;
         this.category = this.$store.getters.currCategory;
-        if (this.category.toLowerCase() === "posting") {
-            this.isAllToot = false;
-        } else {
-            this.isAllToot = true;
-        }
+        this.isPosting();
     }
-    
-    @Watch('search.searchHistory')
-    getHistory(){
+
+    @Watch("search.searchHistory")
+    getHistory() {
         this.searchHistory = this.search.searchHistory;
     }
     mounted() {
@@ -200,7 +186,17 @@ export default class SearchBar extends Vue {
         tootDropDown2.init();
         search.init();
         dim.init();
+        this.isPosting();
+        this.$store.commit("searchType", this.searchType);
         window.addEventListener("keydown", this.handleKeyDown);
+    }
+
+    isPosting() {
+        if (this.category.toLowerCase() === "posting") {
+            this.isAllToot = false;
+        } else {
+            this.isAllToot = true;
+        }
     }
 
     beforeDestroy() {
@@ -237,12 +233,13 @@ export default class SearchBar extends Vue {
 
         if (arg.toLowerCase() === "posting") {
             this.isAllToot = false;
-        } else if (arg.toLowerCase() === "hive") {
+        } else {
             this.isAllToot = true;
         }
         this.$store.commit("currCategory", arg);
         this.$router.push("/" + arg.toLowerCase()).catch(() => {});
     }
+
     mobileToggle(arg: string) {
         search.mobileToggle(this.$refs[arg]);
     }
@@ -272,7 +269,6 @@ export default class SearchBar extends Vue {
     }
 
     clickedRctKeyword(keyword: string) {
-       
         this.searchInput = keyword;
     }
 

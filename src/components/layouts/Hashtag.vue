@@ -38,62 +38,48 @@ import tempCategory from "@/scripts/categoryList";
 export default class Hashtag extends Vue {
     @Prop() tag!: string;
     private hashtags: string[] = [];
+    private categories: any;
+    private category: string = "";
 
-    mounted() {
+    async mounted() {
         hashDropDown.init();
-        this.initCate();
-    }
-
-    async getCategory() {
-        const result = await this.$api.getCategory();
-        console.log("getCategory", result);
-        return result;
-    }
-    //todo: 한번만 불러오게 수정하기
-    async initCate() {
-        const categories = await this.getCategory();
-
-        this.hashtags.push("ALL TAG");
-
-        let category = Object.keys(categories);
-
-        for (const i in category) {
-            let detailCtgry = categories[category[i]];
-            for (const j in detailCtgry) {
-                if (
-                    this.$store.getters.currCategory.toLowerCase() === "posting"
-                ) {
-                    this.hashtags.push(detailCtgry[j]);
-                } else {
-                    if (
-                        category[i].toLowerCase() ===
-                        this.$store.getters.currCategory.toLowerCase()
-                    ) {
-                        this.hashtags.push(detailCtgry[j]);
-                    }
-                }
-            }
-        }
+        this.category = this.$store.getters.currCategory.toLowerCase();
+        await new Promise<void>(async (resolve, reject) => {
+            this.categories = await this.$store.getters.categories;
+            resolve();
+        }).then(() => {
+            this.createHashtag();
+        });
     }
 
     @Watch("$store.getters.currCategory")
     watchC() {
-        this.hashtags = [];
-        this.initCate();
+        this.createHashtag();
     }
 
+    //posting 용
     @Watch("tag")
     async watchTag() {
-        console.log('Watch',this.tag)
+        if (this.tag === "posting") {
+        } else {
+            this.category = this.tag;
+        }
+        this.createHashtag();
+    }
+
+    createHashtag() {
         this.hashtags = [];
         this.hashtags.push("ALL TAG");
-        const categories = await this.getCategory();
-        let category = Object.keys(categories);
+        let category = Object.keys(this.categories);
         for (const i in category) {
-            let detailCtgry = categories[category[i]];
+            let detailCtgry = this.categories[category[i]];
             for (const j in detailCtgry) {
-                if (category[i].toLowerCase() === this.tag) {
+                if (this.category === "posting") {
                     this.hashtags.push(detailCtgry[j]);
+                } else {
+                    if (category[i].toLowerCase() === this.category) {
+                        this.hashtags.push(detailCtgry[j]);
+                    }
                 }
             }
         }

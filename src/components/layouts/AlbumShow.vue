@@ -71,13 +71,13 @@ import isotope from "vueisotope";
 @Component({ components: { isotope } })
 export default class AlbumShow extends Vue {
     private isOpen: boolean = false;
+    private isDrag: boolean = false;
     private list: any[] = [];
     private detailSrc: string = "";
     private category: string = "";
     private autoScroll!: any;
     private scrollBegin!: any;
     private startAlbum!: any;
-
     private imgArr: string[] = [];
     private imgId: string = "";
     private pos = { top: 0, left: 0, x: 0, y: 0 };
@@ -85,23 +85,12 @@ export default class AlbumShow extends Vue {
 
     async mounted() {
         this.stopInterval();
-        albumPop.init(this.openCallback);
-
-        this.elem = document.getElementById("albumScroll")!;
-
-        this.elem.addEventListener("mousedown", this.mouseDownHandler);
-    }
-
-    beforeCreate() {
-        this.$store.dispatch("resetSearchInfo");
-    }
-
-    stopInterval() {
-        clearInterval(this.autoScroll);
-    }
-    stopTimeout() {
-        clearTimeout(this.scrollBegin);
-        clearTimeout(this.startAlbum);
+        this.stopTimeout();
+        this.$nextTick(() => {
+            albumPop.init(this.openCallback);
+            this.elem = document.getElementById("albumScroll")!;
+            this.elem.addEventListener("mousedown", this.mouseDownHandler);
+        });
     }
     beforeDestroy() {
         albumPop.destroy();
@@ -110,13 +99,12 @@ export default class AlbumShow extends Vue {
     @Watch("$store.getters.albumResult")
     async watchResult() {
         this.imgArr = [];
-        let result = await this.$store.getters.albumResult;
-        this.imgArr = result;
-
+        this.imgArr = await this.$store.getters.albumResult;
         this.init();
     }
     openCallback() {
         this.isOpen = true;
+        this.elem.addEventListener("mousedown", this.mouseDownHandler);
         this.init();
     }
     async init() {
@@ -170,21 +158,12 @@ export default class AlbumShow extends Vue {
 
     scrollInterval() {
         this.autoScroll = setInterval(() => {
-            if (this.$refs.scroll !== undefined) {
-                //@ts-ignore
-                this.$refs.scroll.scrollLeft += 2;
+            if (this.elem.scroll !== undefined) {
+                this.elem.scrollLeft += 2;
                 if (
-                    //@ts-ignore
-                    this.$refs.scroll.scrollWidth -
-                        //@ts-ignore
-                        this.$refs.scroll.clientWidth ===
-                    //@ts-ignore
-                    this.$refs.scroll.scrollLeft
+                    this.elem.scrollWidth - this.elem.clientWidth ===
+                    this.elem.scrollLeft
                 ) {
-                    console.log("end");
-                    // this.stopInterval();
-                    //@ts-ignore
-                    // this.$refs.scroll.scrollLeft = 0;
                     this.scrollToBegin();
                 }
             }
@@ -203,22 +182,27 @@ export default class AlbumShow extends Vue {
         }, 1000);
     }
 
+    stopInterval() {
+        clearInterval(this.autoScroll);
+    }
+    stopTimeout() {
+        clearTimeout(this.scrollBegin);
+        clearTimeout(this.startAlbum);
+    }
+
     layerClose() {
         this.isOpen = false;
         albumPop.layerClose();
     }
 
     albumPopClose() {
+        albumPop.layerClose();
         this.isOpen = false;
         this.list.length = 0;
-        albumPop.layerClose(() => {
-            // 상세 레이어 닫기
-            // isDesktop();
-            // document.querySelector("#layer .grid")!.innerHTML = "";
-        });
         this.endFullScreen();
         this.stopInterval();
         this.stopTimeout();
+        this.elem.removeEventListener("mousedown", this.mouseDownHandler);
     }
 
     endFullScreen() {
@@ -244,22 +228,25 @@ export default class AlbumShow extends Vue {
     layerOpenDepth2(image: any) {
         this.detailSrc = image.url;
         this.imgId = image.id;
-        albumPop.layerOpenDepth2(); //상세 레이어 열기
-        this.stopInterval();
+        if (!this.isDrag) {
+            albumPop.layerOpenDepth2(); //상세 레이어 열기
+            this.stopInterval();
+        }
     }
 
     layerCloseDepth2() {
         albumPop.layerCloseDepth2();
+        this.scrollInterval();
     }
 
     options() {
         return {
             layoutMode: "masonryHorizontal",
-            // initLayout: false,
+            initLayout: true,
             mansonryHorizontal: {
                 itemSelector: ".grid-item",
             },
-            transitionDuration: "0.2s",
+            transitionDuration: 200,
         };
     }
     goToDetailPage(imgId: string) {
@@ -269,28 +256,28 @@ export default class AlbumShow extends Vue {
     }
 
     mouseDownHandler(e: MouseEvent) {
+        this.isDrag = false;
+        this.stopInterval();
+        this.stopTimeout();
+
         this.pos = {
-            // The current scroll
             left: this.elem.scrollLeft,
             top: this.elem.scrollTop,
-            // Get the current mouse position
             x: e.clientX,
             y: e.clientY,
         };
-
         document.addEventListener("mousemove", this.mouseMoveHandler);
         document.addEventListener("mouseup", this.mouseUpHandler);
     }
     mouseUpHandler() {
-        this.elem.style.cursor = "grab";
-        this.elem.style.removeProperty("user-select");
-
+        console.log("?");
+        this.scrollInterval();
         document.removeEventListener("mousemove", this.mouseMoveHandler);
         document.removeEventListener("mouseup", this.mouseUpHandler);
     }
 
     mouseMoveHandler(e: MouseEvent) {
-        this.elem.scrollLeft = 0;
+        this.isDrag = true;
         const dx = e.clientX - this.pos.x;
         this.elem.scrollLeft = this.pos.left - dx;
     }

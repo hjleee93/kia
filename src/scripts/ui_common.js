@@ -585,7 +585,7 @@ var DropDown = function DropDown(wrap) {
     };
 
     var btnDropdownClick = function btnDropdownClick(self, callback) {
-      
+
         if (domWrap && self) {
             var _self$dataset;
 
@@ -1408,16 +1408,18 @@ var LayerPop = function LayerPop() {
     }
 
     var layerCloseDepth2 = function layerCloseDepth2(callback) {
-        domWrapDepth2.classList.add("close");
-        domWrapDepth2.classList.remove("open");
-        setTimeout(function () {
-            domWrapDepth2.classList.remove("close");
-            domWrapDepth2.style.display = "none";
+        if (domWrapDepth2) {
+            domWrapDepth2.classList.add("close");
+            domWrapDepth2.classList.remove("open");
+            setTimeout(function () {
+                domWrapDepth2.classList.remove("close");
+                domWrapDepth2.style.display = "none";
 
-            if (callback && typeof callback === 'function') {
-                callback();
-            }
-        }, 300);
+                if (callback && typeof callback === 'function') {
+                    callback();
+                }
+            }, 300);
+        }
     };
 
     var destroy = function destroy() {

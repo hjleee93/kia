@@ -84,13 +84,16 @@ export default class Hive extends Vue {
         });
 
         this.toot.ready();
+
+        console.log('======',this.$store.getters.currCategory.toLowerCase(),'======')
+
         if (
             this.$store.getters.currCategory.toLowerCase() === "hive" ||
             this.$store.getters.currCategory.toLowerCase() === "posting"
         ) {
             this.toot.newVersion();
         } else {
-            this.toot.newVersion(this.category);
+            this.toot.newVersion("ALL TAG");
         }
         window.addEventListener("scroll", this.scrollHandler);
     }
@@ -115,21 +118,21 @@ export default class Hive extends Vue {
 
     //posting 용
     getCategory(val: string) {
-        this.category = val;
-        this.toot && this.toot.newVersion(val);
+        this.$store.commit("postingCategory", val);
+        this.toot && this.toot.newVersion("all tag");
         this.key = val;
     }
 
     @Watch("$store.getters.sortOrder")
     async sortOrder() {
-        this.toot && this.toot.newVersion(this.category);
+        this.toot && this.toot.newVersion(this.$store.getters.hashtag);
         this.key = this.$store.getters.sortOrder;
     }
 
     @Watch("$store.getters.hashtag")
-    watchHashtag(val: string) {
-        
-        this.toot && this.toot.newVersion(val);
+    watchHashtag() {
+        console.log('Watch',this.$store.getters.hashtag)
+        this.toot && this.toot.newVersion(this.$store.getters.hashtag);
         this.key = this.$store.getters.hashtag;
     }
 

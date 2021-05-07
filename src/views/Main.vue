@@ -7,7 +7,7 @@
                     <router-view></router-view>
                 </section>
             </div>
-            <AlbumShow />
+            <AlbumShow :key='$store.getters.currCategory'/>
         </div>
     </div>
 </template>
@@ -18,14 +18,13 @@ import { initApp } from "@/scripts/ui_common";
 import Header from "@/components/layouts/Header.vue";
 import AlbumShow from "@/components/layouts/AlbumShow.vue";
 
-
 @Component({
     components: { Header, AlbumShow },
 })
-export default class App extends Vue {  
+export default class App extends Vue {
+    private key: any = "";
     async mounted() {
         initApp();
-        
     }
 }
 </script>

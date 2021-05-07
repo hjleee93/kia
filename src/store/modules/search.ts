@@ -1,3 +1,4 @@
+import _ from "lodash";
 import Vue from "vue";
 import store from "..";
 export default {
@@ -38,7 +39,7 @@ export default {
     },
     mutations: {
         searchResult(state: any, payload: any) {
-            state.searchResult = payload;
+            state.searchResult = _.sortBy(payload,'media_attachments');
         },
 
         tootCnt(state: any, payload: any) {
