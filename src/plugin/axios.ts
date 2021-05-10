@@ -47,6 +47,20 @@ _axios.interceptors.response.use(
     }
 );
 
+_axios.interceptors.request.use(config => {
+    store.commit('isLoading', true)
+    return config
+  }, error => {
+    // Handle errors
+})
+
+_axios.interceptors.response.use(response => {
+    store.commit('isLoading', false)
+    return response
+  }, error => {
+    // Handle errors
+})
+
 const Plugin: PluginObject<any> = {
     install: (Vue) => {
         Vue.$axios = _axios;

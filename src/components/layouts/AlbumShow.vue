@@ -23,7 +23,7 @@
                         <span>닫기</span>
                     </button>
                 </div>
-                <div class="layer-content" id="albumScroll" ref="scroll">
+                <div class="layer-content" :class="isLoadingDone ? '' :'dimmed' " id="albumScroll" ref="scroll">
                     <div class="grid-wrap">
                         <isotope class="grid" :options="options()" :list="list">
                             <div
@@ -82,32 +82,36 @@ export default class AlbumShow extends Vue {
     private imgId: string = "";
     private pos = { top: 0, left: 0, x: 0, y: 0 };
     private elem: any;
+    private isLoadingDone = false;
 
-    async mounted() {
+    async mounted(): Promise<void> {
         this.stopInterval();
         this.stopTimeout();
         this.$nextTick(() => {
+            this.isLoadingDone = false;
             albumPop.init(this.openCallback);
             this.elem = document.getElementById("albumScroll")!;
             this.elem.addEventListener("mousedown", this.mouseDownHandler);
         });
     }
-    beforeDestroy() {
+    beforeDestroy(): void {
         albumPop.destroy();
     }
 
     @Watch("$store.getters.albumResult")
-    async watchResult() {
+    async watchResult(): Promise<void> {
+        this.isLoadingDone = false;
         this.imgArr = [];
         this.imgArr = await this.$store.getters.albumResult;
         this.init();
     }
-    openCallback() {
+    openCallback(): void {
+        this.isLoadingDone = false;
         this.isOpen = true;
         this.elem.addEventListener("mousedown", this.mouseDownHandler);
         this.init();
     }
-    async init() {
+    async init(): Promise<void> {
         const heightRatio = 1.0681818182;
         const imageList = this.imgArr;
         for (let i = 0; i < imageList.length; i++) {
@@ -154,9 +158,11 @@ export default class AlbumShow extends Vue {
                 this.scrollInterval();
             }, 200);
         }
+
+        this.isLoadingDone = true;
     }
 
-    scrollInterval() {
+    scrollInterval(): void {
         this.autoScroll = setInterval(() => {
             if (this.elem.scroll !== undefined) {
                 this.elem.scrollLeft += 2;
@@ -170,7 +176,7 @@ export default class AlbumShow extends Vue {
         }, 1000 / 60);
     }
 
-    scrollToBegin() {
+    scrollToBegin(): void {
         this.stopInterval();
         this.scrollBegin = setTimeout(() => {
             this.elem.scrollTo({
@@ -182,30 +188,30 @@ export default class AlbumShow extends Vue {
         }, 1000);
     }
 
-    stopInterval() {
+    stopInterval(): void {
         clearInterval(this.autoScroll);
     }
-    stopTimeout() {
+    stopTimeout(): void {
         clearTimeout(this.scrollBegin);
         clearTimeout(this.startAlbum);
     }
 
-    layerClose() {
+    layerClose(): void {
         this.isOpen = false;
         albumPop.layerClose();
     }
 
-    albumPopClose() {
+    albumPopClose(): void {
         albumPop.layerClose();
         this.isOpen = false;
-        this.list.length = 0;
+        // this.list.length = 0;
         this.endFullScreen();
         this.stopInterval();
         this.stopTimeout();
         this.elem.removeEventListener("mousedown", this.mouseDownHandler);
     }
 
-    endFullScreen() {
+    endFullScreen(): void {
         //@ts-ignore
         if (document.exitFullscreen) {
             //@ts-ignore
@@ -225,7 +231,7 @@ export default class AlbumShow extends Vue {
         }
     }
 
-    layerOpenDepth2(image: any) {
+    layerOpenDepth2(image: any): void {
         this.detailSrc = image.url;
         this.imgId = image.id;
         if (!this.isDrag) {
@@ -234,12 +240,12 @@ export default class AlbumShow extends Vue {
         }
     }
 
-    layerCloseDepth2() {
+    layerCloseDepth2(): void {
         albumPop.layerCloseDepth2();
         this.scrollInterval();
     }
 
-    options() {
+    options(): { layoutMode: string; initLayout: boolean; mansonryHorizontal: { itemSelector: string; }; transitionDuration: number; } {
         return {
             layoutMode: "masonryHorizontal",
             initLayout: true,
@@ -249,13 +255,13 @@ export default class AlbumShow extends Vue {
             transitionDuration: 200,
         };
     }
-    goToDetailPage(imgId: string) {
+    goToDetailPage(imgId: string): void {
         wrapOverflow.auto();
         this.endFullScreen();
         this.$router.push(`/mastodon/web/statuses/${imgId}`);
     }
 
-    mouseDownHandler(e: MouseEvent) {
+    mouseDownHandler(e: MouseEvent): void {
         this.isDrag = false;
         this.stopInterval();
         this.stopTimeout();
@@ -269,17 +275,28 @@ export default class AlbumShow extends Vue {
         document.addEventListener("mousemove", this.mouseMoveHandler);
         document.addEventListener("mouseup", this.mouseUpHandler);
     }
-    mouseUpHandler() {
-        console.log("?");
+    mouseUpHandler(): void {
         this.scrollInterval();
         document.removeEventListener("mousemove", this.mouseMoveHandler);
         document.removeEventListener("mouseup", this.mouseUpHandler);
     }
 
-    mouseMoveHandler(e: MouseEvent) {
+    mouseMoveHandler(e: MouseEvent): void {
         this.isDrag = true;
         const dx = e.clientX - this.pos.x;
         this.elem.scrollLeft = this.pos.left - dx;
     }
 }
 </script>
+
+<style scoped>
+.dimmed{
+    background-color: black;
+    opacity: 0.5;
+    overflow: hidden !important;
+    pointer-events: none;
+}
+.btn-close{
+    z-index: 999;
+}
+</style>

@@ -39,7 +39,10 @@ export default {
     },
     mutations: {
         searchResult(state: any, payload: any) {
-            state.searchResult = _.sortBy(payload,'media_attachments');
+            for(const i in payload){
+                payload[i].media_attachments = _.sortBy(payload[i].media_attachments, 'id');
+            }
+            state.searchResult = payload
         },
 
         tootCnt(state: any, payload: any) {

@@ -62,7 +62,6 @@ export default class CategoryP extends Vue {
     private active: string = this.$store.getters.currCategory;
 
     isActive(value: string) {
-
         return this.active === value;
     }
 
@@ -72,6 +71,28 @@ export default class CategoryP extends Vue {
 
     openAlbum(): void {
         albumPop.layerOpen();
+          let elem = document.documentElement;
+        //@ts-ignore
+        if (elem.requestFullscreen) {
+            //@ts-ignore
+            elem.requestFullscreen();
+            //@ts-ignore
+        } else if (elem.mozRequestFullScreen) {
+            /* Firefox */
+            //@ts-ignore
+            elem.mozRequestFullScreen();
+            //@ts-ignore
+        } else if (elem.webkitRequestFullscreen) {
+            /* Chrome, Safari & Opera */
+            //@ts-ignore
+            elem.webkitRequestFullscreen();
+            //@ts-ignore
+        } else if (elem.msRequestFullscreen) {
+            /* IE/Edge */
+            elem = window.top.document.body; //To break out of frame in IE
+            //@ts-ignore
+            elem.msRequestFullscreen();
+        }
     }
     clickedCategory(category: string) {
         this.active = category;

@@ -70,24 +70,24 @@ export default class App extends Vue {
                     break;
             }
         }
-        // else if (type === "requestImage") {
+        else if (type === "requestImage") {
 
-        //     if (!this.isShared) {
-        //         //@ts-ignore
-        //         if (this.$store.getters.sharedImg) {
-        //             //@ts-ignore
-        //             this.$refs.iframe.contentWindow.postMessage(
-        //                 {
-        //                     type: "responseImage",
-        //                     //@ts-ignore
-        //                     images: this.$store.getters.sharedImg,
-        //                 },
-        //                 "*"
-        //             );
-        //         }
-        //         this.isShared = true;
-        //     }
-        // }
+            if (!this.isShared) {
+                //@ts-ignore
+                if (this.$store.getters.sharedImg) {
+                    //@ts-ignore
+                    this.$refs.iframe.contentWindow.postMessage(
+                        {
+                            type: "responseImage",
+                            //@ts-ignore
+                            images: this.$store.getters.sharedImg,
+                        },
+                        "*"
+                    );
+                }
+                this.isShared = true;
+            }
+        }
     }
 }
 </script>

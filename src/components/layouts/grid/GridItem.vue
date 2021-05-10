@@ -76,22 +76,13 @@
                         <span
                             id="shareBtn"
                             class="txt more"
-                            @click="
-                                shareLink(
-                                    mediaToot.media_attachments
-                                )
-                            "
+                            @click="shareLink(mediaToot.media_attachments)"
                         >
                             공유하기
                         </span>
                     </div>
                 </a>
-                <!--비활성-->
                 <Like :toot="mediaToot" />
-                <!--활성화-->
-                <!--<button class="btn btn-like active"></button>-->
-                <!--활성화 모션-->
-                <!--<button class="btn btn-like active motion"></button>-->
             </template>
         </template>
     </div>
@@ -141,15 +132,13 @@ export default class GridItem extends Vue {
         });
     }
     shareLink(imgSrc: any) {
-         this.$store.commit("sharedImg", []);
-        for(const i in imgSrc){
-             this.$store.commit("sharedImg", imgSrc[i].preview_url);
+        this.$store.commit("sharedImg", []);
+        for (const i in imgSrc) {
+            this.$store.commit("sharedImg", imgSrc[i].preview_url);
         }
-       
-        this.$router.push("/mastodon/web/statuses/new");       
-    }
 
-   
+        this.$router.push("/mastodon/web/statuses/new");
+    }
 }
 </script>
 

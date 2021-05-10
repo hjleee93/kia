@@ -14,9 +14,13 @@ import 'babel-polyfill'
 import * as _ from "lodash";
 export const bus = new Vue();
 
+
 // import './quasar'
 import './scripts/ui_common.js'
 
+//bootstrap
+import { BootstrapVue } from 'bootstrap-vue'
+Vue.use(BootstrapVue)
 
 Vue.config.productionTip = false
 Vue.prototype.$http = axios

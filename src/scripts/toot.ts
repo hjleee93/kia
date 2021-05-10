@@ -32,10 +32,12 @@ export default class Toot {
     newVersion(tag?: string) {
         if (tag) {
             if (tag.toLowerCase() === 'all tag') {
+                //posting all tag
                 if (store.getters.currCategory === 'posting') {
                     this.all = store.getters.postingCategory === 'posting' ? undefined : store.getters.postingCategory ;
                     this.tag = undefined
                 }
+                //posting 제외 all tag 
                 else {
                     this.all = store.getters.currCategory
                     this.tag = undefined
@@ -141,7 +143,6 @@ export default class Toot {
 
             }
         }
-
 
     }
 
