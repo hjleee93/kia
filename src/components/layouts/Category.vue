@@ -3,11 +3,7 @@
         <!--검색 한경우 외-->
         <div class="box-category">
             <ul class="category-lists">
-                <!--비활성화-->
-                <!--<button class="btn btn-category"></button>-->
-                <!--활성화-->
-
-                <!--<button class="btn btn-category active"></button>-->
+              
                 <li class="list-all divider">
                     <button
                         @click="clickedCategory('hive')"

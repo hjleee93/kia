@@ -49,7 +49,8 @@ import Toot from "@/scripts/toot";
 @Component({
     components: { SearchBar, Category, Grid, BoxGridTop, CategoryP },
 })
-export default class Hive extends Vue {
+export default class TootPage extends Vue {
+    private readonly allTag = "all tag";
     private toot: Toot = new Toot();
     private category: string = this.$route.name?.toLowerCase()!;
     private allResult: any[] = [];
@@ -100,7 +101,7 @@ export default class Hive extends Vue {
         ) {
             this.toot.newVersion();
         } else {
-            this.toot.newVersion("ALL TAG");
+            this.toot.newVersion(this.allTag);
         }
         console.log(this.toot.newVersion());
         window.addEventListener("scroll", this.scrollHandler);
@@ -122,10 +123,11 @@ export default class Hive extends Vue {
 
     //검색
     searchToot(): void {
-        if (this.category.toLowerCase() === "posting") {
-            this.toot && this.toot.newVersion("all tag");
-        } else if (this.category.toLowerCase() === "hive") {
-            this.toot && this.toot.newVersion();
+        if (
+            this.$store.getters.currCategory.toLowerCase() === "hive" ||
+            this.$store.getters.currCategory.toLowerCase() === "posting"
+        ) {
+            this.toot.newVersion();
         } else {
             this.toot && this.toot.newVersion(this.category);
         }
@@ -134,12 +136,13 @@ export default class Hive extends Vue {
     //posting 용
     getCategory(val: string): void {
         this.$store.commit("postingCategory", val);
-        this.toot && this.toot.newVersion("all tag");
+        this.toot && this.toot.newVersion(this.allTag);
         this.key = val;
     }
 
     @Watch("$store.getters.sortOrder")
     async sortOrder(): Promise<void> {
+        console.log(this.$store.getters.hashtag)
         this.toot && this.toot.newVersion(this.$store.getters.hashtag);
         this.key = this.$store.getters.sortOrder;
     }
@@ -160,14 +163,14 @@ export default class Hive extends Vue {
         ) {
             this.toot && this.toot.newVersion();
         } else {
-            this.toot && this.toot.newVersion("all tag");
+            this.toot && this.toot.newVersion(this.allTag);
         }
         this.key = this.$store.getters.currCategory;
     }
 }
 </script>
 
-<style  scoped>
+<style scoped>
 @keyframes ldio-sbj9bxy4vug {
     0% {
         transform: translate(-50%, -50%) rotate(0deg);

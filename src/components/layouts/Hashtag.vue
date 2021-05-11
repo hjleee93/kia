@@ -39,7 +39,7 @@ export default class Hashtag extends Vue {
     private hashtags: string[] = [];
     private categories: any;
     private category: string = "";
-    private key: string = '';
+    private key: string = "";
 
     async mounted() {
         hashDropDown.init();
@@ -55,22 +55,22 @@ export default class Hashtag extends Vue {
     @Watch("$store.getters.currCategory")
     watchC() {
         this.category = this.$store.getters.currCategory.toLowerCase();
-        this.key = this.category
+        this.key = this.category;
         this.createHashtag();
     }
 
     //posting 용
     @Watch("tag")
     async watchTag() {
-        this.categories = this.tag;      
-        this.key = this.categories
+        this.category = this.tag;
+        this.key = this.category;
         this.createHashtag();
     }
 
     createHashtag() {
         this.hashtags = [];
         this.hashtags.push("ALL TAG");
-        
+
         let category = Object.keys(this.categories);
         for (const i in category) {
             let detailCtgry = this.categories[category[i]];
@@ -97,8 +97,6 @@ export default class Hashtag extends Vue {
     listsClose() {
         hashDropDown.listsClose();
     }
-
-    
 }
 </script>
 

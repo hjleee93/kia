@@ -12,6 +12,7 @@ enum ETootLoadingState {
 
 export default class Toot {
     event: Vue = new Vue();
+    private readonly allTag = 'all tag'
     private el: HTMLElement = document.body;
     private limitCount: number = 10;
     private version: number = 0;
@@ -30,8 +31,9 @@ export default class Toot {
     }
 
     newVersion(tag?: string) {
+
         if (tag) {
-            if (tag.toLowerCase() === 'all tag') {
+            if (tag.toLowerCase() === this.allTag) {
                 //posting all tag
                 if (store.getters.currCategory === 'posting') {
                     this.all = store.getters.postingCategory === 'posting' ? undefined : store.getters.postingCategory ;
@@ -80,7 +82,7 @@ export default class Toot {
             let posting = false;
             let username = undefined;
 
-            store.commit('hashtag', (!this.tag && store.getters.currCategory !== 'hive') ? 'ALL TAG' : this.tag)
+            store.commit('hashtag', (!this.tag && store.getters.currCategory !== 'hive') ? this.allTag : this.tag)
             store.commit('searchInput', this.text)
             store.commit('sortOrder', this.order)
             store.commit('searchType', this.type)
