@@ -76,7 +76,7 @@
                         <span
                             id="shareBtn"
                             class="txt more"
-                            @click="shareLink(mediaToot.media_attachments)"
+                            @click="shareLink()"
                         >
                             공유하기
                         </span>
@@ -99,6 +99,7 @@ export default class GridItem extends Vue {
     private tootContent: string = "";
     private height: number = 0;
     private baseURL: string = process.env.VUE_APP_BASE_API!;
+    private imgList: string[] = [];
 
     mounted() {
         if (this.mediaToot.content !== undefined) {
@@ -108,6 +109,7 @@ export default class GridItem extends Vue {
             );
         }
         this.matchHeight();
+        this.initImgList();
     }
 
     @Watch("toot")
@@ -131,12 +133,22 @@ export default class GridItem extends Vue {
             }
         });
     }
-    shareLink(imgSrc: any) {
-        this.$store.commit("sharedImg", []);
-        for (const i in imgSrc) {
-            this.$store.commit("sharedImg", imgSrc[i].preview_url);
+    initImgList(){
+         this.$store.commit("sharedImg", []);
+        for (const i in this.mediaToot.media_attachments) {
+            this.$store.commit(
+                "sharedImg",
+                this.mediaToot.media_attachments[i].preview_url
+            );
+            this.imgList.push(this.mediaToot.media_attachments[i].preview_url);
         }
-
+    }
+    shareLink() {
+        this.initImgList();
+        window.parent.postMessage(
+            { type: "requestImage", imgList: this.imgList },
+            "*"
+        );
         this.$router.push("/mastodon/web/statuses/new");
     }
 }

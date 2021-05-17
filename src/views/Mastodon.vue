@@ -4,6 +4,7 @@
 
         <iframe class="iframe" ref="iframe" :src="`${baseURL}${path}`">
         </iframe>
+        <!-- <iframe class="iframe" ref="iframe" src="http://apptoot.wbcard.org/posting" ></iframe> -->
     </div>
 </template>
 
@@ -19,7 +20,7 @@ export default class App extends Vue {
     private baseURL: string = process.env.VUE_APP_BASE_API!;
     private path: string = "";
     private isShared: boolean = false;
-
+    private imgList: string[] = [];
     mounted() {
         this.$store.commit("currCategory", "INS");
         initApp();
@@ -32,6 +33,7 @@ export default class App extends Vue {
         } else if (this.path === "web/timelines/public") {
             this.$store.commit("currCategory", "INS");
         }
+
         window.addEventListener("message", this.onMessage);
     }
 
@@ -56,6 +58,9 @@ export default class App extends Vue {
     onMessage(e: MessageEvent) {
         const data = e.data || {};
         const type = data.type;
+        this.imgList = data.imgList;
+
+        console.log(type);
 
         if (type === "loadedPage") {
             const url = new URL(data.url);
@@ -69,25 +74,41 @@ export default class App extends Vue {
                     this.$router.push("/login").catch(() => {});
                     break;
             }
-        }
-        else if (type === "requestImage") {
-
-            if (!this.isShared) {
+        } else if (type === "requestImage") {
+            //@ts-ignore
+            if (data.imgList) {
+                console.log("here?", data.imgList);
                 //@ts-ignore
-                if (this.$store.getters.sharedImg) {
-                    //@ts-ignore
-                    this.$refs.iframe.contentWindow.postMessage(
-                        {
-                            type: "responseImage",
-                            //@ts-ignore
-                            images: this.$store.getters.sharedImg,
-                        },
-                        "*"
-                    );
-                }
-                this.isShared = true;
+                this.$refs.iframe.contentWindow.postMessage(
+                    {
+                        type: "responseImage",
+                        //@ts-ignore
+                        images: data.imgList,
+                    },
+                    "*"
+                );
             }
+            this.isShared = true;
         }
+
+        // else if(type==="shardImg"){
+        //     if (!this.isShared) {
+        //         //@ts-ignore
+        //         if (this.imgList) {
+        //             //@ts-ignore
+        //             this.$refs.iframe.contentWindow.postMessage(
+        //                 {
+        //                     type: "responseImage",
+        //                     //@ts-ignore
+        //                     images: this.imgList ,
+        //                 },
+        //                 "*"
+        //             );
+        //         }
+        //         this.isShared = true;
+        //         this.$router.push("/mastodon/web/statuses/new");
+        //     }
+        // }
     }
 }
 </script>
