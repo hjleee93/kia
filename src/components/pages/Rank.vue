@@ -180,6 +180,17 @@ export default class Rank extends Vue {
         this.gte = `${e} 00:00:01`;
         this.isWatch = true;
     }
+    //share
+    onMessage(e: MessageEvent) {
+        const data = e.data || {};
+        const type = data.type;
+        const imgList = e.data.images;
+
+        if (type === "shareImg") {
+            this.$store.commit("sharedImg", imgList);
+            this.$router.push("/mastodon/web/statuses/new");
+        }
+    }
 }
 </script>
 

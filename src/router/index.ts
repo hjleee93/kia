@@ -59,6 +59,13 @@ const routes: Array<RouteConfig> = [
 
 
             },
+            // {
+            //     path: '/test',
+            //     name: 'test',
+            //     component: () => import(/* webpackChunkName: "about" */ '@/components/pages/Test.vue'),
+
+
+            // },
         ]
     },
 

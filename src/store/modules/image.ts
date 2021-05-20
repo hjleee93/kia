@@ -10,10 +10,10 @@ export default {
     },
     mutations: {
         sharedImg(state: any, payload: any) {
-            if(payload.length === 0){
+            if (payload && payload.length === 0) {
                 state.sharedImg = []
-            }else{
-                state.sharedImg.push(payload);
+            } else {
+                state.sharedImg = payload;
 
             }
         },

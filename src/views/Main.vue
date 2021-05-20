@@ -7,7 +7,7 @@
                     <router-view></router-view>
                 </section>
             </div>
-            <AlbumShow :key='$store.getters.currCategory'/>
+            <AlbumShow :key="$store.getters.currCategory" />
         </div>
     </div>
 </template>
@@ -25,6 +25,22 @@ export default class App extends Vue {
     private key: any = "";
     async mounted() {
         initApp();
+        window.addEventListener("message", this.onMessage);
+    }
+    //share
+    onMessage(e: MessageEvent) {
+        const data = e.data || {};
+        const type = data.type;
+        const imgList = e.data.images;
+
+        if (type === "shareImg") {
+            this.$store.commit("sharedImg", imgList);
+            this.$router.push("/mastodon/web/statuses/new");
+        }
+    }
+
+    beforeDestroy() {
+        window.removeEventListener("message", this.onMessage);
     }
 }
 </script>
