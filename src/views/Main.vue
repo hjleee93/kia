@@ -32,9 +32,14 @@ export default class App extends Vue {
         const data = e.data || {};
         const type = data.type;
         const imgList = e.data.images;
+        const imgFile = e.data.files[0];
+        
 
         if (type === "shareImg") {
             this.$store.commit("sharedImg", imgList);
+            this.$router.push("/mastodon/web/statuses/new");
+        } else if (type === "responseImage") {
+            this.$store.commit("sharedImgFile", imgFile);            
             this.$router.push("/mastodon/web/statuses/new");
         }
     }

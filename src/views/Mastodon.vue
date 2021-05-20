@@ -58,10 +58,10 @@ export default class App extends Vue {
             this.$store.commit("currCategory", "INS");
         }
     }
-
     onMessage(e: MessageEvent) {
         const data = e.data || {};
         const type = data.type;
+
         if (type === "loadedPage") {
             const url = new URL(data.url);
 
@@ -85,12 +85,31 @@ export default class App extends Vue {
                     "*"
                 );
             }
-        } else if (this.$store.getters.sharedImg.length > 0) {
+        } else if (type === "requestImage") {
+            //@ts-ignore
+            this.$refs.iframe.contentWindow.postMessage(
+                {
+                    type: "responseImage",
+                    images: this.$store.getters.sharedImgFile,
+                },
+                "*"
+            );
+        }
+        if (this.$store.getters.sharedImg.length > 0) {
             //@ts-ignore
             this.$refs.iframe.contentWindow.postMessage(
                 {
                     type: "responseImage",
                     images: this.$store.getters.sharedImg,
+                },
+                "*"
+            );
+        } else if (this.$store.getters.sharedImgFile.length > 0) {
+            //@ts-ignore
+            this.$refs.iframe.contentWindow.postMessage(
+                {
+                    type: "responseImage",
+                    files: [this.$store.getters.sharedImgFile],
                 },
                 "*"
             );

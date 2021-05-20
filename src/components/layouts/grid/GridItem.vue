@@ -143,7 +143,22 @@ export default class GridItem extends Vue {
     //         this.imgList.push(this.mediaToot.media_attachments[i].preview_url);
     //     }
     // }
-    
+
+    // shareLink(imgSrc: string) {
+    //     console.log("공유하기", imgSrc);
+
+    //     const input = document.createElement("input");
+    //     input.type = "file";
+    //     input.click();
+
+    //     input.addEventListener("change", (e: Event) => {
+    //         //@ts-ignore
+    //         // window.tempFile = e.target.files;
+    //         this.$store.commit("sharedImgFile", e.target.files[0]);
+            
+    //         this.$router.push("/mastodon/web/statuses/new");
+    //     });
+    // }
 }
 </script>
 
