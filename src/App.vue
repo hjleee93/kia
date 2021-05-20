@@ -30,25 +30,26 @@ export default class App extends Vue {
     }
 
     async mounted() {
-         await new Promise<void>(async (resolve, reject) => {
-             await this.$store.dispatch("categories");
-              const wait = () => {
-                  if(!this.$store.getters.categories){
-                      resolve();
-                  }else{
-                      setTimeout(wait, 100)
-                  }
-              }
-              wait();
-         });
-
-         
+        await new Promise<void>(async (resolve, reject) => {
+            await this.$store.dispatch("categories");
+            const wait = () => {
+                if (!this.$store.getters.categories) {
+                    resolve();
+                } else {
+                    setTimeout(wait, 100);
+                }
+            };
+            wait();
+        });
     }
 
     @Watch("$route")
     watchRoute() {
         this.$store.commit("currCategory", this.$route.name?.toLowerCase());
     }
+
+    
+
 }
 </script>
 <style>

@@ -12,6 +12,7 @@ import 'promise-polyfill/src/polyfill';
 import 'es6-promise/auto'
 import 'babel-polyfill'
 import * as _ from "lodash";
+
 export const bus = new Vue();
 
 

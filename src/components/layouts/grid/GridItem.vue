@@ -73,13 +73,13 @@
                             }}</span>
                         </router-link>
 
-                        <!-- <span
+                         <!-- <span
                             id="shareBtn"
                             class="txt more"
                             @click="shareLink()"
                         >
                             공유하기
-                        </span> -->
+                        </span>  -->
                     </div>
                 </a>
                 <Like :toot="mediaToot" />
@@ -144,8 +144,8 @@ export default class GridItem extends Vue {
     //     }
     // }
 
-    // shareLink(imgSrc: string) {
-    //     console.log("공유하기", imgSrc);
+    // shareLink() {
+   
 
     //     const input = document.createElement("input");
     //     input.type = "file";
@@ -153,8 +153,9 @@ export default class GridItem extends Vue {
 
     //     input.addEventListener("change", (e: Event) => {
     //         //@ts-ignore
-    //         // window.tempFile = e.target.files;
-    //         this.$store.commit("sharedImgFile", e.target.files[0]);
+    //         window.tempFile = e.target.files;
+    //         console.log(window.tempFile)
+    //         // this.$store.commit("sharedImgFile", e.target.files[0]);
             
     //         this.$router.push("/mastodon/web/statuses/new");
     //     });

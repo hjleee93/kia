@@ -59,9 +59,9 @@ export default class App extends Vue {
         }
     }
     onMessage(e: MessageEvent) {
+        console.log(e)
         const data = e.data || {};
         const type = data.type;
-
         if (type === "loadedPage") {
             const url = new URL(data.url);
 
@@ -91,6 +91,14 @@ export default class App extends Vue {
                 {
                     type: "responseImage",
                     images: this.$store.getters.sharedImgFile,
+                },
+                "*"
+            );
+        } else if (type === "clickUploadButton") {
+            //@ts-ignore
+            this.$refs.iframe.contentWindow.postMessage(
+                {
+                    type: "clickUploadButton",
                 },
                 "*"
             );
