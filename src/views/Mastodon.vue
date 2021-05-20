@@ -59,6 +59,7 @@ export default class App extends Vue {
         }
     }
     onMessage(e: MessageEvent) {
+        console.log('mastodon', this.$store.getters.sharedImg)
         const data = e.data || {};
         const type = data.type;
 
