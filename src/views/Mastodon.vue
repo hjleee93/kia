@@ -9,7 +9,6 @@
             :src="`${baseURL}${path}`"
         >
         </iframe>
-        <!-- <iframe class="iframe" ref="iframe" src="http://apptoot.wbcard.org/posting" ></iframe> -->
     </div>
 </template>
 
@@ -18,14 +17,7 @@ import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import { gnb, initApp } from "@/scripts/ui_common";
 import Header from "@/components/layouts/Header.vue";
 //@ts-ignore
-window.uploadBtnEvent = function () {
-    // postMessage(
-    //     {
-    //         type: 'clickUploadButton',
-    //     },
-    //     "*"
-    // );
-};
+window.uploadBtnEvent = function () {};
 
 @Component({
     components: { Header },
@@ -35,6 +27,7 @@ export default class App extends Vue {
     private path: string = "";
     private isShared: boolean = false;
     private imgList: string[] = [];
+
     mounted() {
         this.$store.commit("currCategory", "INS");
         initApp();
@@ -47,9 +40,7 @@ export default class App extends Vue {
             this.$store.commit("currCategory", "INS");
         }
         window.addEventListener("message", this.onMessage);
-        //@ts-ignore
-        // window.uploadBtnEvent = this.onMessage.bind(this);
-        window.uploadBtnEvent = ()=> {
+        window.uploadBtnEvent = () => {
             //@ts-ignore
             this.$refs.iframe.contentWindow.postMessage(
                 {
@@ -112,14 +103,6 @@ export default class App extends Vue {
                 {
                     type: "responseImage",
                     images: this.$store.getters.sharedImgFile,
-                },
-                "*"
-            );
-        } else if (type === "clickUploadButton") {
-            //@ts-ignore
-            this.$refs.iframe.contentWindow.postMessage(
-                {
-                    type: "clickUploadButton",
                 },
                 "*"
             );

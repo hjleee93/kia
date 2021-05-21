@@ -72,14 +72,6 @@
                                 mediaToot.account.username
                             }}</span>
                         </router-link>
-
-                         <!-- <span
-                            id="shareBtn"
-                            class="txt more"
-                            @click="shareLink()"
-                        >
-                            공유하기
-                        </span>  -->
                     </div>
                 </a>
                 <Like :toot="mediaToot" />
@@ -109,7 +101,7 @@ export default class GridItem extends Vue {
             );
         }
         this.matchHeight();
-        // this.initImgList();
+      
     }
 
     @Watch("toot")
@@ -133,33 +125,6 @@ export default class GridItem extends Vue {
             }
         });
     }
-    // initImgList(){
-    //      this.$store.commit("sharedImg", []);
-    //     for (const i in this.mediaToot.media_attachments) {
-    //         this.$store.commit(
-    //             "sharedImg",
-    //             this.mediaToot.media_attachments[i].preview_url
-    //         );
-    //         this.imgList.push(this.mediaToot.media_attachments[i].preview_url);
-    //     }
-    // }
-
-    // shareLink() {
-   
-
-    //     const input = document.createElement("input");
-    //     input.type = "file";
-    //     input.click();
-
-    //     input.addEventListener("change", (e: Event) => {
-    //         //@ts-ignore
-    //         window.tempFile = e.target.files;
-    //         console.log(window.tempFile)
-    //         // this.$store.commit("sharedImgFile", e.target.files[0]);
-            
-    //         this.$router.push("/mastodon/web/statuses/new");
-    //     });
-    // }
 }
 </script>
 

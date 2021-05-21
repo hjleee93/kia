@@ -58,44 +58,6 @@ export default class TootPage extends Vue {
     private key: any = "";
     private el: HTMLElement = document.documentElement;
 
-    // test
-    private imgList: string[] = [];
-    sendMessage(event: string) {
-        this.imgList = [
-            "https://toot.wbcard.org/system/media_attachments/files/106/187/694/649/273/125/small/a209f06963e06a6a.png",
-            // "https://toot.wbcard.org/system/media_attachments/files/106/153/528/473/216/258/small/73a468090142f638.png",
-        ];
-        const url = "/mastodon/web/timelines/public";
-        switch (event) {
-            case "movePage":
-                //@ts-ignore
-                this.$refs.iframe.contentWindow.postMessage(
-                    {
-                        type: "movePage",
-                        //@ts-ignore
-                        url: url,
-                    },
-                    "*"
-                );
-
-                break;
-            case "shareImg":
-                this.$store.commit("sharedImg", this.imgList);
-
-                // //@ts-ignore
-                // this.$refs.iframe.contentWindow.postMessage(
-                //     {
-                //         type: "shareImg",
-                //         //@ts-ignore
-                //         images: this.imgList,
-                //     },
-                //     "*"
-                // );
-                break;
-        }
-    }
-    // test fin
-
     beforeUpdate(): void {
         tootDropDown.init();
         hashDropDown.init();
@@ -141,14 +103,11 @@ export default class TootPage extends Vue {
         } else {
             this.toot.newVersion(this.allTag);
         }
-        console.log(this.toot.newVersion());
         window.addEventListener("scroll", this.scrollHandler);
-        // window.addEventListener("message", this.onMessage);
     }
 
     beforeDestroy(): void {
         window.removeEventListener("scroll", this.scrollHandler);
-        // window.removeEventListener("message", this.onMessage);
     }
 
     scrollHandler(): void {
@@ -182,7 +141,6 @@ export default class TootPage extends Vue {
 
     @Watch("$store.getters.sortOrder")
     async sortOrder(): Promise<void> {
-        console.log(this.$store.getters.hashtag);
         this.toot && this.toot.newVersion(this.$store.getters.hashtag);
         this.key = this.$store.getters.sortOrder;
     }
@@ -207,18 +165,6 @@ export default class TootPage extends Vue {
         }
         this.key = this.$store.getters.currCategory;
     }
-
-    // //share
-    // onMessage(e: MessageEvent) {
-    //     const data = e.data || {};
-    //     const type = data.type;
-    //     const imgList = e.data.images;
-
-    //     if (type === "shareImg") {
-    //         this.$store.commit("sharedImg", imgList);
-    //         this.$router.push("/mastodon/web/statuses/new");
-    //     }
-    // }
 }
 </script>
 

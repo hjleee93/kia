@@ -10,16 +10,6 @@
                         <div class="sec-tab">
                             <div class="box-tab">
                                 <ul class="tab-lists">
-                                    <!--
-                        tab 개발시 안내사항
-
-                        tab.init 의 경우
-                        .btn-tab.active 초기의 찾아 해당 data-target에 해당하는 content list 활성화 합니다.
-                      -->
-                                    <!--활성화-->
-                                    <!--<button class="btn btn-tab active">인기 툿</button>-->
-                                    <!--비활성화-->
-                                    <!--<button class="btn btn-tab">인기 툿</button>-->
                                     <li>
                                         <button
                                             data-target="sec-toot"
