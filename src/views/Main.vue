@@ -17,17 +17,24 @@ import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import { initApp } from "@/scripts/ui_common";
 import Header from "@/components/layouts/Header.vue";
 import AlbumShow from "@/components/layouts/AlbumShow.vue";
-import Image from "@/scripts/image";
+import store from "@/store";
+import router from "@/router";
+
+//@ts-ignore
+window.sendImgString = function (imgString) {
+    let imgArr = imgString.split(",");
+    store.commit("sharedImg", imgArr);
+    router.push("/mastodon/web/statuses/new");
+};
 
 @Component({
     components: { Header, AlbumShow },
 })
-export default class App extends Vue {
+export default class Main extends Vue {
     private key: any = "";
     async mounted() {
         initApp();
         window.addEventListener("message", this.onMessage);
-        
     }
     //share
     onMessage(e: MessageEvent) {
@@ -39,7 +46,6 @@ export default class App extends Vue {
         if (type === "shareImg") {
             this.$store.commit("sharedImg", imgList);
             this.$router.push("/mastodon/web/statuses/new");
-            Image.getImgArr("https://toot.wbcard.org/system/media_attachments/files/106/187/593/299/168/169/small/2007d8ab2e19fe38.png, https://toot.wbcard.org/system/media_attachments/files/106/187/590/638/047/674/small/827b2b089b3994a2.png")
         } else if (type === "responseImage") {
             this.$store.commit("sharedImgFile", imgFile);
             this.$router.push("/mastodon/web/statuses/new");

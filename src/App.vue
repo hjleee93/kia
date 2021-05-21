@@ -47,9 +47,6 @@ export default class App extends Vue {
     watchRoute() {
         this.$store.commit("currCategory", this.$route.name?.toLowerCase());
     }
-
-    
-
 }
 </script>
 <style>

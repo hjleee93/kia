@@ -17,6 +17,15 @@
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import { gnb, initApp } from "@/scripts/ui_common";
 import Header from "@/components/layouts/Header.vue";
+//@ts-ignore
+window.uploadBtnEvent = function () {
+    // postMessage(
+    //     {
+    //         type: 'clickUploadButton',
+    //     },
+    //     "*"
+    // );
+};
 
 @Component({
     components: { Header },
@@ -29,7 +38,6 @@ export default class App extends Vue {
     mounted() {
         this.$store.commit("currCategory", "INS");
         initApp();
-        //gnb.init();
         const { params } = this.$route;
         const { pathMatch } = params;
         this.path = pathMatch;
@@ -39,9 +47,22 @@ export default class App extends Vue {
             this.$store.commit("currCategory", "INS");
         }
         window.addEventListener("message", this.onMessage);
+        //@ts-ignore
+        // window.uploadBtnEvent = this.onMessage.bind(this);
+        window.uploadBtnEvent = ()=> {
+            //@ts-ignore
+            this.$refs.iframe.contentWindow.postMessage(
+                {
+                    type: "clickUploadButton",
+                },
+                "*"
+            );
+        };
     }
 
     beforeDestroy() {
+        //@ts-ignore
+        window.uploadBtnEvent = function () {};
         window.removeEventListener("message", this.onMessage);
         this.$store.commit("sharedImg", []);
     }
@@ -59,7 +80,7 @@ export default class App extends Vue {
         }
     }
     onMessage(e: MessageEvent) {
-        console.log(e)
+        console.log(e);
         const data = e.data || {};
         const type = data.type;
         if (type === "loadedPage") {
@@ -104,14 +125,17 @@ export default class App extends Vue {
             );
         }
         if (this.$store.getters.sharedImg.length > 0) {
-            //@ts-ignore
-            this.$refs.iframe.contentWindow.postMessage(
-                {
-                    type: "responseImage",
-                    images: this.$store.getters.sharedImg,
-                },
-                "*"
-            );
+            if (this.isShared === false) {
+                //@ts-ignore
+                this.$refs.iframe.contentWindow.postMessage(
+                    {
+                        type: "responseImage",
+                        images: this.$store.getters.sharedImg,
+                    },
+                    "*"
+                );
+                this.isShared = true;
+            }
         } else if (this.$store.getters.sharedImgFile.length > 0) {
             //@ts-ignore
             this.$refs.iframe.contentWindow.postMessage(
