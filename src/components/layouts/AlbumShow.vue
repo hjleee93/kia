@@ -23,7 +23,12 @@
                         <span>닫기</span>
                     </button>
                 </div>
-                <div class="layer-content" :class="isLoadingDone ? '' :'dimmed' " id="albumScroll" ref="scroll">
+                <div
+                    class="layer-content"
+                    :class="isLoadingDone ? '' : 'dimmed'"
+                    id="albumScroll"
+                    ref="scroll"
+                >
                     <div class="grid-wrap">
                         <isotope class="grid" :options="options()" :list="list">
                             <div
@@ -83,8 +88,12 @@ export default class AlbumShow extends Vue {
     private pos = { top: 0, left: 0, x: 0, y: 0 };
     private elem: any;
     private isLoadingDone = false;
+    private isClickDetailPage = false;
+
+    private testBum = 0;
 
     async mounted(): Promise<void> {
+        this.$store.commit("albumShowState", "");
         this.stopInterval();
         this.stopTimeout();
         this.$nextTick(() => {
@@ -162,15 +171,78 @@ export default class AlbumShow extends Vue {
         this.isLoadingDone = true;
     }
 
-    scrollInterval(): void {
-        this.autoScroll = setInterval(() => {
-            if (this.elem.scroll !== undefined) {
+    // @Watch("$store.getters.albumShowState")
+    // async watchAlbumShowState(): Promise<void> {
+    //     console.log("watch!", this.$store.getters.albumShowState);
+    //     if (this.$store.getters.albumShowState) {
+    //     }
+    // }
+
+    async scrollInterval(): Promise<void> {
+        this.autoScroll = setInterval(async (): Promise<void> => {
+            if (this.elem.scroll !== undefined && !this.isClickDetailPage) {
                 this.elem.scrollLeft += 2;
                 if (
                     this.elem.scrollWidth - this.elem.clientWidth ===
                     this.elem.scrollLeft
                 ) {
-                    this.scrollToBegin();
+                  
+                    if (this.$store.getters.albumShowState === "scrollDone") {
+                        this.scrollToBegin();
+                    }
+                    //scroll end
+                    this.$store.commit("albumShowState", "scrollEnd");
+
+                    this.imgArr = await this.$store.getters.moreAlbumResult;
+
+                    // test
+                    const heightRatio = 1.0681818182;
+                    const imageList = this.imgArr;
+                   
+                    for (let i = 0; i < imageList.length; i++) {
+                        console.log(this.testBum++)
+                        if (!this.isOpen) {
+                            return;
+                        }
+                        
+                        const img = document.createElement(
+                            "img"
+                        ) as HTMLImageElement;
+                        //@ts-ignore
+                        img.src = imageList[i].url;
+
+                        await new Promise<void>((resolve) => {
+                            img.onload = function () {
+                                resolve();
+                            };
+                        });
+
+                        let w;
+                        const width = img.width;
+                        const height = img.height;
+                        const imgheightRatio = height / width;
+                        const imgWidthRatio = width / height;
+
+                        if (imgheightRatio > heightRatio) {
+                            w = 480;
+                        } else {
+                            w = Math.min(188 * imgWidthRatio, 480);
+                        }
+
+                        this.list.push({
+                            width: img.width,
+                            //@ts-ignore
+                            url: imageList[i].url,
+                            //@ts-ignore
+                            id: imageList[i].id,
+                        });
+console.log(this.list[i])
+
+                    }
+
+                    // test(E)
+
+                    // this.list.push()
                 }
             }
         }, 1000 / 60);
@@ -245,7 +317,12 @@ export default class AlbumShow extends Vue {
         this.scrollInterval();
     }
 
-    options(): { layoutMode: string; initLayout: boolean; mansonryHorizontal: { itemSelector: string; }; transitionDuration: number; } {
+    options(): {
+        layoutMode: string;
+        initLayout: boolean;
+        mansonryHorizontal: { itemSelector: string };
+        transitionDuration: number;
+    } {
         return {
             layoutMode: "masonryHorizontal",
             initLayout: true,
@@ -256,6 +333,7 @@ export default class AlbumShow extends Vue {
         };
     }
     goToDetailPage(imgId: string): void {
+        this.isClickDetailPage = true;
         wrapOverflow.auto();
         this.endFullScreen();
         this.$router.push(`/mastodon/web/statuses/${imgId}`);
@@ -290,13 +368,13 @@ export default class AlbumShow extends Vue {
 </script>
 
 <style scoped>
-.dimmed{
+.dimmed {
     background-color: black;
     opacity: 0.5;
     overflow: hidden !important;
     pointer-events: none;
 }
-.btn-close{
+.btn-close {
     z-index: 999;
 }
 </style>

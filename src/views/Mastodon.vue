@@ -16,8 +16,13 @@
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import { gnb, initApp } from "@/scripts/ui_common";
 import Header from "@/components/layouts/Header.vue";
+import store from "@/store";
+import router from "@/router";
 //@ts-ignore
 window.uploadBtnEvent = function () {};
+
+//@ts-ignore
+window.sendImgString = function () {};
 
 @Component({
     components: { Header },
@@ -40,6 +45,7 @@ export default class App extends Vue {
             this.$store.commit("currCategory", "INS");
         }
         window.addEventListener("message", this.onMessage);
+        //@ts-ignore
         window.uploadBtnEvent = () => {
             //@ts-ignore
             this.$refs.iframe.contentWindow.postMessage(
@@ -48,6 +54,23 @@ export default class App extends Vue {
                 },
                 "*"
             );
+        };
+        //@ts-ignore
+        window.sendImgString = (imgString) => {
+            let imgArr = imgString.split(",");
+            store.commit("sharedImg", imgArr);
+            if (this.$route.path === "/mastodon/web/statuses/new") {               
+            } else {
+                router.push("/mastodon/web/statuses/new");
+            }
+             //@ts-ignore
+                this.$refs.iframe.contentWindow.postMessage(
+                    {
+                        type: "responseImage",
+                        images: this.$store.getters.sharedImg,
+                    },
+                    "*"
+                );
         };
     }
 
@@ -69,6 +92,23 @@ export default class App extends Vue {
         } else if (this.path === "web/timelines/public") {
             this.$store.commit("currCategory", "INS");
         }
+         //@ts-ignore
+        window.sendImgString = (imgString) => {
+            let imgArr = imgString.split(",");
+            
+            if (this.$route.path === "/mastodon/web/statuses/new") {
+            } else {
+                router.push("/mastodon/web/statuses/new");
+            }
+             //@ts-ignore
+                this.$refs.iframe.contentWindow.postMessage(
+                    {
+                        type: "responseImage",
+                        images: imgArr,
+                    },
+                    "*"
+                );
+        };
     }
     onMessage(e: MessageEvent) {
         console.log(e);

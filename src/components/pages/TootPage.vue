@@ -138,6 +138,15 @@ export default class TootPage extends Vue {
         this.toot && this.toot.newVersion(this.allTag);
         this.key = val;
     }
+    //album
+    @Watch("$store.getters.albumShowState")
+    watchAlbumState(){
+        console.log(this.$store.getters.albumShowState)
+        //scrollEnd
+       if(this.$store.getters.albumShowState === 'scrollEnd'){
+           this.toot.load();
+       }
+    }
 
     @Watch("$store.getters.sortOrder")
     async sortOrder(): Promise<void> {

@@ -117,7 +117,6 @@ export default class Api {
             result = err;
         };
 
-
         return result.data
     }
 

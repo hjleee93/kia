@@ -36,7 +36,7 @@ export default class Toot {
             if (tag.toLowerCase() === this.allTag) {
                 //posting all tag
                 if (store.getters.currCategory === 'posting') {
-                    this.all = store.getters.postingCategory === 'posting' ? undefined : store.getters.postingCategory ;
+                    this.all = store.getters.postingCategory === 'posting' ? undefined : store.getters.postingCategory;
                     this.tag = undefined
                 }
                 //posting 제외 all tag 
@@ -87,6 +87,7 @@ export default class Toot {
             store.commit('sortOrder', this.order)
             store.commit('searchType', this.type)
             store.commit('searchInput', this.input)
+            // 
 
             const searchInput = store.getters.searchInput;
             const searchType = store.getters.searchType;
@@ -100,6 +101,14 @@ export default class Toot {
             } else if (searchType !== "contents") {
                 username = searchInput
             }
+            //album offset
+            if (store.getters.albumShowState === 'scrollEnd') {
+                console.log(store.getters.albumOffset)
+                this.offset = store.getters.albumOffset;
+            }else{
+                store.commit('albumOffset', this.offset + 10)
+            }
+
             let param = {
                 account_id,
                 posting: posting,
@@ -117,32 +126,50 @@ export default class Toot {
 
             const result = await Vue.$api.showToot(param);
 
+            console.log('>>',result)
             if (reqVersion !== this.version) {
                 return;
             }
-
-            this.allResult.push(...result);
-            this.event.$emit('addToot', result);
-            store.commit('searchResult', this.allResult)
-            store.commit("albumResult", this.allResult);
-            store.commit("tootCnt", this.allResult.length);
-
-            this.offset += result.length;
-
-            if (result.length < this.limitCount) {
-                this.loadingState = ETootLoadingState.end;
+            if (store.getters.albumShowState === 'scrollEnd') {
+                console.log('true', result, param)
+                store.commit('moreAlbumResult', result)
+                store.commit('albumShowState', 'albumLoading')
+                store.commit('albumOffset', this.offset + result.length)
+                
+                if (result.length < this.limitCount) {
+                    console.log('done!!!!!!!!!!')
+                    store.commit('albumShowState', 'scrollDone')
+                }
             }
             else {
-                setTimeout(() => {
-                    if (this.el.scrollHeight <= this.el.clientHeight) {
-                        this.loadingState = ETootLoadingState.complete;
-                        this.load();
-                    } else {
-                        this.loadingState = ETootLoadingState.complete;
-                        this.all = undefined;
-                    }
-                }, 400);
 
+                this.allResult.push(...result);
+                this.event.$emit('addToot', result);
+                store.commit('searchResult', this.allResult)
+                store.commit("albumResult", this.allResult);
+                store.commit("tootCnt", this.allResult.length);
+
+                // if (store.getters.albumShowState === "albumEnd") {
+                //     store.commit("albumShowState", "albumLoad")
+                // }
+
+                this.offset += result.length;
+
+                if (result.length < this.limitCount) {
+                    this.loadingState = ETootLoadingState.end;
+                }
+                else {
+                    setTimeout(() => {
+                        if (this.el.scrollHeight <= this.el.clientHeight) {
+                            this.loadingState = ETootLoadingState.complete;
+                            this.load();
+                        } else {
+                            this.loadingState = ETootLoadingState.complete;
+                            this.all = undefined;
+                        }
+                    }, 400);
+
+                }
             }
         }
 
