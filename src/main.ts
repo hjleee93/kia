@@ -20,8 +20,8 @@ export const bus = new Vue();
 import './scripts/ui_common.js'
 
 //bootstrap
-import { BootstrapVue } from 'bootstrap-vue'
-Vue.use(BootstrapVue)
+// import { BootstrapVue } from 'bootstrap-vue'
+// Vue.use(BootstrapVue)
 
 Vue.config.productionTip = false
 Vue.prototype.$http = axios

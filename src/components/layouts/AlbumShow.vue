@@ -1,65 +1,59 @@
 <template>
-    <div id="layer">
-        <div class="layer-outer">
-            <div class="layer-inner type-alert">
-                <div class="layer-content">
-                    <div class="alert-content">
-                        <strong class="tit">앨범 쇼 이용 안내</strong>
-                        <p class="txt">
-                            모바일 버전에서는 지원되지 않는 기능입니다.<br />PC로
-                            접속 후 이용 부탁드립니다.
-                        </p>
-                    </div>
-                    <div class="alert-btn">
-                        <button class="btn btn-confirm" @click="layerClose">
-                            <span>확인</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div class="layer-inner album-show type-full-size">
-                <div class="box-btn">
-                    <button class="btn btn-close" @click="albumPopClose">
-                        <span>닫기</span>
-                    </button>
-                </div>
-                <div class="layer-content" :class="isLoadingDone ? '' :'dimmed' " id="albumScroll" ref="scroll">
-                    <div class="grid-wrap">
-                        <isotope class="grid" :options="options()" :list="list">
-                            <div
-                                class="grid-item"
-                                v-for="(item, index) in list"
-                                :key="index"
-                            >
-                                <button
-                                    class="btn btn-image"
-                                    @click="layerOpenDepth2(item)"
-                                >
-                                    <div
-                                        class="box-img"
-                                        :style="`width: ${item.width}px; background-image: url(${item.url})`"
-                                    ></div>
-                                </button>
-                            </div>
-                        </isotope>
-                    </div>
-                </div>
-
-                <!--상세 이미지-->
-                <div class="layer-depth2" @click="layerCloseDepth2(imgId)">
-                    <div class="layer-depth2-content">
-                        <div class="box-img">
-                            <img
-                                :src="detailSrc"
-                                alt=""
-                                @click="goToDetailPage(imgId)"
-                            />
-                        </div>
-                    </div>
-                </div>
-            </div>
+  <div id="layer">
+    <div class="layer-outer">
+      <div class="layer-inner type-alert">
+        <div class="layer-content">
+          <div class="alert-content">
+            <strong class="tit">앨범 쇼 이용 안내</strong>
+            <p class="txt">
+              모바일 버전에서는 지원되지 않는 기능입니다.<br />PC로 접속 후 이용
+              부탁드립니다.
+            </p>
+          </div>
+          <div class="alert-btn">
+            <button class="btn btn-confirm" @click="layerClose">
+              <span>확인</span>
+            </button>
+          </div>
         </div>
+      </div>
+      <div class="layer-inner album-show type-full-size">
+        <div class="box-btn">
+          <button class="btn btn-close" @click="albumPopClose">
+            <span>닫기</span>
+          </button>
+        </div>
+        <div
+          class="layer-content"
+          :class="isLoadingDone ? '' : 'dimmed'"
+          id="albumScroll"
+          ref="scroll"
+        >
+          <div class="grid-wrap">
+            <isotope class="grid" :options="options()" :list="list">
+              <div class="grid-item" v-for="(item, index) in list" :key="index">
+                <button class="btn btn-image" @click="layerOpenDepth2(item)">
+                  <div
+                    class="box-img"
+                    :style="`width: ${item.width}px; background-image: url(${item.url})`"
+                  ></div>
+                </button>
+              </div>
+            </isotope>
+          </div>
+        </div>
+
+        <!--상세 이미지-->
+        <div class="layer-depth2" @click="layerCloseDepth2(imgId)">
+          <div class="layer-depth2-content">
+            <div class="box-img">
+              <img :src="detailSrc" alt="" @click="goToDetailPage(imgId)" />
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
 </template>
 
 <script lang="ts">
@@ -70,233 +64,280 @@ import isotope from "vueisotope";
 
 @Component({ components: { isotope } })
 export default class AlbumShow extends Vue {
-    private isOpen: boolean = false;
-    private isDrag: boolean = false;
-    private list: any[] = [];
-    private detailSrc: string = "";
-    private category: string = "";
-    private autoScroll!: any;
-    private scrollBegin!: any;
-    private startAlbum!: any;
-    private imgArr: string[] = [];
-    private imgId: string = "";
-    private pos = { top: 0, left: 0, x: 0, y: 0 };
-    private elem: any;
-    private isLoadingDone = false;
+  private isOpen: boolean = false;
+  private isDrag: boolean = false;
+  private list: any[] = [];
+  private detailSrc: string = "";
+  private category: string = "";
+  private autoScroll!: any;
+  private scrollBegin!: any;
+  private startAlbum!: any;
+  private imgArr: string[] = [];
+  private imgId: string = "";
+  private pos = { top: 0, left: 0, x: 0, y: 0 };
+  private elem: any;
+  private isLoadingDone = false;
 
-    async mounted(): Promise<void> {
-        this.stopInterval();
-        this.stopTimeout();
-        this.$nextTick(() => {
-            this.isLoadingDone = false;
-            albumPop.init(this.openCallback);
-            this.elem = document.getElementById("albumScroll")!;
-            this.elem.addEventListener("mousedown", this.mouseDownHandler);
-        });
-    }
-    beforeDestroy(): void {
-        albumPop.destroy();
-    }
+  async mounted(): Promise<void> {
+    this.stopInterval();
+    this.stopTimeout();
+    this.$nextTick(() => {
+      this.isLoadingDone = false;
+      albumPop.init(this.openCallback);
+      this.elem = document.getElementById("albumScroll")!;
+      this.elem.addEventListener("mousedown", this.mouseDownHandler);
+    });
+  }
+  beforeDestroy(): void {
+    albumPop.destroy();
+  }
 
-    @Watch("$store.getters.albumResult")
-    async watchResult(): Promise<void> {
-        this.isLoadingDone = false;
-        this.imgArr = [];
-        this.imgArr = await this.$store.getters.albumResult;
-        this.init();
-    }
-    openCallback(): void {
-        this.isLoadingDone = false;
-        this.isOpen = true;
-        this.elem.addEventListener("mousedown", this.mouseDownHandler);
-        this.init();
-    }
-    async init(): Promise<void> {
-        const heightRatio = 1.0681818182;
-        const imageList = this.imgArr;
-        for (let i = 0; i < imageList.length; i++) {
-            if (!this.isOpen) {
-                return;
-            }
+  @Watch("$store.getters.albumResult")
+  async watchResult(): Promise<void> {
+    this.isLoadingDone = false;
+    this.imgArr = [];
+    this.imgArr = await this.$store.getters.albumResult;
+    this.init();
+  }
+  openCallback(): void {
+    this.isLoadingDone = false;
+    this.isOpen = true;
+    this.elem.addEventListener("mousedown", this.mouseDownHandler);
+    this.init();
+  }
+  async init(): Promise<void> {
+    const heightRatio = 1.0681818182;
+    const imageList = this.imgArr;
+    for (let i = 0; i < imageList.length; i++) {
+      if (!this.isOpen) {
+        return;
+      }
 
-            const img = document.createElement("img") as HTMLImageElement;
-            //@ts-ignore
-            img.src = imageList[i].url;
+      const img = document.createElement("img") as HTMLImageElement;
+      //@ts-ignore
+      img.src = imageList[i].url;
 
-            await new Promise<void>((resolve) => {
-                img.onload = function () {
-                    resolve();
-                };
-            });
+      await new Promise<void>((resolve) => {
+        img.onload = function () {
+          resolve();
+        };
+      });
 
-            let w;
-            const width = img.width;
-            const height = img.height;
-            const imgheightRatio = height / width;
-            const imgWidthRatio = width / height;
+      let w;
+      const width = img.width;
+      const height = img.height;
+      const imgheightRatio = height / width;
+      const imgWidthRatio = width / height;
 
-            if (imgheightRatio > heightRatio) {
-                w = 480;
-            } else {
-                w = Math.min(188 * imgWidthRatio, 480);
-            }
+      if (imgheightRatio > heightRatio) {
+        w = 480;
+      } else {
+        w = Math.min(188 * imgWidthRatio, 480);
+      }
 
-            this.list.push({
-                width: img.width,
-                //@ts-ignore
-                url: imageList[i].url,
-                //@ts-ignore
-                id: imageList[i].id,
-            });
-            if (this.autoScroll) {
-                this.stopInterval();
-            }
-
-            this.stopTimeout();
-            this.elem.scrollLeft = 0;
-            this.startAlbum = setTimeout(() => {
-                this.scrollInterval();
-            }, 200);
-        }
-
-        this.isLoadingDone = true;
-    }
-
-    scrollInterval(): void {
-        this.autoScroll = setInterval(() => {
-            if (this.elem.scroll !== undefined) {
-                this.elem.scrollLeft += 2;
-                if (
-                    this.elem.scrollWidth - this.elem.clientWidth ===
-                    this.elem.scrollLeft
-                ) {
-                    this.scrollToBegin();
-                }
-            }
-        }, 1000 / 60);
-    }
-
-    scrollToBegin(): void {
-        this.stopInterval();
-        this.scrollBegin = setTimeout(() => {
-            this.elem.scrollTo({
-                behavior: "smooth",
-                left: 0,
-                top: 0,
-            });
-            this.scrollInterval();
-        }, 1000);
-    }
-
-    stopInterval(): void {
-        clearInterval(this.autoScroll);
-    }
-    stopTimeout(): void {
-        clearTimeout(this.scrollBegin);
-        clearTimeout(this.startAlbum);
-    }
-
-    layerClose(): void {
-        this.isOpen = false;
-        albumPop.layerClose();
-    }
-
-    albumPopClose(): void {
-        albumPop.layerClose();
-        this.isOpen = false;
-        // this.list.length = 0;
-        this.endFullScreen();
-        this.stopInterval();
-        this.stopTimeout();
-        this.elem.removeEventListener("mousedown", this.mouseDownHandler);
-    }
-
-    endFullScreen(): void {
+      this.list.push({
+        width: img.width,
         //@ts-ignore
-        if (document.exitFullscreen) {
-            //@ts-ignore
-            document.exitFullscreen();
-            //@ts-ignore
-        } else if (document.mozCancelFullScreen) {
-            //@ts-ignore
-            document.mozCancelFullScreen();
-            //@ts-ignore
-        } else if (document.webkitExitFullscreen) {
-            //@ts-ignore
-            document.webkitExitFullscreen();
-            //@ts-ignore
-        } else if (document.msExitFullscreen) {
-            //@ts-ignore
-            window.top.document.msExitFullscreen();
-        }
-    }
-
-    layerOpenDepth2(image: any): void {
-        this.detailSrc = image.url;
-        this.imgId = image.id;
-        if (!this.isDrag) {
-            albumPop.layerOpenDepth2(); //상세 레이어 열기
-            this.stopInterval();
-        }
-    }
-
-    layerCloseDepth2(): void {
-        albumPop.layerCloseDepth2();
-        this.scrollInterval();
-    }
-
-    options(): { layoutMode: string; initLayout: boolean; mansonryHorizontal: { itemSelector: string; }; transitionDuration: number; } {
-        return {
-            layoutMode: "masonryHorizontal",
-            initLayout: true,
-            mansonryHorizontal: {
-                itemSelector: ".grid-item",
-            },
-            transitionDuration: 200,
-        };
-    }
-    goToDetailPage(imgId: string): void {
-        wrapOverflow.auto();
-        this.endFullScreen();
-        this.$router.push(`/mastodon/web/statuses/${imgId}`);
-    }
-
-    mouseDownHandler(e: MouseEvent): void {
-        this.isDrag = false;
+        url: imageList[i].url,
+        //@ts-ignore
+        id: imageList[i].id,
+      });
+      if (this.autoScroll) {
         this.stopInterval();
-        this.stopTimeout();
+      }
 
-        this.pos = {
-            left: this.elem.scrollLeft,
-            top: this.elem.scrollTop,
-            x: e.clientX,
-            y: e.clientY,
-        };
-        document.addEventListener("mousemove", this.mouseMoveHandler);
-        document.addEventListener("mouseup", this.mouseUpHandler);
-    }
-    mouseUpHandler(): void {
+      this.stopTimeout();
+      this.elem.scrollLeft = 0;
+      this.startAlbum = setTimeout(() => {
         this.scrollInterval();
-        document.removeEventListener("mousemove", this.mouseMoveHandler);
-        document.removeEventListener("mouseup", this.mouseUpHandler);
+      }, 200);
     }
 
-    mouseMoveHandler(e: MouseEvent): void {
-        this.isDrag = true;
-        const dx = e.clientX - this.pos.x;
-        this.elem.scrollLeft = this.pos.left - dx;
+    this.isLoadingDone = true;
+  }
+
+  scrollInterval(): void {
+    this.autoScroll = setInterval(() => {
+      if (this.elem.scroll !== undefined) {
+        this.elem.scrollLeft += 2;
+        if (
+          this.elem.scrollWidth - this.elem.clientWidth ===
+          this.elem.scrollLeft
+        ) {
+          //scroll end
+          this.$root.$emit("album");
+          this.scrollToBegin();
+        }
+      }
+    }, 1000 / 60);
+  }
+  @Watch("$store.getters.loadMoreAlbum")
+  async loadMoreAlbum() {
+    const heightRatio = 1.0681818182;
+    const imageList = await this.$store.getters.loadMoreAlbum;
+    for (let i = 0; i < imageList.length; i++) {
+      if (!this.isOpen) {
+        return;
+      }
+
+      const img = document.createElement("img") as HTMLImageElement;
+      //@ts-ignore
+      img.src = imageList[i].url;
+
+      await new Promise<void>((resolve) => {
+        img.onload = function () {
+          resolve();
+        };
+      });
+
+      let w;
+      const width = img.width;
+      const height = img.height;
+      const imgheightRatio = height / width;
+      const imgWidthRatio = width / height;
+
+      if (imgheightRatio > heightRatio) {
+        w = 480;
+      } else {
+        w = Math.min(188 * imgWidthRatio, 480);
+      }
+
+      this.list.push({
+        width: img.width,
+        //@ts-ignore
+        url: imageList[i].url,
+        //@ts-ignore
+        id: imageList[i].id,
+      });
     }
+  }
+
+  scrollToBegin(): void {
+    this.stopInterval();
+    this.scrollBegin = setTimeout(() => {
+      this.elem.scrollTo({
+        behavior: "smooth",
+        left: 0,
+        top: 0,
+      });
+      this.scrollInterval();
+    }, 1000);
+  }
+
+  stopInterval(): void {
+    clearInterval(this.autoScroll);
+  }
+  stopTimeout(): void {
+    clearTimeout(this.scrollBegin);
+    clearTimeout(this.startAlbum);
+  }
+
+  layerClose(): void {
+    this.isOpen = false;
+    albumPop.layerClose();
+  }
+
+  albumPopClose(): void {
+    albumPop.layerClose();
+    this.isOpen = false;
+    // this.list.length = 0;
+    this.endFullScreen();
+    this.stopInterval();
+    this.stopTimeout();
+    this.elem.removeEventListener("mousedown", this.mouseDownHandler);
+  }
+
+  endFullScreen(): void {
+    //@ts-ignore
+    if (document.exitFullscreen) {
+      //@ts-ignore
+      document.exitFullscreen();
+      //@ts-ignore
+    } else if (document.mozCancelFullScreen) {
+      //@ts-ignore
+      document.mozCancelFullScreen();
+      //@ts-ignore
+    } else if (document.webkitExitFullscreen) {
+      //@ts-ignore
+      document.webkitExitFullscreen();
+      //@ts-ignore
+    } else if (document.msExitFullscreen) {
+      //@ts-ignore
+      window.top.document.msExitFullscreen();
+    }
+  }
+
+  layerOpenDepth2(image: any): void {
+    this.detailSrc = image.url;
+    this.imgId = image.id;
+    if (!this.isDrag) {
+      albumPop.layerOpenDepth2(); //상세 레이어 열기
+      this.stopInterval();
+    }
+  }
+
+  layerCloseDepth2(): void {
+    albumPop.layerCloseDepth2();
+    this.scrollInterval();
+  }
+
+  options(): {
+    layoutMode: string;
+    initLayout: boolean;
+    mansonryHorizontal: { itemSelector: string };
+    transitionDuration: number;
+  } {
+    return {
+      layoutMode: "masonryHorizontal",
+      initLayout: true,
+      mansonryHorizontal: {
+        itemSelector: ".grid-item",
+      },
+      transitionDuration: 200,
+    };
+  }
+  goToDetailPage(imgId: string): void {
+    wrapOverflow.auto();
+    this.endFullScreen();
+    this.$router.push(`/mastodon/web/statuses/${imgId}`);
+  }
+
+  mouseDownHandler(e: MouseEvent): void {
+    this.isDrag = false;
+    this.stopInterval();
+    this.stopTimeout();
+
+    this.pos = {
+      left: this.elem.scrollLeft,
+      top: this.elem.scrollTop,
+      x: e.clientX,
+      y: e.clientY,
+    };
+    document.addEventListener("mousemove", this.mouseMoveHandler);
+    document.addEventListener("mouseup", this.mouseUpHandler);
+  }
+  mouseUpHandler(): void {
+    this.scrollInterval();
+    document.removeEventListener("mousemove", this.mouseMoveHandler);
+    document.removeEventListener("mouseup", this.mouseUpHandler);
+  }
+
+  mouseMoveHandler(e: MouseEvent): void {
+    this.isDrag = true;
+    const dx = e.clientX - this.pos.x;
+    this.elem.scrollLeft = this.pos.left - dx;
+  }
 }
 </script>
 
 <style scoped>
-.dimmed{
-    background-color: black;
-    opacity: 0.5;
-    overflow: hidden !important;
-    pointer-events: none;
+.dimmed {
+  background-color: black;
+  opacity: 0.5;
+  overflow: hidden !important;
+  pointer-events: none;
 }
-.btn-close{
-    z-index: 999;
+.btn-close {
+  z-index: 999;
 }
 </style>

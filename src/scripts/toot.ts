@@ -36,7 +36,7 @@ export default class Toot {
             if (tag.toLowerCase() === this.allTag) {
                 //posting all tag
                 if (store.getters.currCategory === 'posting') {
-                    this.all = store.getters.postingCategory === 'posting' ? undefined : store.getters.postingCategory ;
+                    this.all = store.getters.postingCategory === 'posting' ? undefined : store.getters.postingCategory;
                     this.tag = undefined
                 }
                 //posting 제외 all tag 
@@ -113,6 +113,11 @@ export default class Toot {
 
             };
 
+            console.log('load', param)
+
+            //album show 
+            store.commit('albumParam', param)
+
             const reqVersion = this.version;
 
             const result = await Vue.$api.showToot(param);
@@ -147,7 +152,78 @@ export default class Toot {
         }
 
     }
+    async albumLoad() {
+        if (this.loadingState === ETootLoadingState.ready
+            || this.loadingState === ETootLoadingState.complete) {
+            let posting = false;
+            let username = undefined;
 
+
+            // store.commit('hashtag', (!this.tag && store.getters.currCategory !== 'hive') ? this.allTag : this.tag)
+            // store.commit('searchInput', this.text)
+            // store.commit('sortOrder', this.order)
+            // store.commit('searchType', this.type)
+            // store.commit('searchInput', this.input)
+
+            const searchInput = store.getters.searchInput;
+            const searchType = store.getters.searchType;
+            const recentOrder = store.getters.sortOrder;
+            const account_id = store.getters.currentUser.id;
+            const currCategory = store.getters.currCategory.toLowerCase();
+
+
+
+
+            if (searchType === "contents" && currCategory === 'posting') {
+                posting = true;
+                username = store.getters.currentUser.username
+            } else if (searchType !== "contents") {
+                username = searchInput
+            }
+            console.log(store.getters.albumParam)
+            this.offset = store.getters.albumParam.offset;
+            console.log('offset', this.offset)
+            let param = {
+                account_id,
+                posting: store.getters.albumParam.posting,
+                limit: this.limitCount,
+                offset: store.getters.loadMoreAlbumOffset,
+                tag: store.getters.albumParam.tag,
+                username: store.getters.albumParam.username,
+                text: store.getters.albumParam.searchInput,
+                order: store.getters.albumParam.recentOrder,
+                all: store.getters.albumParam.all
+            };
+
+            console.log(param)
+
+            const reqVersion = this.version;
+
+            const result = await Vue.$api.showToot(param);
+
+
+
+            if (reqVersion !== this.version) {
+                return;
+            }
+            //todo: offset수정해야됨
+
+            this.allResult.push(...result);
+            // store.commit("albumResult", this.allResult);
+            store.commit('loadMoreAlbum', result)
+
+            console.log(this.offset, result.length)
+            // this.offset += result.length;
+            store.commit('loadMoreAlbumOffset', this.offset + result.length)
+
+            if (result.length < this.limitCount) {
+                console.log("끝")
+                this.loadingState = ETootLoadingState.end;
+            }
+
+        }
+
+    }
 
 
 }

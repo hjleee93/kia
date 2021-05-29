@@ -104,6 +104,10 @@ export default class TootPage extends Vue {
             this.toot.newVersion(this.allTag);
         }
         window.addEventListener("scroll", this.scrollHandler);
+
+        this.$root.$on('album', ()=>{
+            this.loadAlbum();
+        })
     }
 
     beforeDestroy(): void {
@@ -130,6 +134,12 @@ export default class TootPage extends Vue {
         } else {
             this.toot && this.toot.newVersion(this.category);
         }
+    }
+
+    //Album
+    loadAlbum(){
+        console.log("load album~!")
+        this.toot.albumLoad();
     }
 
     //posting 용
