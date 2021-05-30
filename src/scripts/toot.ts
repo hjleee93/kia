@@ -133,7 +133,7 @@ export default class Toot {
             store.commit("tootCnt", this.allResult.length);
 
             this.offset += result.length;
-
+            store.commit('loadMoreAlbumOffset', this.offset)
             if (result.length < this.limitCount) {
                 this.loadingState = ETootLoadingState.end;
             }
@@ -182,12 +182,12 @@ export default class Toot {
             }
             console.log(store.getters.albumParam)
             this.offset = store.getters.albumParam.offset;
-            console.log('offset', this.offset)
+            console.log('result', this.allResult.length)
             let param = {
                 account_id,
                 posting: store.getters.albumParam.posting,
                 limit: this.limitCount,
-                offset: store.getters.loadMoreAlbumOffset,
+                offset:this.allResult.length,
                 tag: store.getters.albumParam.tag,
                 username: store.getters.albumParam.username,
                 text: store.getters.albumParam.searchInput,
@@ -209,12 +209,13 @@ export default class Toot {
             //todo: offset수정해야됨
 
             this.allResult.push(...result);
-            // store.commit("albumResult", this.allResult);
+            
+            store.commit("loadMoreAlbumOffset", this.allResult.length);
             store.commit('loadMoreAlbum', result)
 
             console.log(this.offset, result.length)
             // this.offset += result.length;
-            store.commit('loadMoreAlbumOffset', this.offset + result.length)
+            // store.commit('loadMoreAlbumOffset', this.offset + result.length)
 
             if (result.length < this.limitCount) {
                 console.log("끝")
